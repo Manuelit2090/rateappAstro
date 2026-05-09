@@ -1,0 +1,92 @@
+---
+import "../../styles/global.css";
+
+---
+
+<script>
+  const page = window.location.pathname;
+  var linkElements = {
+    home: document.getElementById("home-link"),
+    rewards: document.getElementById("rewards-link"),
+    store: document.getElementById("store-link"),
+  };
+  if (page === "/") {
+    if (linkElements.home)
+      linkElements.home.classList.add(
+        "border-b-terciary",
+        "border-b-2",
+        "text-fourty",
+      );
+  } else if (page === "/Rewards/") {
+    if (linkElements.rewards)
+      linkElements.rewards.classList.add(
+        "border-b-terciary",
+        "border-b-2",
+        "text-fourty",
+      );
+  } else if (page === "/Store/") {
+    if (linkElements.store)
+      linkElements.store.classList.add(
+        "border-b-terciary",
+        "border-b-2",
+        "text-fourty",
+      );
+  } else {
+    document.title = "GastroLink";
+  }
+</script>
+
+<header
+  class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-bg/90 backdrop-blur-md border border-stone-200/10 shadow-2xl rounded-br-4xl rounded-bl-4xl"
+  id="headerAncla"
+>
+  <!-- Top Right/Center: App Name and Location -->
+  <div class="flex items-center gap-4">
+    <a href="/">
+      <h1
+        class="text-xl font-extrabold text-primary font-headline tracking-tight"
+      >
+        RateApp
+      </h1>
+    </a>
+  </div>
+
+
+
+  <div class="flex items-center gap-1">
+    <nav
+      class="hidden md:visible md:flex justify-center items-center gap-6 border-l border-stone-200/10"
+    >
+      <a
+        href="/"
+        id="home-link"
+        class="text-sm font-medium hover:text-fourty transition-colors active:scale-95 duration-300"
+        >Home</a
+      >
+      <a
+        href="/Rewards/"
+        id="rewards-link"
+        class="text-sm font-medium hover:text-fourty transition-colors active:scale-95 duration-300"
+        >Rewards</a
+      >
+      <a
+        href="/Store/"
+        id="store-link"
+        class="text-sm font-medium hover:text-fourty transition-colors active:scale-95 duration-300"
+        >Store</a
+      >
+    </nav>
+
+    <div class="flex items-center gap-2 pl-3.5">
+      <a href="/login">
+        <div class="avatar avatar-online">
+          <div class="w-14 rounded-full">
+            <img
+              src="https://t3.ftcdn.net/jpg/06/19/26/46/360_F_619264680_x2PBdGLF54sFe7kTBtAvZnPyXgvaRw0Y.jpg"
+            />
+          </div>
+        </div></a
+      >
+    </div>
+  </div>
+</header>
