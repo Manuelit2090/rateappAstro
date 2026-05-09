@@ -10,31 +10,31 @@ const stats = [
 </script>
 
 <template>
-  <div class="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br from-surface to-surface-elevated p-6 md:p-8">
+  <div class="relative overflow-hidden rounded-3xl border border-base-300/60 bg-gradient-to-br from-base-100 to-base-200 p-6 md:p-8">
     <!-- Decorative blobs -->
-    <div class="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-lime/10 blur-3xl" />
-    <div class="absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-peach/10 blur-3xl" />
+    <div class="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+    <div class="absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-secondary/10 blur-3xl" />
 
     <div class="relative flex flex-col md:flex-row md:items-center gap-6">
       <!-- Avatar + name -->
       <div class="flex items-center gap-4">
         <div class="relative">
-          <div class="absolute inset-0 rounded-full bg-lime/40 blur-md" />
+          <div class="absolute inset-0 rounded-full bg-primary/40 blur-md" />
           <img
             :src={avatar}
             alt="Sofia Reyes profile"
             width="72"
             height="72"
-            class="relative h-18 w-18 rounded-full object-cover ring-2 ring-lime"
+            class="relative h-18 w-18 rounded-full object-cover ring-2 ring-primary"
           />
-          <span class="absolute -bottom-1 -right-1 grid place-items-center h-6 w-6 rounded-full bg-lime text-lime-foreground text-[10px] font-bold ring-2 ring-background">
+          <span class="absolute -bottom-1 -right-1 grid place-items-center h-6 w-6 rounded-full bg-primary text-primary-content text-[10px] font-bold ring-2 ring-base-100">
             7
           </span>
         </div>
         <div>
-          <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground">Welcome back</p>
+          <p class="text-xs uppercase tracking-[0.2em] text-neutral">Welcome back</p>
           <h1 class="font-display text-2xl md:text-3xl font-bold">Sofia Reyes</h1>
-          <p class="text-sm text-peach mt-0.5">Foodie · Tier Gold · 142 reviews</p>
+          <p class="text-sm text-secondary mt-0.5">Foodie · Tier Gold · 142 reviews</p>
         </div>
       </div>
 
@@ -46,13 +46,13 @@ const stats = [
           :class="[
             'rounded-2xl p-4 border',
             s.highlight
-              ? 'bg-lime text-lime-foreground border-transparent shadow-[0_0_30px_-8px_var(--lime)]'
-              : 'bg-background/40 border-border/60'
+              ? 'bg-primary text-primary-content border-transparent shadow-[0_0_30px_-8px_var(--p)]'
+              : 'bg-base-100/40 border-base-300/60'
           ]"
         >
           <component :is="s.icon" class="h-4 w-4 mb-2 opacity-80" />
           <p class="font-display text-xl font-bold leading-none">{{ s.value }}</p>
-          <p :class="['text-[11px] mt-1 uppercase tracking-wider', s.highlight ? 'opacity-80' : 'text-muted-foreground']">
+          <p :class="['text-[11px] mt-1 uppercase tracking-wider', s.highlight ? 'opacity-80' : 'text-neutral']">
             {{ s.label }}
           </p>
         </div>

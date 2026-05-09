@@ -1,0 +1,16 @@
+---
+// src/pages/quests.astro
+import BaseLayout from '../layouts/BaseLayout.astro'
+import AppSidebar from '../components/AppSidebar.vue'
+import QuestsPage from '../components/QuestsPage.vue'
+---
+
+<BaseLayout
+  title="Quests — rateapp"
+  description="Complete quests, earn points, and level up your taste."
+>
+  <div class="flex min-h-screen bg-background text-foreground">
+    <AppSidebar client:load />
+    <QuestsPage client:load />
+  </div>
+</BaseLayout>

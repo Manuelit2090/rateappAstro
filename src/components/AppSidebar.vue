@@ -17,13 +17,13 @@ onMounted(() => {
 })
 
 const items = [
-  { icon: Home,         label: 'Feed',      to: '/' },
+  { icon: Home,         label: 'Feed',      to: '/dashboard' },
   { icon: Compass,      label: 'Discover',  to: '/discover' },
   { icon: Flame,        label: 'Trending',  to: '/discover' },
   { icon: Trophy,       label: 'Quests',    to: '/quests', badge: 'NEW' },
-  { icon: Heart,        label: 'Favorites', to: '/' },
-  { icon: Bookmark,     label: 'Saved',     to: '/' },
-  { icon: MessageSquare,label: 'Reviews',   to: '/' },
+  { icon: Heart,        label: 'Favorites', to: '/dashboard' },
+  { icon: Bookmark,     label: 'Saved',     to: '/dashboard' },
+  { icon: MessageSquare,label: 'Reviews',   to: '/dashboard' },
 ]
 
 function isActive(to: string, idx: number) {
@@ -35,14 +35,14 @@ function isActive(to: string, idx: number) {
   <aside
     :class="[
       open ? 'w-64' : 'w-20',
-      'shrink-0 transition-all duration-300 border-r border-border/60 bg-surface/40 backdrop-blur-xl flex flex-col sticky top-0 h-screen'
+      'shrink-0 transition-all duration-300 border-r border-base-300/60 bg-base-100/40 backdrop-blur-xl flex flex-col sticky top-0 h-screen'
     ]"
   >
     <!-- Header / Logo -->
-    <div class="flex items-center gap-3 px-5 h-20 border-b border-border/60">
+    <div class="flex items-center gap-3 px-5 h-20 border-b border-base-300/60">
       <button
         @click="open = !open"
-        class="grid place-items-center h-10 w-10 rounded-xl bg-surface-elevated hover:bg-lime/10 hover:text-lime transition-colors"
+        class="grid place-items-center h-10 w-10 rounded-xl bg-base-200 hover:bg-primary/10 hover:text-primary transition-colors"
         aria-label="Toggle menu"
       >
         <Menu class="h-5 w-5" />
@@ -51,7 +51,7 @@ function isActive(to: string, idx: number) {
         <div v-if="open" class="flex items-baseline gap-1">
           <span class="font-display text-2xl font-bold tracking-tight">rate</span>
           <span class="font-display text-2xl font-bold text-lime">app</span>
-          <span class="h-1.5 w-1.5 rounded-full bg-lime shadow-[0_0_12px_var(--lime)]" />
+          <span class="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_12px_var(--p)]" />
         </div>
       </transition>
     </div>
@@ -65,8 +65,8 @@ function isActive(to: string, idx: number) {
         :class="[
           'group relative w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm font-medium transition-all',
           isActive(it.to, idx)
-            ? 'bg-lime text-lime-foreground shadow-[0_0_24px_-4px_var(--lime)]'
-            : 'text-muted-foreground hover:text-foreground hover:bg-surface-elevated'
+            ? 'bg-primary text-primary-content shadow-[0_0_24px_-4px_var(--p)]'
+            : 'text-neutral hover:text-base-content hover:bg-base-200'
         ]"
       >
         <component :is="it.icon" class="h-5 w-5 shrink-0" />
@@ -75,7 +75,7 @@ function isActive(to: string, idx: number) {
           v-if="it.badge && open"
           :class="[
             'ml-auto text-[10px] font-semibold px-1.5 py-0.5 rounded-md',
-            isActive(it.to, idx) ? 'bg-background/20' : 'bg-lime/15 text-lime'
+            isActive(it.to, idx) ? 'bg-base-100/20' : 'bg-primary/15 text-primary'
           ]"
         >
           {{ it.badge }}
@@ -84,12 +84,12 @@ function isActive(to: string, idx: number) {
     </nav>
 
     <!-- Footer buttons -->
-    <div class="px-3 py-4 border-t border-border/60 space-y-1">
-      <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-surface-elevated transition-colors">
+    <div class="px-3 py-4 border-t border-base-300/60 space-y-1">
+      <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral hover:text-base-content hover:bg-base-200 transition-colors">
         <Settings class="h-5 w-5" />
         <span v-if="open">Settings</span>
       </button>
-      <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-surface-elevated transition-colors">
+      <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral hover:text-base-content hover:bg-base-200 transition-colors">
         <LogOut class="h-5 w-5" />
         <span v-if="open">Sign out</span>
       </button>

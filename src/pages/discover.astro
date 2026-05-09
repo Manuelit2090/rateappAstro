@@ -1,0 +1,16 @@
+---
+// src/pages/discover.astro
+import BaseLayout from '../layouts/BaseLayout.astro'
+import AppSidebar from '../components/AppSidebar.vue'
+import DiscoverPage from '../components/DiscoverPage.vue'
+---
+
+<BaseLayout
+  title="Discover — rateapp"
+  description="Explore trending spots, new openings and hidden gems near you."
+>
+  <div class="flex min-h-screen bg-background text-foreground">
+    <AppSidebar client:load />
+    <DiscoverPage client:load />
+  </div>
+</BaseLayout>
