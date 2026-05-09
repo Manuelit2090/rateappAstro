@@ -1,0 +1,42 @@
+---
+
+---
+
+<html>
+  <head>
+    <title>Test DB Connection</title>
+    <meta charset="utf-8" />
+  </head>
+  <body style="font-family: sans-serif; background: #111; color: #fff; padding: 2rem;">
+    <h1>Test DB Connection</h1>
+    <div id="db-status-msg">Cargando...</div>
+    <pre id="db-status-json" style="background: #222; padding: 1rem; border-radius: 8px; margin-top: 1rem;">Sin datos</pre>
+    <script>
+      fetch('/api/db-status')
+        .then(res => res.json())
+        .then(status => {
+          const msg = document.getElementById('db-status-msg');
+          const pre = document.getElementById('db-status-json');
+          if (msg) {
+            if (status.connected) {
+              msg.innerHTML = '✅ Conexión exitosa';
+              msg.style.color = '#0f0';
+            } else {
+              msg.innerHTML = '❌ Error de conexión: ' + status.error;
+              msg.style.color = '#f00';
+            }
+          }
+          if (pre) {
+            pre.textContent = JSON.stringify(status, null, 2);
+          }
+        })
+        .catch(e => {
+          const msg = document.getElementById('db-status-msg');
+          if (msg) {
+            msg.innerHTML = '❌ Error: ' + e.message;
+            msg.style.color = '#f00';
+          }
+        });
+    </script>
+  </body>
+</html>

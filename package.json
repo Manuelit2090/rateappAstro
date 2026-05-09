@@ -10,7 +10,9 @@
   "dependencies": {
     "@astrojs/vue": "^4.5.3",
     "astro": "^5.7.0",
+    "dotenv": "^17.4.2",
     "lucide-vue-next": "^0.503.0",
+    "mysql2": "^3.22.3",
     "vue": "^3.5.0",
     "vue-router": "^4.5.0"
   },
