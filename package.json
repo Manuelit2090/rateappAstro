@@ -1,5 +1,5 @@
 {
-  "name": "neon-peach-feed-astro-vue",
+  "name": "rateappastro",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.0",
+    "daisyui": "^5.5.19",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.8.0"
   }

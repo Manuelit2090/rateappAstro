@@ -1,11 +1,10 @@
 import { Camera, MapPin, Star, Flame, Coffee, Users, Pizza, Award, Sparkles, Compass, Utensils, Heart } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 
 export interface Quest {
   slug: string;
   title: string;
   description: string;
-  icon: LucideIcon;
+
   category: "Daily" | "Weekly" | "Seasonal" | "Legendary";
   difficulty: "Easy" | "Medium" | "Hard" | "Epic";
   reward: number;
@@ -21,7 +20,6 @@ export const quests: Quest[] = [
     slug: "photograph-5-dishes",
     title: "Photograph 5 dishes",
     description: "Snap a great shot of any 5 dishes you order this week. Lighting matters.",
-    icon: Camera,
     category: "Weekly",
     difficulty: "Easy",
     reward: 150,
@@ -35,7 +33,7 @@ export const quests: Quest[] = [
     slug: "new-neighborhood",
     title: "Try a new neighborhood",
     description: "Review one restaurant in a part of the city you've never rated before.",
-    icon: Compass,
+
     category: "Weekly",
     difficulty: "Medium",
     reward: 200,
@@ -48,7 +46,7 @@ export const quests: Quest[] = [
     slug: "detailed-reviews",
     title: "Write 3 detailed reviews",
     description: "150+ words, at least one photo, and a dish recommendation each.",
-    icon: Star,
+
     category: "Weekly",
     difficulty: "Medium",
     reward: 300,
@@ -61,7 +59,7 @@ export const quests: Quest[] = [
     slug: "ramen-rampage",
     title: "Ramen Rampage",
     description: "Slurp through 4 different ramen spots and rank them.",
-    icon: Utensils,
+
     category: "Seasonal",
     difficulty: "Hard",
     reward: 750,
@@ -75,7 +73,7 @@ export const quests: Quest[] = [
     slug: "morning-glory",
     title: "Morning Glory",
     description: "Review a breakfast or brunch spot before 11am.",
-    icon: Coffee,
+ 
     category: "Daily",
     difficulty: "Easy",
     reward: 50,
@@ -88,7 +86,7 @@ export const quests: Quest[] = [
     slug: "bring-a-friend",
     title: "Bring a friend",
     description: "Invite a friend to rateapp and get them to post their first review.",
-    icon: Users,
+
     category: "Seasonal",
     difficulty: "Medium",
     reward: 400,
@@ -101,7 +99,7 @@ export const quests: Quest[] = [
     slug: "pizza-pilgrim",
     title: "Pizza Pilgrim",
     description: "Visit 3 wood-fired pizzerias and document the leoparding.",
-    icon: Pizza,
+ 
     category: "Weekly",
     difficulty: "Hard",
     reward: 500,
@@ -114,7 +112,7 @@ export const quests: Quest[] = [
     slug: "tastemaker",
     title: "Tastemaker",
     description: "Earn 50 helpful votes on your reviews this season.",
-    icon: Award,
+
     category: "Legendary",
     difficulty: "Epic",
     reward: 2000,
@@ -128,7 +126,7 @@ export const quests: Quest[] = [
     slug: "spicy-streak",
     title: "Spicy streak",
     description: "Try 5 dishes rated 3+ chilis on the heat scale.",
-    icon: Flame,
+
     category: "Weekly",
     difficulty: "Medium",
     reward: 250,
@@ -141,7 +139,7 @@ export const quests: Quest[] = [
     slug: "hidden-gem-hunter",
     title: "Hidden gem hunter",
     description: "Be the first to review a place with under 10 ratings.",
-    icon: Sparkles,
+
     category: "Seasonal",
     difficulty: "Hard",
     reward: 600,
@@ -154,7 +152,7 @@ export const quests: Quest[] = [
     slug: "love-letter",
     title: "Love letter",
     description: "Write a glowing 5-star review for a place you visit weekly.",
-    icon: Heart,
+
     category: "Daily",
     difficulty: "Easy",
     reward: 80,
@@ -167,7 +165,7 @@ export const quests: Quest[] = [
     slug: "neighborhood-mayor",
     title: "Neighborhood Mayor",
     description: "Review every restaurant in a single zip code. Glory awaits.",
-    icon: MapPin,
+ 
     category: "Legendary",
     difficulty: "Epic",
     reward: 3500,
