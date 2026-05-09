@@ -8,7 +8,7 @@ defineProps<{ r: Restaurant }>()
 <template>
   <a
     :href="`/restaurant/${r.slug}`"
-    class="group block rounded-3xl overflow-hidden border border-border/60 bg-surface/60 hover:border-lime/40 hover:shadow-[var(--shadow-card)] transition-all"
+    class="group block rounded-3xl overflow-hidden border border-base-300/60 bg-base-100/60 hover:border-primary/40 hover:shadow-[var(--shadow-card)] transition-all"
   >
     <article>
       <!-- Image -->
@@ -19,12 +19,12 @@ defineProps<{ r: Restaurant }>()
           loading="lazy"
           class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-background/90 via-background/10 to-transparent" />
+        <div class="absolute inset-0 bg-gradient-to-t from-base-100/90 via-base-100/10 to-transparent" />
 
         <!-- Promoted badge -->
         <span
           v-if="r.promoted"
-          class="absolute top-4 left-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-lime text-lime-foreground text-[10px] font-bold uppercase tracking-wider shadow-[0_0_24px_-4px_var(--lime)]"
+          class="absolute top-4 left-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary text-primary-content text-[10px] font-bold uppercase tracking-wider shadow-[0_0_24px_-4px_var(--p)]"
         >
           <span class="h-1.5 w-1.5 rounded-full bg-lime-foreground animate-pulse" />
           Promoted
@@ -35,14 +35,14 @@ defineProps<{ r: Restaurant }>()
           <button
             type="button"
             @click.prevent
-            class="grid place-items-center h-9 w-9 rounded-full bg-background/60 backdrop-blur-md border border-border/60 hover:bg-peach hover:text-peach-foreground transition-colors"
+            class="grid place-items-center h-9 w-9 rounded-full bg-base-100/60 backdrop-blur-md border border-base-300/60 hover:bg-secondary hover:text-secondary-content transition-colors"
           >
             <Heart class="h-4 w-4" />
           </button>
           <button
             type="button"
             @click.prevent
-            class="grid place-items-center h-9 w-9 rounded-full bg-background/60 backdrop-blur-md border border-border/60 hover:bg-lime hover:text-lime-foreground transition-colors"
+            class="grid place-items-center h-9 w-9 rounded-full bg-base-100/60 backdrop-blur-md border border-base-300/60 hover:bg-primary hover:text-primary-content transition-colors"
           >
             <Bookmark class="h-4 w-4" />
           </button>
@@ -51,10 +51,10 @@ defineProps<{ r: Restaurant }>()
         <!-- Name / rating overlay -->
         <div class="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
           <div>
-            <p class="text-[11px] uppercase tracking-[0.2em] text-peach mb-1">{{ r.cuisine }}</p>
+            <p class="text-[11px] uppercase tracking-[0.2em] text-secondary mb-1">{{ r.cuisine }}</p>
             <h3 class="font-display text-2xl font-bold leading-tight">{{ r.name }}</h3>
           </div>
-          <div class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-lime text-lime-foreground">
+          <div class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-primary text-primary-content">
             <Star class="h-3.5 w-3.5 fill-current" />
             <span class="text-sm font-bold">{{ r.rating }}</span>
           </div>
@@ -63,7 +63,7 @@ defineProps<{ r: Restaurant }>()
 
       <!-- Card footer -->
       <div class="p-5 flex items-center justify-between gap-4">
-        <div class="flex items-center gap-4 text-xs text-muted-foreground">
+        <div class="flex items-center gap-4 text-xs text-neutral">
           <span class="inline-flex items-center gap-1.5">
             <MapPin class="h-3.5 w-3.5" />
             {{ r.distance }}
@@ -75,13 +75,13 @@ defineProps<{ r: Restaurant }>()
           <span
             v-for="t in r.tags"
             :key="t"
-            class="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-border/60 text-muted-foreground"
+            class="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-base-300/60 text-neutral"
           >
             {{ t }}
           </span>
         </div>
       </div>
     </article>
-  </a>z
+  </a>
   <!-- </RouterLink> -->
 </template>

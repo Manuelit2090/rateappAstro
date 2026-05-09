@@ -23,8 +23,8 @@ function share() {
       :class="[
         'grid place-items-center h-10 w-10 rounded-full backdrop-blur-md border transition',
         liked
-          ? 'bg-peach text-peach-foreground border-peach'
-          : 'bg-background/60 border-border/60 hover:bg-peach hover:text-peach-foreground'
+          ? 'bg-secondary text-secondary-content border-secondary'
+          : 'bg-base-100/60 border-base-300/60 hover:bg-secondary hover:text-secondary-content'
       ]"
       :aria-label="liked ? 'Unlike' : 'Like'"
     >
@@ -36,8 +36,8 @@ function share() {
       :class="[
         'grid place-items-center h-10 w-10 rounded-full backdrop-blur-md border transition',
         saved
-          ? 'bg-lime text-lime-foreground border-lime'
-          : 'bg-background/60 border-border/60 hover:bg-lime hover:text-lime-foreground'
+          ? 'bg-primary text-primary-content border-primary'
+          : 'bg-base-100/60 border-base-300/60 hover:bg-primary hover:text-primary-content'
       ]"
       :aria-label="saved ? 'Unsave' : 'Save'"
     >
@@ -46,7 +46,7 @@ function share() {
 
     <button
       @click="share"
-      class="grid place-items-center h-10 w-10 rounded-full bg-background/60 backdrop-blur-md border border-border/60 hover:border-lime/40 transition"
+      class="grid place-items-center h-10 w-10 rounded-full bg-base-100/60 backdrop-blur-md border border-base-300/60 hover:border-primary/40 transition"
       aria-label="Share"
     >
       <Share2 class="h-4 w-4" />
