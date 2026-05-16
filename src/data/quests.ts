@@ -1,4 +1,4 @@
-import { Camera, MapPin, Star, Flame, Coffee, Users, Pizza, Award, Sparkles, Compass, Utensils, Heart } from "lucide-react";
+import { Camera, MapPin, Star, Flame, Coffee, Users, Pizza, Award, Sparkles, Compass, Utensils, Heart } from "lucide-vue-next";
 
 export interface Quest {
   slug: string;

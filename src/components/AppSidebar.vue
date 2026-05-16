@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-
+import { storeUbicacion as ubication } from './UI/storeUbication.js';
 // lucide-vue-next equivalents
 import {
   Menu, Home, Compass, Trophy, Heart, Bookmark,
-  MessageSquare, Settings, LogOut, Flame
+  MessageSquare, Settings, LogOut, Flame, MapPin
 } from 'lucide-vue-next'
 
 const open = ref(true)
@@ -13,6 +13,7 @@ const routePath = ref('/')
 onMounted(() => {
   if (typeof window !== 'undefined') {
     routePath.value = window.location.pathname
+     ubication.detectarUbicacion();
   }
 })
 
@@ -24,6 +25,7 @@ const items = [
   { icon: Heart,        label: 'Favorites', to: '/dashboard' },
   { icon: Bookmark,     label: 'Saved',     to: '/dashboard' },
   { icon: MessageSquare,label: 'Reviews',   to: '/dashboard' },
+  { icon: MapPin,        label: 'Ubicación' },
 ]
 
 function isActive(to: string, idx: number) {
@@ -84,7 +86,17 @@ function isActive(to: string, idx: number) {
     </nav>
 
     <!-- Footer buttons -->
-    <div class="px-3 py-4 border-t border-base-300/60 space-y-1">
+    <div class="px-3 py-4 border-t border-base-300/60 space-y-3">
+      <div class="rounded-2xl border border-base-200 bg-base-200/60 p-3 text-sm text-neutral">
+        <div class="flex items-center gap-2">
+          <MapPin class="h-4 w-4 shrink-0 text-primary" />
+          <span class="font-semibold">Ubicación</span>
+        </div>
+        <p class="mt-2 text-xs leading-5 text-base-content/80">
+          {{ ubication.ciudad }}
+        </p>
+      </div>
+
       <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral hover:text-base-content hover:bg-base-200 transition-colors">
         <Settings class="h-5 w-5" />
         <span v-if="open">Settings</span>

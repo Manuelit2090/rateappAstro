@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { Sparkles, TrendingUp, Award } from 'lucide-vue-next'
+import { dataUser, loadDataUserFromStorage } from '../store/dataUser';
 import avatar from '../assets/avatar-user.jpg'
 
 const stats = [
@@ -7,6 +9,10 @@ const stats = [
   { icon: TrendingUp, value: '#214',  label: 'Rank',    highlight: false },
   { icon: Award,      value: '18',    label: 'Badges',  highlight: false },
 ]
+
+onMounted(() => {
+  loadDataUserFromStorage();
+})
 </script>
 
 <template>
@@ -21,8 +27,8 @@ const stats = [
         <div class="relative">
           <div class="absolute inset-0 rounded-full bg-primary/40 blur-md" />
           <img
-            :src={avatar}
-            alt="Sofia Reyes profile"
+            :src="avatar"
+            :alt="dataUser.user?.name ?? 'avatar'"
             width="72"
             height="72"
             class="relative h-18 w-18 rounded-full object-cover ring-2 ring-primary"
@@ -33,7 +39,7 @@ const stats = [
         </div>
         <div>
           <p class="text-xs uppercase tracking-[0.2em] text-neutral">Welcome back</p>
-          <h1 class="font-display text-2xl md:text-3xl font-bold">Sofia Reyes</h1>
+          <h1 class="font-display text-2xl md:text-3xl font-bold">{{ dataUser.user?.name ?? 'User' }}</h1>
           <p class="text-sm text-secondary mt-0.5">Foodie · Tier Gold · 142 reviews</p>
         </div>
       </div>

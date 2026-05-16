@@ -5,12 +5,14 @@ import AppSidebar from '../components/AppSidebar.vue'
 import ProfileCard from '../components/ProfileCard.vue'
 import QuestsCard from '../components/QuestsCard.vue'
 import RestaurantCard from '../components/RestaurantCard.vue'
+import RequireAuth from '../components/RequireAuth.vue'
 import { restaurants } from '../data/restaurants'
 
 const filterTabs = ['All', 'Trending', 'Nearby', 'Promoted']
 ---
 
 <BaseLayout>
+  <RequireAuth client:load />
   <div class="flex min-h-screen bg-background text-foreground">
 
     <!-- Sidebar: client:load so Vue reactivity works -->

@@ -163,7 +163,7 @@ const moods = ['Date night', 'Quick bite', 'With friends', 'Working solo', 'Cele
             </button>
           </div>
         </div>
-
+        
         <div class="grid md:grid-cols-2 gap-6">
           <RestaurantCard v-for="r in list" :key="r.slug" :r="r" />
         </div>
@@ -178,6 +178,7 @@ const moods = ['Date night', 'Quick bite', 'With friends', 'Working solo', 'Cele
       </section>
 
       <footer class="py-10 text-center text-xs text-neutral">
+      
         © 2026 rateapp · Crafted for hungry humans
       </footer>
     </div>
