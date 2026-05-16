@@ -12,6 +12,7 @@ export interface Review {
 }
 
 export interface Restaurant {
+  id: number,
   slug: string;
   name: string;
   cuisine: string;
@@ -35,6 +36,7 @@ export interface Restaurant {
 
 export const restaurants: Restaurant[] = [
   {
+    id: 1,
     slug: "ember-and-oak",
     name: "Ember & Oak",
     cuisine: "American · Smash Burgers",
@@ -60,6 +62,7 @@ export const restaurants: Restaurant[] = [
     ],
   },
   {
+    id: 2,
     slug: "tonkotsu-lab",
     name: "Tonkotsu Lab",
     cuisine: "Japanese · Ramen",
@@ -82,7 +85,9 @@ export const restaurants: Restaurant[] = [
       { author: "Sam L.", rating: 5, date: "2 weeks ago", text: "Tiny spot, huge flavor. The egg alone is a 10/10." },
     ],
   },
+  
   {
+    id: 3,
     slug: "forno-nero",
     name: "Forno Nero",
     cuisine: "Italian · Wood-fired",
@@ -107,6 +112,7 @@ export const restaurants: Restaurant[] = [
     ],
   },
   {
+    id: 4,
     slug: "slate-omakase",
     name: "Slate Omakase",
     cuisine: "Japanese · Sushi",
