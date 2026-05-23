@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import AppSidebar from '../components/AppSidebar.vue'
+import RequireAuth from '../components/RequireAuth.vue'
+import RestaurantSearch from '../components/UI/RestaurantSearch.vue'
+---
+
+<BaseLayout>
+  <RequireAuth client:load />
+  <div class="flex min-h-screen bg-background text-foreground">
+    <AppSidebar client:load />
+
+    <main class="flex-1 min-w-0">
+      <div class="px-6 md:px-10 py-8 space-y-8 max-w-[1400px] mx-auto">
+        <section class="space-y-6">
+          {/* El modificador client:load asegura que Vue tome el control del buscador inmediatamente */}
+          <RestaurantSearch client:load />
+        </section>
+      </div>
+    </main>
+  </div>
+</BaseLayout>
