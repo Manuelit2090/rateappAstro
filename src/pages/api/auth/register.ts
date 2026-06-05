@@ -30,9 +30,6 @@ export const POST: APIRoute = async ({ request }) => {
       [full_name, username, email, password_hash]
     ) as any[];
 
-    // Asegurarse de que los cambios se reflejen en la base de datos
-    await pool.execute('UPDATE customers SET updated_at = NOW() WHERE id = ?', [result.insertId]);
-
     const [rows] = await pool.execute(
       'SELECT id, uuid, email FROM customers WHERE id = ?',
       [result.insertId]

@@ -3,8 +3,8 @@ import vue from '@astrojs/vue'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  // Si deseas probar el modo estático puro para descartar errores:
-  output: 'static', 
+  // Modo híbrido para permitir endpoints dinámicos (API routes)
+  output: 'hybrid', 
   integrations: [
     vue()
   ],
