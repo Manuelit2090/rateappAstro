@@ -5,13 +5,15 @@ import { dataUser, loadDataUserFromStorage } from '../store/dataUser';
 import avatar from '../assets/avatar-user.jpg'
 
 const stats = [
-  { icon: Sparkles,   value: '2,480', label: 'Points',  highlight: true },
-  { icon: TrendingUp, value: '#214',  label: 'Rank',    highlight: false },
+  { icon: Sparkles,   value: 0, label: 'Points',  highlight: true },
+  { icon: TrendingUp, value: '0',  label: 'Rank',    highlight: false },
   { icon: Award,      value: '18',    label: 'Badges',  highlight: false },
 ]
 
 onMounted(() => {
   loadDataUserFromStorage();
+  stats[0].value = dataUser.user?.totalPoints ?? 0;
+  stats[1].value = dataUser.user.totalReviews;
 })
 </script>
 
@@ -28,7 +30,7 @@ onMounted(() => {
           <div class="absolute inset-0 rounded-full bg-primary/40 blur-md" />
           <img
             :src="avatar"
-            :alt="dataUser.user?.name ?? 'avatar'"
+º            :alt="dataUser.user?.name ?? 'avatar'"
             width="72"
             height="72"
             class="relative h-18 w-18 rounded-full object-cover ring-2 ring-primary"
