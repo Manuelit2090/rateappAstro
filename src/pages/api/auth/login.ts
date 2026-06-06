@@ -1,3 +1,10 @@
+/**
+ * @file login.ts
+ * @description Endpoint POST para autenticación de usuarios. Verifica credenciales y genera JWT.
+ * @route POST /api/auth/login
+ * @dependencies src/lib/db, src/lib/auth
+ */
+
 import type { APIRoute } from 'astro';
 import pool from '../../../lib/db';
 import { verifyPassword, generateToken } from '../../../lib/auth';

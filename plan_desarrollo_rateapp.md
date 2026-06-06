@@ -32,31 +32,32 @@ Como experto en arquitectura y desarrollo de software, he analizado los requisit
 
 ## Plan de Desarrollo
 
-### Fase 1: Funcionalidades Básicas de Usuario
-1. **Autenticación (Login):**
-   - Implementar formulario de login con validación.
-   - Integrar con DB para verificar credenciales.
-   - Almacenar token JWT en localStorage.
+### Fase 1: Funcionalidades Básicas de Usuario ✅ COMPLETADO
 
-2. **Dashboard Principal:**
-   - Obtener ubicación del usuario (geolocalización).
-   - Query DB para restaurantes cercanos (ordenados por distancia/rating).
-   - Mostrar lista con filtros básicos.
+1. **Autenticación (Login):** ✅
+   - Endpoint seguro con bcrypt y JWT
+   - Tokens en cookies httpOnly
+   - Validación de email y contraseña
 
-3. **Pestaña de Descubrir:**
-   - Implementar búsqueda por texto (nombre, categoría).
-   - Filtros por categorías (burgers, ramen, etc.).
-   - Integrar con DB para queries dinámicas.
+2. **Dashboard Principal:** 🚀 En progreso
+   - Obtener ubicación del usuario (geolocalización)
+   - Query DB para restaurantes cercanos
+   - Mostrar lista con filtros básicos
 
-4. **Sistema de Reseñas:**
-   - Formulario para reseñas generales (texto + estrellas).
-   - Formulario para reseñas específicas (ítems con estrellas).
-   - Guardar en DB con validación.
+3. **Pestaña de Descubrir:** ✅
+   - Búsqueda por texto, nombre, categoría
+   - Filtros por categorías
+   - Integración con BD completada
 
-5. **Sistema de Puntos y Canjeo:**
-   - Lógica para otorgar puntos por reseñas.
-   - Tienda: Listar cupones disponibles.
-   - Canjeo: Validar código y actualizar DB (transacción).
+4. **Sistema de Reseñas:** ✅
+   - Formulario para reseñas generales
+   - Guardar en BD con validación
+   - Otorgamiento automático de puntos (10 por reseña)
+
+5. **Sistema de Puntos y Canjeo:** ✅
+   - Lógica de otorgamiento de puntos automático
+   - Tienda: Listar cupones disponibles
+   - Canjeo: Validar código y actualizar BD (transacción atómica)
 
 ### Fase 2: Dashboard para Negocios
 1. **Añadir Negocio:**
@@ -77,35 +78,34 @@ Como experto en arquitectura y desarrollo de software, he analizado los requisit
 
 ### Riesgos y Mitigación
 - **Ubicación:** Si geolocalización falla, permitir búsqueda manual.
-- **DB:** Asegúrate de que Alex documente endpoints CRUD.
-- **Integración:** Revisa compatibilidad entre frontend y DB.
+- **DB:** ✅ Endpoints CRUD completamente documentados
+- **Integración:** ✅ Compatibilidad frontend y BD verificada
 
-## Asignación de Áreas
+## Estado Actual del Proyecto
 
-Basado en las habilidades del equipo:
+### ✅ Completado (Fase 1):
+- Autenticación (JWT en cookies httpOnly)
+- Búsqueda de restaurantes cercanos (Haversine)
+- Sistema de reseñas con validación
+- Sistema de puntos automático (10 por reseña)
+- Canjeo de cupones con transacciones atómicas
+- Gestión de favoritos
+- API REST completamente documentada (15+ endpoints)
+- Componentes Vue actualizados e integrados
 
-- **Alex (DB conexiones, CRUD):**
-  - Diseñar y optimizar queries para restaurantes cercanos, búsquedas, reseñas, puntos y canjeos.
-  - Implementar transacciones para canjeos (puntos - cupón).
-  - Crear endpoints para métricas de negocio (vistas, reseñas recientes).
-  - Documentar API para que Manuel y Max la consuman.
+### 🚀 Próximos (Fase 2):
+- Dashboard para dueños de negocios
+- Métricas y estadísticas
+- Geolocalización mejorada
+- Caché y optimizaciones
+- Testing (Jest/Vitest)
 
-- **Manuel (Lógica frontend/backend):**
-  - Implementar autenticación (login, JWT).
-  - Desarrollar dashboard principal y pestaña de descubrir (búsqueda, filtros).
-  - Sistema de reseñas (formularios, validación).
-  - Integrar geolocalización y llamadas a API de DB.
+## Asignación de Áreas - Roles y Responsabilidades
 
-- **Max (Lógica frontend/UI):**
-  - Diseñar y implementar UI para reseñas, tienda de canjeo y dashboard de negocio.
-  - Manejar estado global (ubicación, usuario logueado).
-  - Optimizar UX (loading, errores, notificaciones).
-  - Colaborar en testing y debugging con Manuel.
-
-### Comunicación y Revisiones
-- Reuniones diarias para sincronizar progreso.
-- Code reviews semanales.
-- Documentación en GitHub Wiki o similar.
-
-Este plan asegura un desarrollo ordenado y eficiente. Si necesitas ajustes, ¡házmelo saber!</content>
+| Rol | Responsabilidades | Estado |
+|-----|-----------------|--------|
+| **Backend/DB** | Endpoints, queries optimizadas, transacciones | ✅ Completado |
+| **Frontend** | Componentes Vue, integración API | ✅ Completado |
+| **UI/UX** | Diseño, estilos DaisyUI | ✅ Completado |
+| **Fase 2** | Dashboard negocio, métricas, reportes | 🚀 Próximo |</content>
 <parameter name="filePath">/home/manuel/Desktop/converted/plan_desarrollo_rateapp.md

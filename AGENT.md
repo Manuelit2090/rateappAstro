@@ -24,7 +24,27 @@ src/
 └── middleware.ts      # Protección de rutas (auth)
 
 ## Base de datos
-El proyecto está migrando de archivos `.ts` locales en `src/data/` a una base de datos **SQL hosteada en Aiven**. Durante la migración pueden coexistir ambas fuentes. Al tocar lógica de datos, verificar si ya existe el módulo migrado antes de leer del archivo local.
+El proyecto está **completamente migrado a SQL** (MySQL en Aiven). Toda la lógica de negocio está implementada en endpoints API RESTful en `src/pages/api/`. No hay datos locales en archivos `.ts` en `src/data/` — estos son solo para tipos TypeScript.
+
+**Endpoints implementados:**
+- `POST /api/auth/register` — Registro de usuarios
+- `POST /api/auth/login` — Autenticación
+- `GET /api/auth/me` — Obtener usuario autenticado
+- `POST /api/auth/logout` — Cerrar sesión
+- `GET /api/restaurants/nearby` — Restaurantes cercanos (Haversine)
+- `GET /api/restaurants/search` — Búsqueda con filtros y paginación
+- `GET /api/restaurants/[slug]` — Detalles de restaurante
+- `POST /api/reviews` — Crear reseña (otorga 10 puntos)
+- `GET /api/reviews` — Obtener reseñas de restaurante
+- `GET /api/points` — Saldo de puntos del usuario
+- `POST /api/coupons` — Canjear cupón (transacción atómica)
+- `GET /api/coupons` — Listar cupones disponibles
+- `POST /api/favorites` — Agregar/quitar favoritos
+- `GET /api/favorites` — Listar favoritos
+- `GET /api/test-connection` — Verificar conexión a BD
+
+**Conexión centralizada:** `src/lib/db.ts` (pool MySQL con max 10 conexiones)
+**Autenticación:** `src/lib/auth.ts` (bcrypt para contraseñas, JWT tokens)
 
 ## Routing
 El proyecto usa **dos sistemas de routing en paralelo**:
@@ -39,24 +59,24 @@ Al crear rutas nuevas: si es una página completa → `src/pages/`. Si es
 navegación dentro de un componente Vue → Vue Router.
 
 ## Autenticación y sesión
-La sesión se guarda actualmente en **localStorage** por simplicidad.
+La sesión se guarda en **cookies httpOnly** (secure) generadas por los endpoints `/api/auth/`.
 
 ```ts
-// Guardar sesión
-localStorage.setItem("session", JSON.stringify({ userId, token }))
+// Los tokens se almacenan automáticamente en cookies httpOnly
+// No requiere code manual en el frontend — el navegador maneja las cookies
 
-// Leer sesión
-const session = JSON.parse(localStorage.getItem("session") ?? "null")
+// Verificar si el usuario está autenticado:
+const response = await fetch('/api/auth/me');
+const user = await response.json();
 ```
 
-> ⚠️ **Deuda técnica conocida**: migrar a cookies de sesión HttpOnly para mayor
-> seguridad. Al implementar esta migración, actualizar `src/middleware.ts` y
-> `src/utils/checkLogin.ts` para leer desde cookies en lugar de localStorage.
-> Documentar el cambio en la rama `base-de-datos`.
+**Implementado según mejores prácticas:**
+- ✅ Contraseñas encriptadas con bcrypt (12 rounds)
+- ✅ JWT tokens con expiración 7 días
+- ✅ Cookies httpOnly (protegidas contra XSS)
+- ✅ CSRF protection via SameSite=Strict
 
-La protección de rutas del lado del servidor vive en `src/middleware.ts`.
-Mientras se use localStorage, la validación real ocurre en el cliente
-(componentes Vue); el middleware solo puede validar una vez se migre a cookies.
+La protección de rutas del lado del servidor se puede implementar en `src/middleware.ts` verificando el token JWT desde cookies.
 
 ## Convenciones de código
 

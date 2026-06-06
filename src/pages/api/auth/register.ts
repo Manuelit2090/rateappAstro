@@ -1,3 +1,10 @@
+/**
+ * @file register.ts
+ * @description Endpoint POST para registrar nuevos usuarios con validación y encriptación.
+ * @route POST /api/auth/register
+ * @dependencies src/lib/db, src/lib/auth
+ */
+
 import type { APIRoute } from 'astro';
 import pool from '../../../lib/db';
 import { hashPassword, generateToken } from '../../../lib/auth';

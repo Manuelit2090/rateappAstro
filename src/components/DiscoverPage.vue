@@ -1,25 +1,28 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { Search, Compass, TrendingUp, MapPin, Sparkles, Flame } from 'lucide-vue-next'
 import RestaurantCard from './RestaurantCard.vue'
 import SearchBar from './UI/RestaurantSearchBar.vue'
-import { restaurants } from '../data/restaurants'
+import { restaurantService } from '../lib/api'
 
 const filters = ['All', 'Trending', 'New', 'Promoted', 'Top rated'] as const
 type Filter = typeof filters[number]
 
 const activeFilter = ref<Filter>('All')
-const query        = ref('')
+const query = ref('')
+const restaurants = ref<any[]>([])
+const loading = ref(false)
+const error = ref('')
 
-const featured = restaurants.find((r) => r.promoted) ?? restaurants[0]
+const featured = computed(() => restaurants.value[0] ?? null)
 
 const list = computed(() => {
-  let r = [...restaurants]
+  let r = [...restaurants.value]
 
   if (activeFilter.value === 'Promoted')  r = r.filter((x) => x.promoted)
-  if (activeFilter.value === 'Top rated') r = r.sort((a, b) => b.rating - a.rating)
-  if (activeFilter.value === 'Trending')  r = r.sort((a, b) => b.reviews - a.reviews)
-  if (activeFilter.value === 'New')       r = r.filter((x) => x.tags.includes('New'))
+  if (activeFilter.value === 'Top rated') r = r.sort((a, b) => b.avg_rating - a.avg_rating)
+  if (activeFilter.value === 'Trending')  r = r.sort((a, b) => b.review_count - a.review_count)
+  if (activeFilter.value === 'New')       r = r.filter((x) => x.tags?.includes('New'))
 
   if (query.value.trim()) {
     const q = query.value.toLowerCase()
@@ -45,6 +48,39 @@ const categories = [
 ]
 
 const moods = ['Date night', 'Quick bite', 'With friends', 'Working solo', 'Celebration', 'Hidden gem']
+
+// Cargar restaurantes al montar el componente
+onMounted(async () => {
+  await loadRestaurants()
+})
+
+async function loadRestaurants() {
+  loading.value = true
+  error.value = ''
+  try {
+    const response = await restaurantService.search('', undefined, 1)
+    restaurants.value = response.restaurants || []
+  } catch (err) {
+    console.error('Error cargando restaurantes:', err)
+    error.value = 'Error al cargar restaurantes'
+  } finally {
+    loading.value = false
+  }
+}
+
+async function searchRestaurants(category?: string) {
+  loading.value = true
+  error.value = ''
+  try {
+    const response = await restaurantService.search(query.value, category, 1)
+    restaurants.value = response.restaurants || []
+  } catch (err) {
+    console.error('Error buscando:', err)
+    error.value = 'Error en la búsqueda'
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <template>
@@ -71,8 +107,8 @@ const moods = ['Date night', 'Quick bite', 'With friends', 'Working solo', 'Cele
     <div class="px-6 md:px-10 py-8 space-y-10 max-w-[1400px] mx-auto">
 
       <!-- Featured banner -->
-      <section class="relative overflow-hidden rounded-3xl border border-base-300/60">
-        <img :src="featured.image" :alt="featured.name" class="absolute inset-0 h-full w-full object-cover" />
+      <section v-if="featured" class="relative overflow-hidden rounded-3xl border border-base-300/60">
+        <img v-if="featured.image_url" :src="featured.image_url" :alt="featured.name" class="absolute inset-0 h-full w-full object-cover" />
         <div class="absolute inset-0 bg-gradient-to-r from-base-100 via-base-100/80 to-base-100/10" />
         <div class="relative p-8 md:p-12 max-w-2xl">
           <span class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-primary mb-3">
@@ -90,7 +126,7 @@ const moods = ['Date night', 'Quick bite', 'With friends', 'Working solo', 'Cele
               View restaurant
             </a>
             <span class="text-xs text-neutral inline-flex items-center gap-1.5">
-              <MapPin class="h-3.5 w-3.5" /> {{ featured.distance }} away
+              <MapPin class="h-3.5 w-3.5" /> {{ featured.address }}
             </span>
           </div>
         </div>
@@ -159,13 +195,24 @@ const moods = ['Date night', 'Quick bite', 'With friends', 'Working solo', 'Cele
           </div>
         </div>
         
-        <div class="grid md:grid-cols-2 gap-6">
+        <div v-if="loading" class="text-center py-20">
+          <div class="inline-block">
+            <div class="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full"></div>
+          </div>
+          <p class="mt-4 text-neutral">Cargando restaurantes...</p>
+        </div>
+
+        <div v-else-if="error" class="alert alert-error">
+          <span>{{ error }}</span>
+        </div>
+
+        <div v-else-if="list.length > 0" class="grid md:grid-cols-2 gap-6">
           <RestaurantCard v-for="r in list" :key="r.slug" :r="r" />
         </div>
 
         <!-- Empty state -->
         <div
-          v-if="list.length === 0"
+          v-else
           class="text-center py-20 text-neutral rounded-3xl border border-base-300/60 bg-base-100/40"
         >
           Nothing matches "{{ query }}". Try a different cuisine.
