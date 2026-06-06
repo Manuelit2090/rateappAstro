@@ -133,3 +133,38 @@ pnpm preview          # Preview del build
 - La protección de rutas se maneja en `src/middleware.ts`
 - Los componentes Vue que necesiten reactividad en páginas Astro deben usar `client:load`
 - El tema DaisyUI activo es `abyss`; no sobreescribir variables del tema sin consultar
+
+## Documentación del Proyecto
+
+### Archivos de Referencia Principal
+- **`AGENT.md`** (este archivo) — Convenciones, arquitectura, estándares de código
+- **`SECURITY.md`** — Prácticas de seguridad implementadas, mejores prácticas
+- **`CHANGELOG.md`** — Historial detallado de cambios y auditoría
+- **`API_DOCUMENTATION.md`** — Especificación completa de endpoints
+- **`PROYECTO_COMPLETADO.md`** — Estado ejecutivo del proyecto
+
+### Archivos de Referencia Rápida
+- **`RESUMEN_CAMBIOS.txt`** — Quick reference de últimos cambios (cambiar en cada auditoría)
+- **`README.md`** — Guía de instalación y uso
+- **`plan_desarrollo_rateapp.md`** — Plan de fases y equipo
+
+### Cómo Usar Documentación
+1. Entender proyecto → **AGENT.md** + **README.md**
+2. Entender seguridad → **SECURITY.md**
+3. Ver cambios recientes → **CHANGELOG.md** o **RESUMEN_CAMBIOS.txt**
+4. Usar APIs → **API_DOCUMENTATION.md**
+5. Verificar estado → **PROYECTO_COMPLETADO.md**
+
+## Control de Cambios
+
+Cuando realices cambios:
+1. Agregar cabecera JSDoc a archivos modificados/creados
+2. Documentar cambio en **CHANGELOG.md** con:
+   - ID del cambio (ej: FEAT-001, BUG-002, SEC-003)
+   - Archivo afectado
+   - ANTES/DESPUÉS
+   - Razón del cambio
+   - Impacto en el sistema
+3. Actualizar **RESUMEN_CAMBIOS.txt** si es cambio mayor
+4. Actualizar **README.md** si afecta instalación/uso
+5. Actualizar **SECURITY.md** si afecta seguridad
