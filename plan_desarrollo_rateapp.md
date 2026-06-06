@@ -7,6 +7,7 @@ Como experto en arquitectura y desarrollo de software, he analizado los requisit
 ## Recomendaciones
 
 ### Arquitectura General
+
 - **Adopta una arquitectura modular:** Divide la aplicación en módulos independientes (usuario, reseñas, canjeo, negocio) para facilitar el mantenimiento y escalabilidad.
 - **Usa patrones de diseño:** Implementa MVC (Model-View-Controller) o similar para separar la lógica de negocio de la presentación. Para el frontend, considera Vue.js con Pinia para estado global.
 - **Seguridad:** Implementa autenticación JWT o similar para login. Valida inputs en frontend y backend para prevenir inyecciones SQL y XSS.
@@ -17,6 +18,7 @@ Como experto en arquitectura y desarrollo de software, he analizado los requisit
 - **Escalabilidad:** Prepara para futuras fases; diseña la DB para métricas de negocio y considera microservicios si crece.
 
 ### Tecnologías y Herramientas
+
 - **Frontend:** Vue 3 con Astro para SSR, DaisyUI para estilos (ya integrado).
 - **Backend:** Asume que hay un backend (Node.js/Express?) conectado a la DB.
 - **DB:** Ya conectada; asegúrate de que soporte transacciones para operaciones como canjeo de puntos.
@@ -24,6 +26,7 @@ Como experto en arquitectura y desarrollo de software, he analizado los requisit
 - **Notificaciones:** Para canjeos exitosos, usa toast notifications (como en DaisyUI).
 
 ### Mejores Prácticas
+
 - **Validación:** Valida reseñas (longitud, formato) y códigos de canjeo.
 - **UX:** Muestra loading states durante búsquedas y canjeos. Implementa búsqueda en tiempo real.
 - **Error Handling:** Maneja errores de red, DB y validación con mensajes amigables.
@@ -60,30 +63,34 @@ Como experto en arquitectura y desarrollo de software, he analizado los requisit
    - Canjeo: Validar código y actualizar BD (transacción atómica)
 
 ### Fase 2: Dashboard para Negocios
+
 1. **Añadir Negocio:**
-   - Formulario para registrar negocio (con ubicación).
-   - Validar y guardar en DB.
+   - Formulario para registrar negocio (con ubicación)
+   - Validar y guardar en DB
 
 2. **Métricas:**
-   - Vistas: Contador de visitas a la página del negocio.
-   - Comentarios/Reseñas: Mostrar recientes y estadísticas.
-   - Dashboard simple con gráficos (usando Chart.js o similar).
+   - Vistas: Contador de visitas a la página del negocio
+   - Comentarios/Reseñas: Mostrar recientes y estadísticas
+   - Dashboard simple con gráficos (usando Chart.js o similar)
 
 ### Cronograma Sugerido
-- **Semana 1-2:** Autenticación y Dashboard básico.
-- **Semana 3-4:** Descubrir y búsqueda.
-- **Semana 5-6:** Reseñas y puntos.
-- **Semana 7-8:** Canjeo y Fase 2.
-- **Semana 9:** Testing, optimización y despliegue.
+
+- **Semana 1-2:** Autenticación y Dashboard básico
+- **Semana 3-4:** Descubrir y búsqueda
+- **Semana 5-6:** Reseñas y puntos
+- **Semana 7-8:** Canjeo y Fase 2
+- **Semana 9:** Testing, optimización y despliegue
 
 ### Riesgos y Mitigación
-- **Ubicación:** Si geolocalización falla, permitir búsqueda manual.
+
+- **Ubicación:** Si geolocalización falla, permitir búsqueda manual
 - **DB:** ✅ Endpoints CRUD completamente documentados
 - **Integración:** ✅ Compatibilidad frontend y BD verificada
 
 ## Estado Actual del Proyecto
 
-### ✅ Completado (Fase 1):
+### ✅ Completado (Fase 1)
+
 - Autenticación (JWT en cookies httpOnly)
 - Búsqueda de restaurantes cercanos (Haversine)
 - Sistema de reseñas con validación
@@ -93,7 +100,8 @@ Como experto en arquitectura y desarrollo de software, he analizado los requisit
 - API REST completamente documentada (15+ endpoints)
 - Componentes Vue actualizados e integrados
 
-### 🚀 Próximos (Fase 2):
+### 🚀 Próximos (Fase 2)
+
 - Dashboard para dueños de negocios
 - Métricas y estadísticas
 - Geolocalización mejorada
@@ -103,9 +111,8 @@ Como experto en arquitectura y desarrollo de software, he analizado los requisit
 ## Asignación de Áreas - Roles y Responsabilidades
 
 | Rol | Responsabilidades | Estado |
-|-----|-----------------|--------|
+| --- | --- | --- |
 | **Backend/DB** | Endpoints, queries optimizadas, transacciones | ✅ Completado |
 | **Frontend** | Componentes Vue, integración API | ✅ Completado |
 | **UI/UX** | Diseño, estilos DaisyUI | ✅ Completado |
-| **Fase 2** | Dashboard negocio, métricas, reportes | 🚀 Próximo |</content>
-<parameter name="filePath">/home/manuel/Desktop/converted/plan_desarrollo_rateapp.md
+| **Fase 2** | Dashboard negocio, métricas, reportes | 🚀 Próximo |

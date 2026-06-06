@@ -104,12 +104,12 @@ async function searchRestaurants(category?: string) {
       </div>
     </header>
 
-    <div class="px-6 md:px-10 py-8 space-y-10 max-w-[1400px] mx-auto">
+    <div class="px-6 md:px-10 py-8 space-y-10 max-w-350 mx-auto">
 
       <!-- Featured banner -->
       <section v-if="featured" class="relative overflow-hidden rounded-3xl border border-base-300/60">
         <img v-if="featured.image_url" :src="featured.image_url" :alt="featured.name" class="absolute inset-0 h-full w-full object-cover" />
-        <div class="absolute inset-0 bg-gradient-to-r from-base-100 via-base-100/80 to-base-100/10" />
+        <div class="absolute inset-0 bg-linear-to-r from-base-100 via-base-100/80 to-base-100/10" />
         <div class="relative p-8 md:p-12 max-w-2xl">
           <span class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-primary mb-3">
             <Sparkles class="h-3.5 w-3.5" /> Editor's pick

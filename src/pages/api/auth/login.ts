@@ -47,7 +47,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ message: 'Login exitoso', uuid: customer.uuid }), {
       status: 200,
       headers: {
-        'Set-Cookie': `auth_token=${token}; HttpOnly; Path=/; Max-Age=604800; SameSite=Strict`,
+        'Set-Cookie': `auth_token=${token}; HttpOnly; Secure; Path=/; Max-Age=604800; SameSite=Strict`,
         'Content-Type': 'application/json',
       },
     });
