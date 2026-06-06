@@ -31,18 +31,7 @@ function share() {
       <Heart class="h-4 w-4" :class="liked ? 'fill-current' : ''" />
     </button>
 
-    <button
-      @click="saved = !saved"
-      :class="[
-        'grid place-items-center h-10 w-10 rounded-full backdrop-blur-md border transition',
-        saved
-          ? 'bg-primary text-primary-content border-primary'
-          : 'bg-base-100/60 border-base-300/60 hover:bg-primary hover:text-primary-content'
-      ]"
-      :aria-label="saved ? 'Unsave' : 'Save'"
-    >
-      <Bookmark class="h-4 w-4" :class="saved ? 'fill-current' : ''" />
-    </button>
+    
 
     <button
       @click="share"

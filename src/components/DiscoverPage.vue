@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { Search, Compass, TrendingUp, MapPin, Sparkles, Flame } from 'lucide-vue-next'
 import RestaurantCard from './RestaurantCard.vue'
+import SearchBar from './UI/RestaurantSearchBar.vue'
 import { restaurants } from '../data/restaurants'
 
 const filters = ['All', 'Trending', 'New', 'Promoted', 'Top rated'] as const
@@ -63,13 +64,7 @@ const moods = ['Date night', 'Quick bite', 'With friends', 'Working solo', 'Cele
 
       <!-- Search (desktop) -->
       <div class="ml-auto relative w-full max-w-md hidden md:block">
-        <Search class="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-content" />
-        <input
-          v-model="query"
-          type="search"
-          placeholder="Search cuisines, dishes, places…"
-          class="w-full h-11 pl-11 pr-4 rounded-full bg-base-100 border border-base-300/60 text-sm placeholder:text-neutral focus:outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/20 transition"
-        />
+        <SearchBar/>
       </div>
     </header>
 

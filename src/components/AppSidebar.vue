@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { storeUbicacion as ubication } from './UI/storeUbication.js';
+import { storeUbicacion as ubication } from './UI/storeUbication.ts';
+import { dataUser, loadDataUserFromStorage, setDataUser } from '../store/dataUser';
 // lucide-vue-next equivalents
 import {
   Menu, Home, Compass, Trophy, Heart, Bookmark,
@@ -10,22 +11,31 @@ import {
 const open = ref(true)
 const routePath = ref('/')
 
-onMounted(() => {
+onMounted(async () => {
+  loadDataUserFromStorage();
   if (typeof window !== 'undefined') {
     routePath.value = window.location.pathname
-     ubication.detectarUbicacion();
+    await ubication.detectarUbicacion();
+    
+    // Guardar ubicación en el usuario
+    if (dataUser.user) {
+      const coordinates = ubication.getCoordinates();
+      if (coordinates) {
+        const updatedUser = {
+          ...dataUser.user,
+          currentLocation: coordinates
+        };
+        setDataUser(updatedUser);
+      }
+    }
   }
 })
 
 const items = [
   { icon: Home,         label: 'Feed',      to: '/dashboard' },
   { icon: Compass,      label: 'Discover',  to: '/discover' },
-  { icon: Flame,        label: 'Trending',  to: '/discover' },
   { icon: Trophy,       label: 'Quests',    to: '/quests', badge: 'NEW' },
-  { icon: Heart,        label: 'Favorites', to: '/dashboard' },
-  { icon: Bookmark,     label: 'Saved',     to: '/dashboard' },
-  { icon: MessageSquare,label: 'Reviews',   to: '/dashboard' },
-  { icon: MapPin,        label: 'Ubicación' },
+  { icon: Heart,        label: 'Favorites', to: '/dashboard' }
 ]
 
 function isActive(to: string, idx: number) {
@@ -101,7 +111,7 @@ function isActive(to: string, idx: number) {
         <Settings class="h-5 w-5" />
         <span v-if="open">Settings</span>
       </button>
-      <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral hover:text-base-content hover:bg-base-200 transition-colors">
+      <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral hover:text-base-content hover:bg-base-200 transition-colors" @click="dataUser.logoutUser()">
         <LogOut class="h-5 w-5" />
         <span v-if="open">Sign out</span>
       </button>

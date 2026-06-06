@@ -56,8 +56,11 @@ const filterTabs = ['All', 'Trending', 'Nearby', 'Promoted']
       <!-- Page content -->
       <div class="px-6 md:px-10 py-8 space-y-8 max-w-[1400px] mx-auto">
 
-        <ProfileCard client:load />
+        <div
+        class="flex flex-col gap-4">
+      <ProfileCard client:load />
         <QuestsCard client:load />
+      </div>
 
         <!-- Restaurant feed section -->
         <section>

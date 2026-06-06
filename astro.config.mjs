@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   // Modo híbrido para permitir endpoints dinámicos (API routes)
-  output: 'hybrid', 
+  output: 'static', 
   integrations: [
     vue()
   ],

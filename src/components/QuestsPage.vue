@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { Trophy, Flame, Target, Sparkles } from 'lucide-vue-next'
 import QuestCard from './QuestCard.vue'
+import SearchBar from './UI/RestaurantSearchBar.vue'
 import { quests } from '../data/quests'
 import type { Quest } from '../data/quests'
 
@@ -36,6 +37,7 @@ const inProgress  = computed(() => quests.filter((q) => q.current > 0 && q.curre
           <p class="text-xs text-primary-content mt-1">Earn points. Become a tastemaker.</p>
         </div>
       </div>
+      <SearchBar />
     </header>
 
     <div class="px-6 md:px-10 py-8 space-y-8 max-w-[1400px] mx-auto">

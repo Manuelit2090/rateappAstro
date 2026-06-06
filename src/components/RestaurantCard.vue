@@ -39,13 +39,7 @@ defineProps<{ r: Restaurant }>()
           >
             <Heart class="h-4 w-4" />
           </button>
-          <button
-            type="button"
-            @click.prevent
-            class="grid place-items-center h-9 w-9 rounded-full bg-base-100/60 backdrop-blur-md border border-base-300/60 hover:bg-primary hover:text-primary-content transition-colors"
-          >
-            <Bookmark class="h-4 w-4" />
-          </button>
+         
         </div>
 
         <!-- Name / rating overlay -->

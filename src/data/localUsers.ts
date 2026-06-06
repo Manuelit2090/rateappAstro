@@ -11,6 +11,7 @@ export const localUsers: User[] = [
     reviews: ['Buen lugar, excelente servicio.'],
     favoriteRestaurant: ['la-fonda', 'burger-town'],
     cuponsBuy: ['WELCOME20'],
+    currentLocation: { lat: 40.4168, lng: -3.7038 } // Madrid
   },
   {
     id: 'u2',
@@ -21,7 +22,8 @@ export const localUsers: User[] = [
     totalReviews: 4,
     reviews: ['La sopa ramen tenía un sabor increíble.'],
     favoriteRestaurant: ['sushi-house'],
-    cuponsBuy: ['FRESCO10']
+    cuponsBuy: ['FRESCO10'],
+    currentLocation: { lat: 39.4699, lng: -0.3763 } // Valencia
   },
     {
     id: 'u3',
@@ -33,5 +35,6 @@ export const localUsers: User[] = [
     reviews: ['Buen lugar, excelente servicio.'],
     favoriteRestaurant: ['la-fonda', 'burger-town'],
     cuponsBuy: ['WELCOME20'],
+    currentLocation: { lat: 41.3851, lng: 2.1734 } // Barcelona
   }
 ];

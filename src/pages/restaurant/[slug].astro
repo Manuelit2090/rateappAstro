@@ -4,7 +4,11 @@
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import AppSidebar from '../../components/AppSidebar.vue'
 import RestaurantDetailClient from '../../components/RestaurantDetailClient.vue'
+import RestaurantDistance from '../../components/RestaurantDistance.vue'
 import { restaurants, getRestaurant } from '../../data/restaurants'
+import { ref, onMounted } from 'vue'
+import {calculeDistance} from '../../lib/calculateDistance.js'
+import { storeUbicacion } from '../../components/UI/storeUbication'
 
 // Genera las rutas estáticas para cada resturante
 export function getStaticPaths() {
@@ -34,6 +38,7 @@ const ratingDist = [
   { stars: 2, pct: 1  },
   { stars: 1, pct: 1  },
 ]
+
 ---
 
 <BaseLayout title={`${r.name} — rateapp`} description={r.description}>
@@ -98,6 +103,10 @@ const ratingDist = [
             <span class="text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full border border-base-300/60 text-neutral">
               {r.priceRange}
             </span>
+          </div>
+
+          <div class="mt-6 pt-6 border-t border-base-300/60">
+            <RestaurantDistance client:load resLat={r.lat} resLon={r.lon} />
           </div>
         </section>
 
@@ -269,7 +278,6 @@ const ratingDist = [
             <section class="rounded-3xl border border-base-300/60 bg-base-100/60 p-6">
               <h3 class="font-display text-base font-bold mb-3">At a glance</h3>
               <ul class="text-sm text-neutral space-y-2">
-                <li class="flex justify-between"><span>Distance</span><span class="text-base-content">{r.distance}</span></li>
                 <li class="flex justify-between"><span>Price</span><span class="text-base-content">{r.priceRange}</span></li>
                 <li class="flex justify-between"><span>Average rating</span><span class="text-base-content">{r.rating} / 5</span></li>
                 <li class="flex justify-between"><span>Total reviews</span><span class="text-base-content">{r.reviews.toLocaleString()}</span></li>
