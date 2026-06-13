@@ -33,7 +33,7 @@ export const localUsers: User[] = [
     totalPoints: 1200,
     totalReviews: 8,
     reviews: ['Buen lugar, excelente servicio.'],
-    favoriteRestaurant: ['la-fonda', 'burger-town'],
+    favoriteRestaurant: [],
     cuponsBuy: ['WELCOME20'],
     currentLocation: { lat: 41.3851, lng: 2.1734 } // Barcelona
   }

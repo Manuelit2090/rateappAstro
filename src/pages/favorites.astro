@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import AppSidebar from '../components/AppSidebar.vue'
+import FavoriteRestaurants from '../components/FavoriteRestaurants.vue'
+---
+
+<BaseLayout title="Mis Favoritos — rateapp" description="Ver y gestionar tus restaurantes favoritos">
+  <div class="flex min-h-screen bg-base-100 text-base-content">
+    
+    <AppSidebar client:load />
+
+    <main class="flex-1 min-w-0">
+      
+      <!-- Header section -->
+      <div class="px-6 md:px-10 py-8 max-w-[1400px] mx-auto">
+        <div class="mb-8">
+          <h1 class="font-display text-4xl md:text-5xl font-bold mb-2">Mis Favoritos</h1>
+          <p class="text-neutral max-w-2xl">Aquí están todos tus restaurantes favoritos. Explora, descubre y comparte tus lugares preferidos.</p>
+        </div>
+
+        <!-- Favorites grid -->
+        <div class="py-8">
+          <FavoriteRestaurants client:load />
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+</BaseLayout>
