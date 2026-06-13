@@ -1,14 +1,7 @@
-/**
- * @file db.ts
- * @description Gestor de conexión a base de datos MySQL usando mysql2/promise.
- * @dependencies mysql2/promise
- */
-
 import mysql from 'mysql2/promise';
 
 /**
- * Pool de conexiones a la base de datos MySQL.
- * Configurado con max 10 conexiones simultáneas.
+ * Pool de conexiones a la base de datos MySQL con soporte SSL para Aiven Cloud.
  * @type {mysql.Pool}
  */
 const pool = mysql.createPool({
@@ -19,6 +12,9 @@ const pool = mysql.createPool({
   database: import.meta.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
+  ssl: {
+    rejectUnauthorized: false // Permite la conexión cifrada requerida por Aiven
+  }
 });
 
 export default pool;

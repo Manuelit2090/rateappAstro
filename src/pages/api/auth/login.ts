@@ -22,11 +22,15 @@ export const POST: APIRoute = async ({ request }) => {
       [email]
     ) as any[];
 
-    const customer = rows[0];
+        const customer = rows[0];
 
-    if (!customer || !(await verifyPassword(password, customer.password_hash))) {
-      return new Response(JSON.stringify({ error: 'Credenciales incorrectas' }), { status: 401 });
+    console.log("--- INTENTO DE LOGIN ---");
+    console.log("Usuario encontrado en BD:", customer);
+    if (customer) {
+      const match = await verifyPassword(password, customer.password_hash);
+      console.log("¿La contraseña coincide?:", match);
     }
+    console.log("------------------------");
 
     if (customer.status !== 'active') {
       return new Response(JSON.stringify({ error: 'Tu cuenta no está activa' }), { status: 403 });
