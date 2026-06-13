@@ -1,3 +1,10 @@
+/**
+ * @file register.ts
+ * @description Endpoint POST para registrar nuevos usuarios con validación y encriptación.
+ * @route POST /api/auth/register
+ * @dependencies src/lib/db, src/lib/auth
+ */
+
 import type { APIRoute } from 'astro';
 import pool from '../../../lib/db';
 import { hashPassword, generateToken } from '../../../lib/auth';
@@ -41,7 +48,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ message: 'Registro exitoso', uuid: customer.uuid }), {
       status: 201,
       headers: {
-        'Set-Cookie': `auth_token=${token}; HttpOnly; Path=/; Max-Age=604800; SameSite=Strict`,
+        'Set-Cookie': `auth_token=${token}; HttpOnly; Secure; Path=/; Max-Age=604800; SameSite=Strict`,
         'Content-Type': 'application/json',
       },
     });

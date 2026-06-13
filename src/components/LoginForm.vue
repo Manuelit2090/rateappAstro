@@ -10,27 +10,45 @@ const password = ref('');
 const error = ref('');
 const loading = ref(false);
 
-async function handleSubmit(event: Event) {
-  event.preventDefault();
+async function handleLogin() {
   error.value = '';
-
+  
   if (!email.value || !password.value) {
-    error.value = 'Completa el email y la contraseña.';
+    error.value = 'Email y contraseña son requeridos';
     return;
   }
 
   loading.value = true;
-  const user = await checkLogin(email.value, password.value);
-  loading.value = false;
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        email: email.value.trim(), 
+        password: password.value 
+      }),
+    });
 
-  if (!user) {
-    error.value = 'Usuario o contraseña incorrectos.';
-    return;
+    const data = await res.json();
+
+    if (!res.ok) {
+      error.value = data.error || 'Error al iniciar sesión';
+      return;
+    }
+
+    // Login exitoso, redirigir al dashboard
+    window.location.href = '/dashboard';
+  } catch (err) {
+    console.error('Error:', err);
+    error.value = 'Error de conexión. Intenta de nuevo.';
+  } finally {
+    loading.value = false;
   }
+}
 
-  const userData = exportDataUser(user);
-  setDataUser(userData);
-  window.location.href = '/dashboard';
+async function handleSubmit(e: Event) {
+  e.preventDefault();
+  await handleLogin();
 }
 </script>
 

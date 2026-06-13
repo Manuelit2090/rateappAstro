@@ -19,8 +19,8 @@ export const POST: APIRoute = async ({ cookies }) => {
   return new Response(JSON.stringify({ message: 'Sesión cerrada' }), {
     status: 200,
     headers: {
-      'Set-Cookie': 'auth_token=; HttpOnly; Path=/; Max-Age=0; SameSite=Strict',
+      'Set-Cookie': 'auth_token=; HttpOnly; Secure; Path=/; Max-Age=0; SameSite=Strict',
       'Content-Type': 'application/json',
     },
-  });
+  });}
 };

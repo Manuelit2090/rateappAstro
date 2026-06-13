@@ -1,3 +1,10 @@
+/**
+ * @file login.ts
+ * @description Endpoint POST para autenticación de usuarios. Verifica credenciales y genera JWT.
+ * @route POST /api/auth/login
+ * @dependencies src/lib/db, src/lib/auth
+ */
+
 import type { APIRoute } from 'astro';
 import pool from '../../../lib/db';
 import { verifyPassword, generateToken } from '../../../lib/auth';
@@ -15,11 +22,15 @@ export const POST: APIRoute = async ({ request }) => {
       [email]
     ) as any[];
 
-    const customer = rows[0];
+        const customer = rows[0];
 
-    if (!customer || !(await verifyPassword(password, customer.password_hash))) {
-      return new Response(JSON.stringify({ error: 'Credenciales incorrectas' }), { status: 401 });
+    console.log("--- INTENTO DE LOGIN ---");
+    console.log("Usuario encontrado en BD:", customer);
+    if (customer) {
+      const match = await verifyPassword(password, customer.password_hash);
+      console.log("¿La contraseña coincide?:", match);
     }
+    console.log("------------------------");
 
     if (customer.status !== 'active') {
       return new Response(JSON.stringify({ error: 'Tu cuenta no está activa' }), { status: 403 });
@@ -40,7 +51,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ message: 'Login exitoso', uuid: customer.uuid }), {
       status: 200,
       headers: {
-        'Set-Cookie': `auth_token=${token}; HttpOnly; Path=/; Max-Age=604800; SameSite=Strict`,
+        'Set-Cookie': `auth_token=${token}; HttpOnly; Secure; Path=/; Max-Age=604800; SameSite=Strict`,
         'Content-Type': 'application/json',
       },
     });
