@@ -4,12 +4,7 @@ import pizzaImg from '../assets/food-pizza.jpg'
 import ramenImg from '../assets/food-ramen.jpg'
 import sushiImg from '../assets/food-sushi.jpg'
 
-export interface Review {
-  author: string;
-  rating: number;
-  date: string;
-  text: string;
-}
+
 
 export interface Restaurant {
   id: number,
@@ -31,7 +26,7 @@ export interface Restaurant {
   // lat,lon used to build the OpenStreetMap embed
   lat: number;
   lon: number;
-  recentReviews: Review[];
+  recentReviews?: [];
 }
 
 export const restaurants: Restaurant[] = [
@@ -54,12 +49,7 @@ export const restaurants: Restaurant[] = [
     email: "hello@emberandoak.com",
     address: "418 Valencia St, San Francisco, CA",
     lat: 37.7656,
-    lon: -122.4218,
-    recentReviews: [
-      { author: "Mia R.", rating: 5, date: "2 days ago", text: "Best smash burger in the city. The oak sauce is unreal." },
-      { author: "Devon K.", rating: 5, date: "1 week ago", text: "Cozy vibe, fast service, perfect crust on the patty." },
-      { author: "Aisha P.", rating: 4, date: "3 weeks ago", text: "Loved it, just wish they took reservations." },
-    ],
+    lon: -122.4218
   },
   {
     id: 2,
@@ -80,10 +70,7 @@ export const restaurants: Restaurant[] = [
     address: "271 Sutter St, San Francisco, CA",
     lat: 37.7894,
     lon: -122.4055,
-    recentReviews: [
-      { author: "Hiro T.", rating: 5, date: "4 days ago", text: "Broth is liquid gold. Worth the wait every time." },
-      { author: "Sam L.", rating: 5, date: "2 weeks ago", text: "Tiny spot, huge flavor. The egg alone is a 10/10." },
-    ],
+    
   },
   
   {
@@ -106,10 +93,7 @@ export const restaurants: Restaurant[] = [
     address: "590 Hayes St, San Francisco, CA",
     lat: 37.7765,
     lon: -122.4275,
-    recentReviews: [
-      { author: "Lucia M.", rating: 5, date: "5 days ago", text: "Margherita reminded me of Naples. Perfect leoparding." },
-      { author: "Theo B.", rating: 4, date: "3 weeks ago", text: "Beautiful room, great wine list, slightly slow on a Friday." },
-    ],
+  
   },
   {
     id: 4,
@@ -130,10 +114,7 @@ export const restaurants: Restaurant[] = [
     address: "1 Sansome St, San Francisco, CA",
     lat: 37.7906,
     lon: -122.4006,
-    recentReviews: [
-      { author: "Noa F.", rating: 5, date: "1 week ago", text: "Transcendent. The toro nigiri made me emotional." },
-      { author: "Rae S.", rating: 5, date: "1 month ago", text: "Worth every dollar. Chef's pacing was perfect." },
-    ],
+   
   },
 ];
 

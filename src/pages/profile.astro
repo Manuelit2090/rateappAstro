@@ -1,0 +1,16 @@
+---
+// src/pages/quests.astro
+import BaseLayout from '../layouts/BaseLayout.astro'
+import AppSidebar from '../components/AppSidebar.vue'
+import ProfilePage from '../components/ProfilePage.vue'
+---
+
+<BaseLayout
+  title="Profile — rateapp"
+  description="Manage your profile and preferences."
+>
+  <div class="flex min-h-screen bg-background text-foreground">
+    <AppSidebar client:load />
+    <ProfilePage client:load />
+  </div>
+</BaseLayout>

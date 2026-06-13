@@ -5,7 +5,7 @@ import { dataUser, loadDataUserFromStorage, setDataUser } from '../store/dataUse
 // lucide-vue-next equivalents
 import {
   Menu, Home, Compass, Trophy, Heart, Bookmark,
-  MessageSquare, Settings, LogOut, Flame, MapPin
+  MessageSquare, Settings, LogOut, Flame, MapPin, CircleUser
 } from 'lucide-vue-next'
 
 const open = ref(true)
@@ -35,7 +35,8 @@ const items = [
   { icon: Home,         label: 'Feed',      to: '/dashboard' },
   { icon: Compass,      label: 'Discover',  to: '/discover' },
   { icon: Trophy,       label: 'Quests',    to: '/quests', badge: 'NEW' },
-  { icon: Heart,        label: 'Favorites', to: '/dashboard' }
+  { icon: Heart,        label: 'Favorites', to: '/favorites' },
+  { icon: CircleUser,   label: 'Profile',    to: '/profile' },
 ]
 
 function isActive(to: string, idx: number) {

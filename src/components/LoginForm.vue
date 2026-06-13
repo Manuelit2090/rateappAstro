@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { checkLogin } from '../modules/auth/checkLogin';
+import { exportDataUser } from '../modules/auth/userUtils';
+import { setDataUser } from '../store/dataUser';
+import { ArrowUp } from 'lucide-vue-next'
 
 const email = ref('');
 const password = ref('');
@@ -101,7 +105,7 @@ async function handleSubmit(e: Event) {
         >
           <span v-if="loading">Ingresando...</span>
           <span v-else>Entrar</span>
-          <span class="material-symbols-outlined">arrow_forward</span>
+         <ArrowUp :size="24"  />
         </button>
       </form>
 

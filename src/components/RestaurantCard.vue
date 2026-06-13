@@ -1,8 +1,41 @@
 <script setup lang="ts">
 import { Star, MapPin, Bookmark, Heart } from 'lucide-vue-next'
+import { computed } from 'vue'
 import type { Restaurant } from '../data/restaurants'
+import { dataUser, setDataUser } from '../store/dataUser'
 
-defineProps<{ r: Restaurant }>()
+const props = defineProps<{ r: Restaurant }>()
+
+const liked = computed({
+  get() {
+    return dataUser.user?.favoriteRestaurant?.includes(props.r.slug) ?? false
+  },
+  set(value: boolean) {
+    if (!dataUser.user) return
+
+    const favorites = [...(dataUser.user.favoriteRestaurant || [])]
+    
+    if (value) {
+      if (!favorites.includes(props.r.slug)) {
+        favorites.push(props.r.slug)
+      }
+    } else {
+      const index = favorites.indexOf(props.r.slug)
+      if (index > -1) {
+        favorites.splice(index, 1)
+      }
+    }
+
+    setDataUser({
+      ...dataUser.user,
+      favoriteRestaurant: favorites
+    })
+  }
+})
+
+function toggleLike() {
+  liked.value = !liked.value
+}
 </script>
 
 <template>
@@ -34,10 +67,16 @@ defineProps<{ r: Restaurant }>()
         <div class="absolute top-4 right-4 flex gap-2">
           <button
             type="button"
-            @click.prevent
-            class="grid place-items-center h-9 w-9 rounded-full bg-base-100/60 backdrop-blur-md border border-base-300/60 hover:bg-secondary hover:text-secondary-content transition-colors"
+            @click.prevent="toggleLike"
+            :class="[
+              'grid place-items-center h-9 w-9 rounded-full backdrop-blur-md border transition-colors',
+              liked
+                ? 'bg-secondary text-secondary-content border-secondary'
+                : 'bg-base-100/60 border-base-300/60 hover:bg-secondary hover:text-secondary-content'
+            ]"
+            :aria-label="liked ? 'Unlike' : 'Like'"
           >
-            <Heart class="h-4 w-4" />
+            <Heart class="h-4 w-4" :class="liked ? 'fill-current' : ''" />
           </button>
          
         </div>
