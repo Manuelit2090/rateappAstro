@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { dataUser, loadDataUserFromStorage } from '../store/dataUser'
+import { dataUser, loadDataUserFromAPI } from '../store/dataUser'
 import { restaurants } from '../data/restaurants'
 import RestaurantCard from './RestaurantCard.vue'
 
@@ -14,8 +14,8 @@ const favoriteRestaurants = computed(() => {
 
 const hasFavorites = computed(() => favoriteRestaurants.value.length > 0)
 
-onMounted(() => {
-  loadDataUserFromStorage()
+onMounted(async () => {
+  await loadDataUserFromAPI()
 })
 </script>
 

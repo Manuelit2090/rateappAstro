@@ -11,10 +11,10 @@ import { hashPassword, generateToken } from '../../../lib/auth';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { full_name, username, email, password } = await request.json();
+    const { name, email, password } = await request.json();
 
-    if (!full_name || !username || !email || !password) {
-      return new Response(JSON.stringify({ error: 'Todos los campos son requeridos' }), { status: 400 });
+    if (!name || !email || !password) {
+      return new Response(JSON.stringify({ error: 'Nombre, email y contraseña son requeridos' }), { status: 400 });
     }
 
     if (password.length < 8) {
@@ -22,30 +22,30 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const [existing] = await pool.execute(
-      'SELECT id FROM customers WHERE email = ? OR username = ?',
-      [email, username]
+      'SELECT id FROM users WHERE email = ?',
+      [email]
     ) as any[];
 
     if (existing.length > 0) {
-      return new Response(JSON.stringify({ error: 'El email o usuario ya está registrado' }), { status: 409 });
+      return new Response(JSON.stringify({ error: 'El email ya está registrado' }), { status: 409 });
     }
 
     const password_hash = await hashPassword(password);
 
     const [result] = await pool.execute(
-      `INSERT INTO customers (full_name, username, email, password_hash, status) VALUES (?, ?, ?, ?, 'active')`,
-      [full_name, username, email, password_hash]
+      `INSERT INTO users (name, email, password, totalPoints, totalReviews) VALUES (?, ?, ?, 0, 0)`,
+      [name, email, password_hash]
     ) as any[];
 
     const [rows] = await pool.execute(
-      'SELECT id, uuid, email FROM customers WHERE id = ?',
+      'SELECT id, email, name FROM users WHERE id = ?',
       [result.insertId]
     ) as any[];
 
     const customer = rows[0];
-    const token = generateToken({ id: customer.id, uuid: customer.uuid, email: customer.email, role: 'customer' });
+    const token = generateToken({ id: customer.id, email: customer.email, role: 'customer' });
 
-    return new Response(JSON.stringify({ message: 'Registro exitoso', uuid: customer.uuid }), {
+    return new Response(JSON.stringify({ message: 'Registro exitoso', id: customer.id }), {
       status: 201,
       headers: {
         'Set-Cookie': `auth_token=${token}; HttpOnly; Secure; Path=/; Max-Age=604800; SameSite=Strict`,

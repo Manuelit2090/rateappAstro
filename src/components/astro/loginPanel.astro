@@ -1,11 +1,22 @@
 ---
-import LoginForm from '../LoginForm.vue';
+import LoginForm from "../LoginForm.vue";
+import {Image} from "astro:assets";
 ---
 
-<section class="bg-base-100 text-base-content min-h-screen grid grid-cols-1 lg:grid-cols-2 overflow-hidden relative">
+<section
+  class="bg-base-100 text-base-content min-h-screen grid grid-cols-1 lg:grid-cols-2 overflow-hidden relative"
+>
   <!-- Elementos Ambientales Decorativos (Orbes de Neón traseros) -->
-  <div class="fixed top-[-15%] right-[-15%] w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10 animate-pulse" style="animation-duration: 4s;"></div>
-  <div class="fixed bottom-[-15%] left-[-15%] w-96 h-96 bg-secondary/15 rounded-full blur-3xl -z-10 animate-pulse" style="animation-duration: 5s;"></div>
+  <div
+    class="fixed top-[-15%] right-[-15%] w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10 animate-pulse"
+    style="animation-duration: 4s;"
+  >
+  </div>
+  <div
+    class="fixed bottom-[-15%] left-[-15%] w-96 h-96 bg-secondary/15 rounded-full blur-3xl -z-10 animate-pulse"
+    style="animation-duration: 5s;"
+  >
+  </div>
 
   <!-- Detalles Tecnológicos en Esquinas Globales -->
   <!-- Esquina Superior Izquierda -->
@@ -29,28 +40,51 @@ import LoginForm from '../LoginForm.vue';
   </div>
 
   <!-- COLUMNA IZQUIERDA: Logo y Fondo Futurista -->
-  <div class="relative hidden lg:flex flex-col items-center justify-center border-r border-base-content/10 bg-neutral/20 backdrop-blur-sm overflow-hidden select-none">
+  <div
+    class="relative hidden lg:flex flex-col items-center justify-center border-r border-base-content/10 bg-neutral/20 backdrop-blur-sm overflow-hidden select-none"
+  >
     <!-- Patrón de malla cibernética de fondo -->
-    <div class="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-    
+    <div
+      class="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px]"
+    >
+    </div>
+
     <!-- Orbe de neón interno para la columna del logo -->
-    <div class="absolute w-64 h-64 bg-primary/20 rounded-full blur-2xl animate-pulse"></div>
+    <div
+      class="absolute w-64 h-64 bg-primary/20 rounded-full blur-2xl animate-pulse"
+    >
+    </div>
 
     <!-- Contenedor del Logotipo (Placeholder Futurista) -->
     <div class="relative z-10 flex flex-col items-center gap-6 p-8 text-center">
       <!-- Escudo/Contenedor del Logo -->
-      <div class="relative w-40 h-40 flex items-center justify-center border border-primary/40 rounded-xl bg-base-100/50 backdrop-blur-md shadow-[0_0_50px_rgba(var(--p),0.1)] before:absolute before:inset-0 before:border-2 before:border-dashed before:border-primary/20 before:rounded-xl before:animate-[spin_40s_linear_infinite]">
+      <div
+        class="relative w-40 h-40 flex items-center justify-center border border-primary/40 rounded-xl bg-base-100/50 backdrop-blur-md shadow-[0_0_50px_rgba(var(--p),0.1)] before:absolute before:inset-0 before:border-2 before:border-dashed before:border-primary/20 before:rounded-xl before:animate-[spin_40s_linear_infinite]"
+      >
         <!-- Glifo Tecnológico Temporal -->
-        <span class="text-5xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-tr from-primary to-secondary animate-bounce" style="animation-duration: 3s;">
-          RP
+        <span
+          class="text-5xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-tr from-primary to-secondary animate-bounce"
+          style="animation-duration: 3s;"
+        >
+          <Image
+            src="/avatar-user.jpg"
+            alt="Avatar del usuario"
+            width={120}
+            height={120}
+          />
         </span>
         <!-- Líneas de escaneo estéticas -->
-        <div class="absolute inset-x-0 h-[2px] bg-primary/30 top-0 animate-[scan_2s_linear_infinite]"></div>
+        <div
+          class="absolute inset-x-0 h-[2px] bg-primary/30 top-0 animate-[scan_2s_linear_infinite]"
+        >
+        </div>
       </div>
-      
+
       <!-- Textos del Proyecto -->
       <div class="space-y-2">
-        <h1 class="text-3xl font-black tracking-[0.2em] uppercase text-base-content">
+        <h1
+          class="text-3xl font-black tracking-[0.2em] uppercase text-base-content"
+        >
           Rate<span class="text-primary">App</span>
         </h1>
         <p class="text-xs tracking-widest text-base-content/60 font-mono">
@@ -60,16 +94,22 @@ import LoginForm from '../LoginForm.vue';
     </div>
 
     <!-- Líneas de datos simuladas en la parte inferior izquierda -->
-    <div class="absolute bottom-8 left-8 font-mono text-[10px] text-base-content/30 space-y-1">
+    <div
+      class="absolute bottom-8 left-8 font-mono text-[10px] text-base-content/30 space-y-1"
+    >
       <p>SYS_STATUS: ACTIVE</p>
       <p>NETWORK: SECURE_CORE_9</p>
     </div>
   </div>
 
   <!-- COLUMNA DERECHA: Formulario de Login -->
-  <main class="relative flex flex-col items-center justify-center p-6 sm:p-12 z-10">
+  <main
+    class="relative flex flex-col items-center justify-center p-6 sm:p-12 z-10"
+  >
     <!-- Contenedor del Formulario -->
-    <div class="w-full max-w-sm bg-base-100/40 lg:bg-transparent p-6 sm:p-0 rounded-2xl border border-base-content/5 lg:border-none backdrop-blur-md lg:backdrop-blur-none shadow-2xl lg:shadow-none">
+    <div
+      class="w-full max-w-sm bg-base-100/40 lg:bg-transparent p-6 sm:p-0 rounded-2xl border border-base-content/5 lg:border-none backdrop-blur-md lg:backdrop-blur-none shadow-2xl lg:shadow-none"
+    >
       <!-- Encabezado visible solo en móviles/tablets (cuando la col izquierda se oculta) -->
       <div class="lg:hidden text-center mb-8">
         <h1 class="text-2xl font-black tracking-widest uppercase">
@@ -81,14 +121,20 @@ import LoginForm from '../LoginForm.vue';
     </div>
 
     <!-- Footer integrado en la columna derecha -->
-    <footer class="w-full text-center text-[10px] sm:text-xs absolute bottom-6 left-0 px-6 font-mono">
+    <footer
+      class="w-full text-center text-[10px] sm:text-xs absolute bottom-6 left-0 px-6 font-mono"
+    >
       <p class="font-medium tracking-widest text-base-content/40">
         © 2026 GASTROLINK • CYBER-GASTRONOMY COLLECTIVE
       </p>
       <div class="flex gap-4 justify-center mt-2 text-base-content/50">
-        <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
+        <a href="#" class="hover:text-primary transition-colors"
+          >Privacy Policy</a
+        >
         <span>•</span>
-        <a href="#" class="hover:text-primary transition-colors">Terms of Service</a>
+        <a href="#" class="hover:text-primary transition-colors"
+          >Terms of Service</a
+        >
       </div>
     </footer>
   </main>
@@ -97,9 +143,19 @@ import LoginForm from '../LoginForm.vue';
 <style>
   /* Animación para la línea de escaneo del logo placeholder */
   @keyframes scan {
-    0% { top: 0%; opacity: 0; }
-    5% { opacity: 1; }
-    95% { opacity: 1; }
-    100% { top: 100%; opacity: 0; }
+    0% {
+      top: 0%;
+      opacity: 0;
+    }
+    5% {
+      opacity: 1;
+    }
+    95% {
+      opacity: 1;
+    }
+    100% {
+      top: 100%;
+      opacity: 0;
+    }
   }
 </style>

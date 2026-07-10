@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { Sparkles, TrendingUp, Award } from 'lucide-vue-next'
-import { dataUser, loadDataUserFromStorage } from '../store/dataUser';
+import { dataUser, loadDataUserFromAPI } from '../store/dataUser';
 
 const stats = [
   { icon: Sparkles,   value: 0, label: 'Points',  highlight: true },
@@ -11,15 +11,15 @@ const stats = [
 
 const avatarSrc = '/avatar-user.jpg' // Image served from /public/
 
-onMounted(() => {
-  loadDataUserFromStorage();
+onMounted(async () => {
+  await loadDataUserFromAPI();
   stats[0].value = dataUser.user?.totalPoints ?? 0;
-  stats[1].value = dataUser.user.totalReviews;
+  stats[1].value = dataUser.user?.totalReviews ?? 0;
 })
 </script>
 
 <template>
-  <div class="relative overflow-hidden rounded-3xl border border-base-300/60 bg-gradient-to-br from-base-100 to-base-200 p-6 md:p-8">
+  <div class="relative overflow-hidden rounded-3xl border border-neutral-600/60 bg-gradient-to-br from-base-100 to-base-200 p-6 md:p-8  shadow-[0_0_30px_-8px_var(--p)]">
     <!-- Decorative blobs -->
     <div class="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
     <div class="absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-secondary/10 blur-3xl" />
@@ -41,7 +41,7 @@ onMounted(() => {
           </span>
         </div>
         <div>
-          <p class="text-xs uppercase tracking-[0.2em] text-neutral">Welcome back</p>
+          <p class="text-xs uppercase tracking-[0.2em] text-accent-content/85 ">Welcome back</p>
           <h1 class="font-display text-2xl md:text-3xl font-bold">{{ dataUser.user?.name ?? 'User' }}</h1>
           <p class="text-sm text-secondary mt-0.5">Foodie · Tier Gold · 142 reviews</p>
         </div>

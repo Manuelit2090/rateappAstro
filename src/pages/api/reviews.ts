@@ -40,7 +40,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     // Verificar que el cliente existe
     const [customers] = await pool.execute(
-      'SELECT id FROM customers WHERE id = ?',
+      'SELECT id FROM users WHERE id = ?',
       [payload.id]
     ) as any[];
 
@@ -84,7 +84,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     // Otorgar puntos al cliente (10 puntos por reseña)
     await pool.execute(
-      'UPDATE customers SET total_points = total_points + 10 WHERE id = ?',
+      'UPDATE users SET totalPoints = totalPoints + 10 WHERE id = ?',
       [payload.id]
     );
 
@@ -115,10 +115,10 @@ export const GET: APIRoute = async ({ request }) => {
 
     const [reviews] = await pool.execute(
       `SELECT r.id, r.rating, r.title, r.content, r.created_at, 
-              c.full_name as author, c.avatar_url
+              c.name as author
        FROM reviews r
-       JOIN customers c ON r.customer_id = c.id
-       WHERE r.business_id = ? AND r.deleted_at IS NULL
+       JOIN users c ON r.customer_id = c.id
+       WHERE r.business_id = ?
        ORDER BY r.created_at DESC`,
       [businessId]
     ) as any[];

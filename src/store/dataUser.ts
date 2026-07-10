@@ -71,7 +71,6 @@ export function logoutUser() {
  * @deprecated Mantener solo para compatibilidad. Usar loadDataUserFromAPI() en su lugar.
  */
 export function loadDataUserFromStorage() {
-  // Esta función ya no hace nada; las cookies se manejan automáticamente
-  console.warn('loadDataUserFromStorage() está deprecada. Usar loadDataUserFromAPI() en su lugar.');
+  return loadDataUserFromAPI();
 }
 

@@ -45,7 +45,7 @@ onMounted(async () => {
   <div>
     <div v-if="loading" class="text-sm text-neutral">Calculando distancia...</div>
     <div v-else-if="error" class="text-sm text-error">{{ error }}</div>
-    <div v-else class="text-sm text-neutral">
+    <div v-else class="text-sm text-accent-content/85 l">
       Distancia: <span class="font-semibold text-primary">{{ distanceTotal.toFixed(2) }} km</span>
     </div>
   </div>

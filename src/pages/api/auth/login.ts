@@ -7,7 +7,7 @@
 
 import type { APIRoute } from 'astro';
 import pool from '../../../lib/db';
-import { verifyPassword, generateToken } from '../../../lib/auth';
+import { verifyPassword, generateToken, hashPassword } from '../../../lib/auth';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -18,37 +18,39 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const [rows] = await pool.execute(
-      'SELECT id, uuid, email, password_hash, status FROM customers WHERE email = ? AND deleted_at IS NULL',
+      'SELECT id, name, email, password FROM users WHERE email = ?',
       [email]
     ) as any[];
 
-        const customer = rows[0];
+    const customer = rows[0];
 
-    console.log("--- INTENTO DE LOGIN ---");
-    console.log("Usuario encontrado en BD:", customer);
-    if (customer) {
-      const match = await verifyPassword(password, customer.password_hash);
-      console.log("¿La contraseña coincide?:", match);
-    }
-    console.log("------------------------");
-
-    if (customer.status !== 'active') {
-      return new Response(JSON.stringify({ error: 'Tu cuenta no está activa' }), { status: 403 });
+    if (!customer) {
+      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), { status: 401 });
     }
 
-    const token = generateToken({ id: customer.id, uuid: customer.uuid, email: customer.email, role: 'customer' });
+    console.log('--- INTENTO DE LOGIN ---');
+    console.log('Usuario encontrado en BD:', customer);
+    const match = await verifyPassword(password, customer.password);
+    console.log('¿La contraseña coincide?:', match);
+    console.log('------------------------');
 
-    await pool.execute(
-      `INSERT INTO customer_sessions (customer_id, token_hash, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 7 DAY))`,
-      [customer.id, token]
-    );
+    if (!match) {
+      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), { status: 401 });
+    }
 
-    await pool.execute(
-      'UPDATE customers SET last_login_at = NOW() WHERE id = ?',
-      [customer.id]
-    );
+    const isBcryptPassword = typeof customer.password === 'string' && customer.password.startsWith('$2');
 
-    return new Response(JSON.stringify({ message: 'Login exitoso', uuid: customer.uuid }), {
+    if (!isBcryptPassword) {
+      const newHash = await hashPassword(password);
+      await pool.execute(
+        'UPDATE users SET password = ? WHERE id = ?',
+        [newHash, customer.id]
+      );
+    }
+
+    const token = generateToken({ id: customer.id, email: customer.email, role: 'customer' });
+
+    return new Response(JSON.stringify({ message: 'Login exitoso', id: customer.id }), {
       status: 200,
       headers: {
         'Set-Cookie': `auth_token=${token}; HttpOnly; Secure; Path=/; Max-Age=604800; SameSite=Strict`,

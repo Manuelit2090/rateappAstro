@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { checkLogin } from '../modules/auth/checkLogin';
-import { exportDataUser } from '../modules/auth/userUtils';
-import { setDataUser } from '../store/dataUser';
+import { loadDataUserFromAPI } from '../store/dataUser';
 import { ArrowUp } from 'lucide-vue-next'
 
 const email = ref('');
@@ -36,6 +34,7 @@ async function handleLogin() {
       return;
     }
 
+    await loadDataUserFromAPI();
     // Login exitoso, redirigir al dashboard
     window.location.href = '/dashboard';
   } catch (err) {
@@ -111,23 +110,9 @@ async function handleSubmit(e: Event) {
 
       <p v-if="error" class="text-sm text-error mt-4">{{ error }}</p>
 
-      <div class="divider my-8 text-xs text-base-content/50">O continúa con</div>
+  
 
-      <div class="grid grid-cols-2 gap-4">
-        <button class="btn btn-outline border-base-300 hover:bg-base-300/50 rounded-full flex items-center gap-2">
-          <img
-            src="https://via.placeholder.com/20"
-            alt="Google"
-            class="w-5 h-5"
-          />
-          Google
-        </button>
-
-        <button class="btn btn-neutral border-base-300 hover:bg-neutral/80 rounded-full flex items-center gap-2">
-          <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">ios</span>
-          Apple
-        </button>
-      </div>
+      
 
       <div class="text-center mt-8 text-sm">
         ¿No tienes cuenta?

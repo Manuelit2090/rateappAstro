@@ -22,7 +22,7 @@ export const GET: APIRoute = async ({ cookies }) => {
     }
 
     const [rows] = await pool.execute(
-      'SELECT total_points FROM customers WHERE id = ?',
+      'SELECT totalPoints FROM users WHERE id = ?',
       [payload.id]
     ) as any[];
 
@@ -34,7 +34,7 @@ export const GET: APIRoute = async ({ cookies }) => {
     }
 
     return new Response(
-      JSON.stringify({ points: rows[0].total_points }),
+      JSON.stringify({ points: rows[0].totalPoints }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {

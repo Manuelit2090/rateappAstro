@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Botones interactivos del hero de la página de detalle
 // (Heart, Bookmark, Share2) — separados en Vue porque necesitan estado
-import { ref, onMounted, computed } from 'vue'
+import { computed } from 'vue'
 import { Heart, Bookmark, Share2 } from 'lucide-vue-next'
 import { dataUser, setDataUser } from '../store/dataUser'
 
@@ -11,40 +11,36 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const saved = ref(false)
-
-const liked = computed({
-  get() {
-    return dataUser.user?.favoriteRestaurant?.includes(props.slug) ?? false
-  },
-  set(value: boolean) {
-    if (!dataUser.user) return
-
-    const favorites = [...(dataUser.user.favoriteRestaurant || [])]
-    
-    if (value) {
-      // Agregar a favoritos si no está
-      if (!favorites.includes(props.slug)) {
-        favorites.push(props.slug)
-      }
-    } else {
-      // Remover de favoritos
-      const index = favorites.indexOf(props.slug)
-      if (index > -1) {
-        favorites.splice(index, 1)
-      }
-    }
-
-    // Actualizar usuario con nuevos favoritos
-    setDataUser({
-      ...dataUser.user,
-      favoriteRestaurant: favorites
-    })
-  }
+const liked = computed(() => {
+  return dataUser.user?.favoriteRestaurant?.includes(props.slug) ?? false
 })
 
-function toggleLike() {
-  liked.value = !liked.value
+async function toggleLike() {
+  if (!dataUser.user) return
+
+  try {
+    const response = await fetch('/api/auth/favorite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slug: props.slug }),
+    })
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => null)
+      console.error('Error guardando favorito:', error?.error || response.status)
+      return
+    }
+
+    const data = await response.json()
+    const favorites = data.favorites || []
+
+    setDataUser({
+      ...dataUser.user,
+      favoriteRestaurant: favorites,
+    })
+  } catch (error) {
+    console.error('Error al actualizar favorito:', error)
+  }
 }
 
 function share() {

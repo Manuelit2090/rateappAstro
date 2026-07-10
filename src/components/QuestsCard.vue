@@ -9,7 +9,7 @@ const quests = [
 </script>
 
 <template>
-  <div class="rounded-3xl border border-base-300/60 bg-base-100/60 p-6 md:p-7">
+  <div class="rounded-3xl border border-neutral-600/60 bg-base-100/60 p-6 md:p-7">
     <!-- Card header -->
     <div class="flex items-center justify-between mb-5">
       <div class="flex items-center gap-3">

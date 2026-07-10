@@ -6,35 +6,34 @@ import { dataUser, setDataUser } from '../store/dataUser'
 
 const props = defineProps<{ r: Restaurant }>()
 
-const liked = computed({
-  get() {
-    return dataUser.user?.favoriteRestaurant?.includes(props.r.slug) ?? false
-  },
-  set(value: boolean) {
-    if (!dataUser.user) return
-
-    const favorites = [...(dataUser.user.favoriteRestaurant || [])]
-    
-    if (value) {
-      if (!favorites.includes(props.r.slug)) {
-        favorites.push(props.r.slug)
-      }
-    } else {
-      const index = favorites.indexOf(props.r.slug)
-      if (index > -1) {
-        favorites.splice(index, 1)
-      }
-    }
-
-    setDataUser({
-      ...dataUser.user,
-      favoriteRestaurant: favorites
-    })
-  }
+const liked = computed(() => {
+  return dataUser.user?.favoriteRestaurant?.includes(props.r.slug) ?? false
 })
 
-function toggleLike() {
-  liked.value = !liked.value
+async function toggleLike() {
+  if (!dataUser.user) return
+
+  try {
+    const response = await fetch('/api/auth/favorite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slug: props.r.slug }),
+    })
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => null)
+      console.error('Error guardando favorito:', error?.error || response.status)
+      return
+    }
+
+    const data = await response.json()
+    setDataUser({
+      ...dataUser.user,
+      favoriteRestaurant: data.favorites || [],
+    })
+  } catch (error) {
+    console.error('Error al actualizar favorito:', error)
+  }
 }
 </script>
 

@@ -22,9 +22,9 @@ export const GET: APIRoute = async ({ params }) => {
     // Obtener reseñas recientes
     const [reviews] = await pool.execute(
       `SELECT r.id, r.rating, r.title, r.content, r.created_at, 
-              c.full_name as author, c.avatar_url
+              c.name as author
        FROM reviews r
-       JOIN customers c ON r.customer_id = c.id
+       JOIN users c ON r.customer_id = c.id
        WHERE r.business_id = ? AND r.deleted_at IS NULL
        ORDER BY r.created_at DESC
        LIMIT 10`,

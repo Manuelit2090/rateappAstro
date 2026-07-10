@@ -5,11 +5,7 @@
     <div v-if="success" class="success-msg">{{ success }}</div>
     <div class="form-group">
       <label>Nombre completo</label>
-      <input v-model="form.full_name" type="text" placeholder="Juan Pérez" />
-    </div>
-    <div class="form-group">
-      <label>Usuario</label>
-      <input v-model="form.username" type="text" placeholder="juanperez" />
+      <input v-model="form.name" type="text" placeholder="Juan Pérez" />
     </div>
     <div class="form-group">
       <label>Email</label>
@@ -30,8 +26,7 @@
 import { ref, reactive } from 'vue';
 
 const form = reactive({
-  full_name: '',
-  username: '',
+  name: '',
   email: '',
   password: ''
 });

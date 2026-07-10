@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { storeUbicacion as ubication } from './UI/storeUbication.ts';
-import { dataUser, loadDataUserFromStorage, setDataUser } from '../store/dataUser';
+import { dataUser, loadDataUserFromAPI, logoutUser, setDataUser } from '../store/dataUser';
 // lucide-vue-next equivalents
 import {
   Menu, Home, Compass, Trophy, Heart, Bookmark,
@@ -12,7 +12,7 @@ const open = ref(true)
 const routePath = ref('/')
 
 onMounted(async () => {
-  loadDataUserFromStorage();
+  await loadDataUserFromAPI();
   if (typeof window !== 'undefined') {
     routePath.value = window.location.pathname
     await ubication.detectarUbicacion();
@@ -79,7 +79,7 @@ function isActive(to: string, idx: number) {
           'group relative w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm font-medium transition-all',
           isActive(it.to, idx)
             ? 'bg-primary text-primary-content shadow-[0_0_24px_-4px_var(--p)]'
-            : 'text-neutral hover:text-base-content hover:bg-base-200'
+            : 'text-neutral-content hover:text-base-content hover:bg-base-200'
         ]"
       >
         <component :is="it.icon" class="h-5 w-5 shrink-0" />
@@ -100,19 +100,19 @@ function isActive(to: string, idx: number) {
     <div class="px-3 py-4 border-t border-base-300/60 space-y-3">
       <div class="rounded-2xl border border-base-200 bg-base-200/60 p-3 text-sm text-neutral">
         <div class="flex items-center gap-2">
-          <MapPin class="h-4 w-4 shrink-0 text-primary" />
-          <span class="font-semibold">Ubicación</span>
+          <MapPin class="h-4 w-4 shrink-0 text-neutral-content" />
+          <span class="font-semibold text-accent-content/85 ">Ubicación</span>
         </div>
         <p class="mt-2 text-xs leading-5 text-base-content/80">
           {{ ubication.ciudad }}
         </p>
       </div>
 
-      <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral hover:text-base-content hover:bg-base-200 transition-colors">
+      <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral-content hover:text-base-content hover:bg-base-200 transition-colors">
         <Settings class="h-5 w-5" />
         <span v-if="open">Settings</span>
       </button>
-      <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral hover:text-base-content hover:bg-base-200 transition-colors" @click="dataUser.logoutUser()">
+      <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral-content hover:text-base-content hover:bg-base-200 transition-colors" @click="logoutUser()">
         <LogOut class="h-5 w-5" />
         <span v-if="open">Sign out</span>
       </button>

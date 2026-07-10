@@ -35,15 +35,16 @@ export async function checkLogin(email: string, password: string): Promise<User 
     
     // Mapear respuesta de API al tipo User
     const user: User = {
-      id: userData.user.uuid,
-      name: userData.user.full_name,
+      id: String(userData.user.id),
+      name: userData.user.name,
       email: userData.user.email,
       password: '', // No almacenar contraseña en cliente
-      totalPoints: 0,
-      totalReviews: 0,
-      reviews: [],
-      favoriteRestaurant: [],
-      cuponsBuy: [],
+      totalPoints: userData.user.totalPoints || 0,
+      totalReviews: userData.user.totalReviews || 0,
+      reviews: userData.user.reviews || [],
+      favoriteRestaurant:
+        userData.user.favoriteRestaurant || userData.user.favoriteRestaurants || [],
+      cuponsBuy: userData.user.cuponsBuy || userData.user.couponsBuy || [],
       currentLocation: { lat: 0, lng: 0 }
     };
 

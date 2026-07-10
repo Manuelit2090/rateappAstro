@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { onMounted, computed, ref } from 'vue';
 import { storeUbicacion as ubication } from './UI/storeUbication.ts';
-import { dataUser, loadDataUserFromStorage, logoutUser } from '../store/dataUser';
+import { dataUser, loadDataUserFromAPI, logoutUser } from '../store/dataUser';
 
 // Declaramos la variable reactiva con un estado inicial de carga
 const ciudad = ref<string>('Cargando ubicación...');
+const routePath = ref('');
 
 onMounted(async () => {
-  loadDataUserFromStorage();
-  
-    if (typeof window !== 'undefined') {
-      routePath.value = window.location.pathname
-      await ubication.detectarUbicacion();
-    }
+  await loadDataUserFromAPI();
+
+  if (typeof window !== 'undefined') {
+    routePath.value = window.location.pathname
+    await ubication.detectarUbicacion();
+  }
 });
 
 // Obtiene la inicial del usuario para el avatar en caso de no tener foto

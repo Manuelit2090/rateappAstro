@@ -80,24 +80,24 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
 
     // Obtener puntos del cliente
-    const [customers] = await pool.execute(
-      'SELECT total_points FROM customers WHERE id = ? AND deleted_at IS NULL',
+    const [users] = await pool.execute(
+      'SELECT totalPoints FROM users WHERE id = ?',
       [payload.id]
     ) as any[];
 
-    if (!customers.length) {
+    if (!users.length) {
       return new Response(
         JSON.stringify({ error: 'Usuario no encontrado' }),
         { status: 404 }
       );
     }
 
-    const customer = customers[0];
+    const customer = users[0];
 
-    if (customer.total_points < coupon.points_required) {
+    if (customer.totalPoints < coupon.points_required) {
       return new Response(
         JSON.stringify({ 
-          error: `Puntos insuficientes. Necesitas ${coupon.points_required}, tienes ${customer.total_points}` 
+          error: `Puntos insuficientes. Necesitas ${coupon.points_required}, tienes ${customer.totalPoints}` 
         }),
         { status: 402 }
       );
@@ -111,7 +111,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
       // Deducir puntos
       await connection.execute(
-        'UPDATE customers SET total_points = total_points - ? WHERE id = ?',
+        'UPDATE users SET totalPoints = totalPoints - ? WHERE id = ?',
         [coupon.points_required, payload.id]
       );
 

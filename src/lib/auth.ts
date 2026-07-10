@@ -14,7 +14,6 @@ const SECRET = import.meta.env.JWT_SECRET;
  */
 type TokenPayload = {
   id: number;
-  uuid: string;
   email: string;
   role: 'customer' | 'owner';
 };
@@ -29,18 +28,27 @@ export async function hashPassword(password: string): Promise<string> {
 }
 
 /**
- * Verifica que una contraseña coincida con su hash bcrypt.
+ * Verifica que una contraseña coincida con el valor almacenado.
+ * Acepta hashes bcrypt y contraseñas antiguas almacenadas en texto plano.
  * @param password - Contraseña en texto plano a verificar
- * @param hash - Hash bcrypt almacenado
+ * @param hash - Valor almacenado en la base de datos
  * @returns Promise que resuelve a true si coinciden, false si no
  */
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  return bcrypt.compare(password, hash);
+  if (!hash) {
+    return false;
+  }
+
+  if (hash.startsWith('$2')) {
+    return bcrypt.compare(password, hash);
+  }
+
+  return password === hash;
 }
 
 /**
  * Genera un token JWT con expiración de 7 días.
- * @param payload - Objeto con datos del usuario (id, uuid, email, role)
+ * @param payload - Objeto con datos del usuario (id, email, role)
  * @returns String con el token JWT firmado
  */
 export function generateToken(payload: TokenPayload): string {
@@ -54,7 +62,7 @@ export function generateToken(payload: TokenPayload): string {
  */
 export function verifyToken(token: string) {
   try {
-    return jwt.verify(token, SECRET) as { id: number; uuid: string; email: string; role: string; };
+    return jwt.verify(token, SECRET) as { id: number; email: string; role: string; };
   } catch {
     return null;
   }
