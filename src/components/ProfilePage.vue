@@ -34,8 +34,8 @@ const userInitial = computed(() => {
         <div class="card-body relative pt-0 flex flex-col md:flex-row gap-6 items-center md:items-end -mt-16">
           <!-- Avatar de DaisyUI -->
           <div class="avatar placeholder">
-            <div class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 bg-neutral text-neutral-content text-3xl font-bold">
-              <span>{{ userInitial }}</span>
+            <div class=" w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 bg-neutral text-base-content text-6xl font-bold">
+              <span class="w-full h-full flex justify-center items-center">{{ userInitial }}</span>
             </div>
           </div>
           
