@@ -88,7 +88,7 @@ export const GET: APIRoute = async ({ cookies }) => {
 
     const [favorites] = await pool.execute(
       `SELECT b.* FROM customer_favorites cf
-       JOIN businesses b ON cf.business_id = b.id
+       JOIN restaurants b ON cf.business_id = b.id
        WHERE cf.customer_id = ? AND b.deleted_at IS NULL`,
       [payload.id]
     ) as any[];

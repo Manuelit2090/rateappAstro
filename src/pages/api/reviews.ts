@@ -78,7 +78,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     ) as any[];
 
     await pool.execute(
-      'UPDATE businesses SET avg_rating = ? WHERE id = ?',
+      'UPDATE restaurants SET avg_rating = ? WHERE id = ?',
       [avgResult[0].avg_rating, business_id]
     );
 

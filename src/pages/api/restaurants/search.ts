@@ -13,11 +13,11 @@ export const GET: APIRoute = async ({ request }) => {
     const url = new URL(request.url);
     const q = url.searchParams.get('q') || '';
     const category = url.searchParams.get('category');
-    const page = parseInt(url.searchParams.get('page') || '1');
+    const page = parseInt(url.searchParams.get('page') || '1', 10) || 1;
     const limit = 20;
     const offset = (page - 1) * limit;
 
-    let query = 'SELECT * FROM businesses WHERE deleted_at IS NULL';
+    let query = 'SELECT * FROM restaurants WHERE 1=1';
     const params: any[] = [];
 
     if (q) {
@@ -30,8 +30,9 @@ export const GET: APIRoute = async ({ request }) => {
       params.push(category);
     }
 
-    query += ' ORDER BY avg_rating DESC LIMIT ? OFFSET ?';
-    params.push(limit, offset);
+    // Al concatenar limit y offset directamente como números enteros seguros,
+    // evitamos que el prepared statement de MySQL falle por tipos de datos.
+    query += ` ORDER BY rating DESC LIMIT ${limit} OFFSET ${offset}`;
 
     const [restaurants] = await pool.execute(query, params) as any[];
 

@@ -24,7 +24,7 @@ export const GET: APIRoute = async ({ request }) => {
         (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * 
         cos(radians(longitude) - radians(?)) + sin(radians(?)) * 
         sin(radians(latitude)))) AS distance
-       FROM businesses 
+       FROM restaurants 
        WHERE deleted_at IS NULL
        HAVING distance <= ?
        ORDER BY distance ASC
