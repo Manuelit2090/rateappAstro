@@ -32,9 +32,11 @@ export const POST: APIRoute = async ({ request }) => {
 
     const password_hash = await hashPassword(password);
 
+    const recovery_code = Math.floor(100000 + Math.random() * 900000).toString();
+
     const [result] = await pool.execute(
-      `INSERT INTO users (name, email, password, totalPoints, totalReviews) VALUES (?, ?, ?, 0, 0)`,
-      [name, email, password_hash]
+      `INSERT INTO users (name, email, password, totalPoints, totalReviews, recovery_code) VALUES (?, ?, ?, 0, 0, ?)`,
+      [name, email, password_hash, recovery_code]
     ) as any[];
 
     const [rows] = await pool.execute(
