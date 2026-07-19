@@ -5,9 +5,9 @@ import { dataUser, loadDataUserFromAPI } from '../store/dataUser';
 import Avatar from './UI/Avatar.vue'
 
 const stats = [
-  { icon: Sparkles, value: 0, label: 'Points', highlight: true },
-  { icon: TrendingUp, value: '0', label: 'Rank', highlight: false },
-  { icon: Award, value: '18', label: 'Badges', highlight: false },
+  { icon: Sparkles, value: 0, label: 'Puntos', highlight: true },
+  { icon: TrendingUp, value: '0', label: 'Reseñas', highlight: false },
+  { icon: Award, value: '0', label: 'Insignias', highlight: false },
 ]
 
 const avatarSrc = '/avatar-user.jpg' // Image served from /public/
@@ -31,10 +31,9 @@ onMounted(async () => {
       <!-- Avatar + name -->
       <div class="flex items-center gap-4">
         <Avatar />
-        <div>
-          <p class="text-xs uppercase tracking-[0.2em] text-accent-content/85 ">Welcome back</p>
-          <h1 class="font-display text-2xl md:text-3xl font-bold">{{ dataUser.user?.name ?? 'User' }}</h1>
-          <p class="text-sm text-secondary mt-0.5">Foodie · Tier Gold · 142 reviews</p>
+        <div class="flex flex-col gap-2">
+          <p class="text-xs uppercase tracking-[0.2em] text-accent-content/85 ">Bienvenido de vuelta</p>
+          <h1 class="font-display text-6xl md:text-3xl font-bold ">{{ dataUser.user?.name ?? 'User' }}</h1>
         </div>
       </div>
     </div>

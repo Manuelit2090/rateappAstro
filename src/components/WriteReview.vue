@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Star } from 'lucide-vue-next'
 import type { Review, ReviewItem } from '../../data/reviews'
+import { dataUser, loadDataUserFromAPI } from '../store/dataUser';
+
 
 const props = defineProps<{
   restaurantSlug: string
@@ -20,7 +22,10 @@ const handleStarClick = (star: number) => {
 }
 
 const isValid = () => rating.value > 0 && reviewText.value.trim() !== ''
-
+onMounted(async () => {
+  await loadDataUserFromAPI();
+ 
+})
 const handleSubmit = async () => {
   if (!isValid()) return
   isSubmitting.value = true
@@ -30,7 +35,7 @@ const handleSubmit = async () => {
       reviewSlug: props.restaurantSlug,
       reviewStar: rating.value,
       reviewText: reviewText.value.trim(),
-      reviewUser: 'Admin',           // reemplazar por el usuario autenticado
+      reviewUser: dataUser.user?.id ?? 0,           // reemplazar por el usuario autenticado
       reviewDate: new Date(),
       reviewItem: [],                // opcional: implementar selector de items
     }
@@ -43,6 +48,7 @@ const handleSubmit = async () => {
     isSubmitting.value = false
   }
 }
+
 </script>
 
 <template>

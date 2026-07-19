@@ -13,8 +13,9 @@
  *   1. `reviewUser` guarda el NOMBRE del usuario (no su id), así que hago un SELECT a `users`
  *      para traer el nombre. Asumí que la columna se llama `name`. Si se llama distinto
  *      (ej. `username`), cámbialo en la query de `users`.
- *   2. `reviewId` lo lleno con el mismo id autoincremental convertido a string (podrías
- *      usar otro formato, ej. un slug único, si lo prefieres).
+ *   2. `reviewId` es NOT NULL sin default en la BD, así que se genera con crypto.randomUUID()
+ *      ANTES del insert y se manda directo en el INSERT (no se puede llenar después, porque
+ *      el insert fallaría primero por el NOT NULL).
  *   3. `reviewSlug` lo lleno con el slug del restaurante (denormalizado), tomado de la
  *      tabla `restaurants`.
  *   4. Como no hay `customer_id` en `reviews`, no puedo detectar de forma confiable si un
@@ -67,14 +68,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       );
     }
 
-    const { business_id, rating, content, reviewItem } = await request.json() as {
-      business_id: number;
+    const { restaurantSlug, rating, content, reviewItem } = await request.json() as {
+      restaurantSlug: string;
       rating: number;
       content: string;
       reviewItem?: ReviewItem[];
     };
 
-    if (!business_id || !rating || rating < 1 || rating > 5) {
+    if (!restaurantSlug || !rating || rating < 1 || rating > 5) {
       return new Response(
         JSON.stringify({ error: 'Datos inválidos' }),
         { status: 400 }
@@ -95,10 +96,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
     const reviewUser = users[0].name;
 
-    // Verificar que el restaurante existe y traer su slug + reviews actuales
+    // Verificar que el restaurante existe (resolvemos el id a partir del slug) y traer sus reviews actuales
     const [restaurants] = await pool.execute(
-      'SELECT id, slug, reviews FROM restaurants WHERE id = ?',
-      [business_id]
+      'SELECT id, slug, reviews FROM restaurants WHERE slug = ?',
+      [restaurantSlug]
     ) as any[];
 
     if (!restaurants.length) {
@@ -108,12 +109,18 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       );
     }
     const restaurant = restaurants[0];
+    const business_id = restaurant.id;
+
+    // reviewId debe ir en el INSERT porque la columna es NOT NULL sin default.
+    // Como todavía no existe el id autoincremental, generamos un identificador único aparte.
+    const reviewId = crypto.randomUUID();
 
     // Insertar la reseña
     const [insertResult] = await pool.execute(
-      `INSERT INTO reviews (reviewSlug, reviewStar, reviewText, reviewUser, reviewDate, restaurant_id, reviewItem)
-       VALUES (?, ?, ?, ?, NOW(), ?, ?)`,
+      `INSERT INTO reviews (reviewId, reviewSlug, reviewStar, reviewText, reviewUser, reviewDate, restaurant_id, reviewItem)
+       VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)`,
       [
+        reviewId,
         restaurant.slug,
         rating,
         content ?? '',
@@ -124,12 +131,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     ) as any[];
 
     const newReviewId = insertResult.insertId;
-
-    // Guardar reviewId (string) en la propia fila
-    await pool.execute(
-      'UPDATE reviews SET reviewId = ? WHERE id = ?',
-      [String(newReviewId), newReviewId]
-    );
 
     // Actualizar el array json `reviews` en restaurants
     let currentReviews: number[] = [];
@@ -160,9 +161,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       'UPDATE users SET totalPoints = totalPoints + 10 WHERE id = ?',
       [payload.id]
     );
-
+    await pool.execute(
+      'UPDATE users SET totalReviews = totalReviews + 1 WHERE id = ?',
+      [payload.id]
+    );
     return new Response(
-      JSON.stringify({ message: 'Reseña creada exitosamente', reviewId: newReviewId }),
+      JSON.stringify({ message: 'Reseña creada exitosamente', reviewId }),
       { status: 201, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {
@@ -173,25 +177,57 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     );
   }
 };
-
 export const GET: APIRoute = async ({ request }) => {
   try {
     const url = new URL(request.url);
-    const businessId = url.searchParams.get('business_id');
+    const slug = url.searchParams.get('slug'); // antes: 'business_slug' — no coincide con lo que envía el componente
 
-    if (!businessId) {
+    if (!slug) {
       return new Response(
-        JSON.stringify({ error: 'business_id requerido' }),
+        JSON.stringify({ error: 'slug requerido' }),
         { status: 400 }
       );
     }
 
+    // 1. Buscar el restaurante por slug y traer su array de ids de reviews
+    const [restaurants] = await pool.execute(
+      'SELECT id, reviews FROM restaurants WHERE slug = ?',
+      [slug]
+    ) as any[];
+
+    if (!restaurants.length) {
+      return new Response(
+        JSON.stringify({ error: 'Restaurante no encontrado' }),
+        { status: 404 }
+      );
+    }
+
+    let reviewIds: number[] = [];
+    if (restaurants[0].reviews) {
+      try {
+        reviewIds = typeof restaurants[0].reviews === 'string'
+          ? JSON.parse(restaurants[0].reviews)
+          : restaurants[0].reviews;
+      } catch {
+        reviewIds = [];
+      }
+    }
+
+    if (!reviewIds.length) {
+      return new Response(JSON.stringify({ reviews: [] }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // 2. Traer esas reviews puntuales por id
+    const placeholders = reviewIds.map(() => '?').join(', ');
     const [rows] = await pool.execute(
       `SELECT reviewId, reviewSlug, reviewStar, reviewText, reviewUser, reviewDate, reviewItem
        FROM reviews
-       WHERE restaurant_id = ?
+       WHERE id IN (${placeholders})
        ORDER BY reviewDate DESC`,
-      [businessId]
+      reviewIds
     ) as any[];
 
     const reviews: Review[] = rows.map((row: any) => ({

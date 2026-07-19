@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { Search, Compass, TrendingUp, MapPin, Sparkles, Flame } from 'lucide-vue-next'
 import RestaurantCard from './RestaurantCard.vue'
-import SearchBar from './UI/RestaurantSearchBar.vue'
+import HeaderPage from './UI/HeaderPage.vue'
 import { restaurantService } from '../lib/api'
 
 const filters = ['All', 'Trending', 'New', 'Promoted', 'Top rated'] as const
@@ -86,38 +86,22 @@ async function searchRestaurants(category?: string) {
 <template>
   <main class="flex-1 min-w-0">
 
-    <!-- Topbar -->
-    <header class="sticky top-0 z-20 flex items-center gap-4 px-6 md:px-10 h-20 border-b border-base-300/60 bg-base-100/70 backdrop-blur-xl">
-      <div class="flex items-center gap-3">
-        <div class="grid place-items-center h-10 w-10 rounded-xl bg-secondary/15 text-secondary">
-          <Compass class="h-5 w-5" />
-        </div>
-        <div>
-          <h1 class="font-display text-lg font-bold leading-none">Discover</h1>
-          <p class="text-xs text-neutral-content mt-1">Find your next favorite spot</p>
-        </div>
-      </div>
-
-      <!-- Search (desktop) -->
-      <div class="ml-auto relative w-full max-w-md hidden md:block">
-        <SearchBar/>
-      </div>
-    </header>
+    <HeaderPage title="Discover" subtitle="Explora restaurantes cerca de ti" />
 
     <div class="px-6 md:px-10 py-8 space-y-10 max-w-350 mx-auto">
 
       <!-- Featured banner -->
       <section v-if="featured" class="relative overflow-hidden rounded-3xl border border-base-300/60">
-        <img v-if="featured.image_url" :src="featured.image_url" :alt="featured.name" class="absolute inset-0 h-full w-full object-cover" />
+        <img v-if="featured.image" :src="featured.image" :alt="featured.name" class="absolute inset-0 h-full w-full object-cover" />
         <div class="absolute inset-0 bg-linear-to-r from-base-100 via-base-100/80 to-base-100/10" />
         <div class="relative p-8 md:p-12 max-w-2xl">
           <span class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-primary mb-3">
-            <Sparkles class="h-3.5 w-3.5" /> Editor's pick
+            <Sparkles class="h-3.5 w-3.5" /> Selección del editor
           </span>
           <h2 class="font-display text-4xl md:text-5xl font-bold leading-[1.05] mb-3">
             {{ featured.name }}
           </h2>
-          <p class="text-neutral mb-6 line-clamp-2">{{ featured.description }}</p>
+          <p class="text-accent-content/85 mb-6 line-clamp-2">{{ featured.description }}</p>
           <div class="flex items-center gap-3">
             <a
               :href="`/restaurant/${featured.slug}`"
@@ -125,14 +109,14 @@ async function searchRestaurants(category?: string) {
             >
               View restaurant
             </a>
-            <span class="text-xs text-neutral inline-flex items-center gap-1.5">
+            <span class="text-xs text-accent-content/85text-accent-content/85 inline-flex items-center gap-1.5">
               <MapPin class="h-3.5 w-3.5" /> {{ featured.address }}
             </span>
           </div>
         </div>
       </section>
-
-      <!-- Categories -->
+<!-- 
+     
       <section>
         <div class="flex items-end justify-between mb-5">
           <div>
@@ -150,10 +134,10 @@ async function searchRestaurants(category?: string) {
             <span class="text-[11px] font-medium text-neutral group-hover:text-base-content">{{ c.label }}</span>
           </button>
         </div>
-      </section>
+      </section> -->
 
       <!-- Moods -->
-      <section>
+      <!-- <section>
         <div class="flex items-center gap-2 mb-4">
           <Flame class="h-4 w-4 text-secondary" />
           <h3 class="font-display text-sm uppercase tracking-[0.2em] text-neutral">Curated moods</h3>
@@ -167,16 +151,16 @@ async function searchRestaurants(category?: string) {
             {{ m }}
           </button>
         </div>
-      </section>
+      </section> -->
 
       <!-- Restaurant feed -->
       <section>
         <div class="flex items-end justify-between mb-5 flex-wrap gap-3">
           <div>
             <h3 class="font-display text-2xl font-bold flex items-center gap-2">
-              <TrendingUp class="h-5 w-5 text-primary" /> Worth a trip
+              <TrendingUp class="h-5 w-5 text-primary" /> Descubre Restaurantes
             </h3>
-            <p class="text-sm text-neutral mt-1">{{ list.length }} spots match your filters</p>
+            <p class="text-sm text-neutral mt-1">{{ list.length }} Restaurantes encontrados</p>
           </div>
           <div class="flex gap-2 flex-wrap">
             <button

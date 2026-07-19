@@ -1,30 +1,52 @@
 <script setup lang="ts">
-import { reviews, type Review } from '../data/reviews'
+import { ref, onMounted  } from 'vue'
+import type { Review } from '../data/reviews'
 import WriteReview from './WriteReview.vue'
 
 interface Props {
   slug: string
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
-const handleReviewSubmit = (review: Omit<Review, 'reviewId'>) => {
+const error = ref('')
+
+// El reviewId lo genera el backend, y reviewUser/reviewDate se resuelven
+// del usuario autenticado en el servidor, así que no los pedimos aquí.
+const handleReviewSubmit = async (
+  review: Omit<Review, 'reviewId' | 'reviewUser' | 'reviewDate'>
+) => {
+  error.value = ''
+
   try {
-    const newReview: Review = {
-      ...review,
-      reviewId: `${review.reviewUser}-${review.reviewSlug}-${Date.now()}`,
+    const res = await fetch('/api/auth/reviews', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        restaurantSlug: props.slug,
+        rating: review.reviewStar,
+        content: review.reviewText,
+        reviewItem: review.reviewItem,
+      }),
+    })
+
+    const data = await res.json()
+
+    // Validamos si la respuesta del servidor es un error (400, 404, 401, 500)
+    if (!res.ok) {
+      error.value = data.error || 'Error al subir reseña'
+      return
     }
 
-    reviews.push(newReview)
-
     alert('¡Reseña enviada con éxito!')
-  } catch (error) {
-    console.error('Error al enviar reseña:', error)
-    alert('Hubo un error al enviar tu reseña')
+  } catch (err) {
+    console.error('Error al enviar reseña:', err)
+    error.value = 'Hubo un error al enviar tu reseña'
   }
 }
 </script>
 
 <template>
-  <WriteReview :restaurant-slug="slug" @submit="handleReviewSubmit" />
+  <WriteReview :restaurant-slug="props.slug" @submit="handleReviewSubmit" />
+  <p v-if="error" class="text-error text-sm mt-2">{{ error }}</p>
 </template>

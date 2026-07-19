@@ -21,6 +21,7 @@ async function toggleLike() {
   try {
     const response = await fetch('/api/auth/favorite', {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ slug: props.slug }),
     })

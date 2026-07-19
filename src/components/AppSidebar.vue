@@ -34,7 +34,7 @@ onMounted(async () => {
 const items = [
   { icon: Home,         label: 'Feed',      to: '/dashboard' },
   { icon: Compass,      label: 'Discover',  to: '/discover' },
-  { icon: Trophy,       label: 'Quests',    to: '/quests', badge: 'NEW' },
+  // { icon: Trophy,       label: 'Quests',    to: '/quests', badge: 'NEW' },
   { icon: Heart,        label: 'Favorites', to: '/favorites' },
   { icon: CircleUser,   label: 'Profile',    to: '/profile' },
 ]
@@ -44,8 +44,9 @@ function isActive(to: string, idx: number) {
 }
 </script>
 
-<template>
-  <aside
+<template >
+ <div class=" "><!-- Sidebar for desktop -->
+   <aside
     :class="[
       open ? 'w-64' : 'w-20',
       'shrink-0 transition-all duration-300 border-r border-base-300/60 bg-base-100/40 backdrop-blur-xl flex flex-col sticky top-0 h-screen'
@@ -118,6 +119,7 @@ function isActive(to: string, idx: number) {
       </button>
     </div>
   </aside>
+ </div>
 </template>
 
 <style scoped>

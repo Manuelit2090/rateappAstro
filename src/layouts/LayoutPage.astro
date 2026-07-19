@@ -1,7 +1,5 @@
 ---
 
-import AppSideBar from '../components/AppSidebar.vue'
-import MobileDock from '../components/MobileDock.vue'
 
 interface Props {
   title?: string
@@ -39,10 +37,8 @@ const {
     <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
   <body>
-     <div class="flex min-h-screen bg-background text-foreground">
-      <AppSideBar class="md:block hidden" client:load/>
-      <MobileDock class="md:hidden" client:load/>
+
+    
     <slot />
-     </div>
   </body>
 </html>

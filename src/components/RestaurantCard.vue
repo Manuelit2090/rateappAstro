@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Star, MapPin, Bookmark, Heart } from 'lucide-vue-next'
 import { computed } from 'vue'
-import type { Restaurant } from '../data/restaurants'
 import { dataUser, setDataUser } from '../store/dataUser'
 
 const props = defineProps<{ r: Restaurant }>()
@@ -16,6 +15,7 @@ async function toggleLike() {
   try {
     const response = await fetch('/api/auth/favorite', {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ slug: props.r.slug }),
     })
@@ -53,7 +53,6 @@ async function toggleLike() {
         />
         <div class="absolute inset-0 bg-gradient-to-t from-base-100/90 via-base-100/10 to-transparent" />
 
-        <!-- Promoted badge -->
         <span
           v-if="r.promoted"
           class="absolute top-4 left-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary text-primary-content text-[10px] font-bold uppercase tracking-wider shadow-[0_0_24px_-4px_var(--p)]"
@@ -95,7 +94,7 @@ async function toggleLike() {
 
       <!-- Card footer -->
       <div class="p-5 flex items-center justify-between gap-4">
-        <div class="flex items-center gap-4 text-xs text-neutral">
+        <div class="flex items-center gap-4 text-xs text-accent-content/85">
           <span class="inline-flex items-center gap-1.5">
             <MapPin class="h-3.5 w-3.5" />
             {{ r.distance }}
@@ -105,11 +104,11 @@ async function toggleLike() {
         </div>
         <div class="flex gap-1.5">
           <span
-            v-for="t in r.tags"
-            :key="t"
-            class="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-base-300/60 text-neutral"
+            v-for="tag in r.tags"
+            :key="tag"
+            class="text-[10px] text-accent-content/75 uppercase tracking-wider px-2 py-1 rounded-full border border-base-300/60 "
           >
-            {{ t }}
+            {{ tag }}
           </span>
         </div>
       </div>

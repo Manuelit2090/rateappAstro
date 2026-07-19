@@ -214,9 +214,9 @@ customers (id, uuid, full_name, username, email, password_hash,
 customer_sessions (id, customer_id, token_hash, expires_at, revoked_at)
 
 -- Restaurantes
-businesses (id, uuid, name, slug, cuisine, category, description, 
-            image_url, avg_rating, review_count, price_range, phone, email, 
-            address, latitude, longitude, deleted_at)
+restaurants (id, slug, name, cuisine, category, description, 
+            image, rating, reviews, distance, priceRange, promoted, phone, email, 
+            address, lat, lon, tags)
 
 -- Reseñas
 reviews (id, customer_id, business_id, rating, title, content, deleted_at, 

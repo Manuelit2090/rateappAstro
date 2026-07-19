@@ -6,7 +6,7 @@ export const GET: APIRoute = async ({ params }) => {
     const { slug } = params;
 
     const [restaurants] = await pool.execute(
-      'SELECT * FROM restaurants WHERE slug = ? AND deleted_at IS NULL',
+      'SELECT * FROM restaurants WHERE slug = ?',
       [slug]
     ) as any[];
 

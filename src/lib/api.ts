@@ -17,7 +17,9 @@ export class APIClient {
    * @returns Promise que resuelve con los datos JSON
    */
   async get<T>(endpoint: string): Promise<T> {
-    const response = await fetch(this.baseURL + endpoint);
+    const response = await fetch(this.baseURL + endpoint, {
+      credentials: 'include',
+    });
     if (!response.ok) throw new Error(`API Error: ${response.status}`);
     return response.json();
   }
@@ -31,6 +33,7 @@ export class APIClient {
   async post<T>(endpoint: string, data: any): Promise<T> {
     const response = await fetch(this.baseURL + endpoint, {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
@@ -44,6 +47,7 @@ export class APIClient {
   async patch<T>(endpoint: string, data: any): Promise<T> {
     const response = await fetch(this.baseURL + endpoint, {
       method: 'PATCH',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
@@ -54,6 +58,7 @@ export class APIClient {
   async delete<T>(endpoint: string): Promise<T> {
     const response = await fetch(this.baseURL + endpoint, {
       method: 'DELETE',
+      credentials: 'include',
     });
     if (!response.ok) throw new Error(`API Error: ${response.status}`);
     return response.json();

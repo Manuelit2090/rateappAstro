@@ -2,7 +2,7 @@
 import { onMounted, computed, ref } from 'vue';
 import { storeUbicacion as ubication } from './UI/storeUbication.ts';
 import { dataUser, loadDataUserFromAPI, logoutUser } from '../store/dataUser';
-
+import HeaderPage from './UI/HeaderPage.vue';
 // Declaramos la variable reactiva con un estado inicial de carga
 const ciudad = ref<string>('Cargando ubicación...');
 const routePath = ref('');
@@ -23,9 +23,9 @@ const userInitial = computed(() => {
 </script>
 
 <template>
-  <div class="max-w-5xl w-full mx-auto p-4">
+  <div class="w-full mx-auto p-4">
     <div v-if="dataUser.user" class="space-y-6">
-      
+      <HeaderPage title="perfil" subtitle="Encuentra us estadisticas e información"/>
       <!-- 1. CARD PRINCIPAL: PERFIL Y AVATAR -->
       <div class="card bg-base-100 shadow-xl overflow-hidden border border-base-200">
         <!-- Banner decorativo superior -->
