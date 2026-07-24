@@ -1,5 +1,7 @@
 ---
 // src/pages/discover.astro
+
+export const prerender = true; 
 import BaseLayout from '../layouts/BaseLayout.astro'
 
 import DiscoverPage from '../components/DiscoverPage.vue'
@@ -12,6 +14,6 @@ import DiscoverPage from '../components/DiscoverPage.vue'
 >
  
 
-    <DiscoverPage client:load />
+    <DiscoverPage client:idle />
 
 </BaseLayout>

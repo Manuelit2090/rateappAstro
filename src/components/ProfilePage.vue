@@ -23,11 +23,11 @@ const userInitial = computed(() => {
 </script>
 
 <template>
-  <div class="w-full mx-auto p-4">
-    <div v-if="dataUser.user" class="space-y-6">
+  <div class="w-full mx-auto">
+    <div v-if="dataUser.user" class="space-y-6 ">
       <HeaderPage title="perfil" subtitle="Encuentra us estadisticas e información"/>
       <!-- 1. CARD PRINCIPAL: PERFIL Y AVATAR -->
-      <div class="card bg-base-100 shadow-xl overflow-hidden border border-base-200">
+      <div class="card bg-base-100 shadow-xl overflow-hidden border border-base-200 ">
         <!-- Banner decorativo superior -->
         <div class="h-32 bg-linear-to-r from-primary to-primary-content"></div>
         

@@ -40,8 +40,8 @@ const {
   </head>
   <body>
      <div class="flex min-h-screen bg-background text-foreground">
-      <AppSideBar class="md:block hidden" client:load/>
-      <MobileDock class="md:hidden" client:load/>
+      <AppSideBar class="md:block hidden" client:visible/>
+      <MobileDock class="md:hidden" client:visible/>
     <slot />
      </div>
   </body>

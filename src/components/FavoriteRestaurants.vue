@@ -31,7 +31,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <div class="w-full">
     <HeaderPage title="Favoritos" subtitle="Encuentra tus Restaurantes Favoritos" />
     <div class="my-4 mx-4">
       <div v-if="loading" class="text-center py-20">

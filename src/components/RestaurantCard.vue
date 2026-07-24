@@ -40,7 +40,7 @@ async function toggleLike() {
 <template>
   <a
     :href="`/restaurant/${r.slug}`"
-    class="group block rounded-3xl overflow-hidden border border-base-300/60 bg-base-100/60 hover:border-primary/40 hover:shadow-[var(--shadow-card)] transition-all"
+    class="group block rounded-3xl overflow-hidden border border-base-300/60 bg-base-100/60 hover:border-primary/40 shadow-2xl shadow-neutral-900/50 hover:shadow-primary/20 transition-all duration-300"
   >
     <article>
       <!-- Image -->
