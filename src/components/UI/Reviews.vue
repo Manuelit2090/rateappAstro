@@ -42,7 +42,7 @@ onMounted(loadReviews)
 <template>
   <div class="mt-8 space-y-4">
 
-    <p v-if="loading" class="text-sm text-neutral text-center py-6">
+    <p v-if="loading" class="text-sm text-secundary text-center py-6">
       Cargando reseñas...
     </p>
 
@@ -66,7 +66,7 @@ onMounted(loadReviews)
 
             <div>
               <div class="text-sm font-semibold">{{ rev.reviewUser }}</div>
-              <div class="text-[11px] text-neutral">
+              <div class="text-[11px] text-secondary">
                 {{ rev.reviewDate.toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' }) }}
               </div>
             </div>
@@ -94,7 +94,7 @@ onMounted(loadReviews)
         </div>
 
         <!-- Texto de la reseña -->
-        <p class="text-sm text-neutral mt-3 leading-relaxed">{{ rev.reviewText }}</p>
+        <p class="text-sm text-neutral-content mt-3 leading-relaxed">{{ rev.reviewText }}</p>
 
         <!-- Items opcionales -->
         <div v-if="rev.reviewItem?.length" class="mt-3 flex flex-wrap gap-2">

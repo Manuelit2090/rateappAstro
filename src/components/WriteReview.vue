@@ -92,11 +92,11 @@ const handleSubmit = async () => {
           class="textarea textarea-bordered w-full focus:outline-none focus:border-primary min-h-[120px] resize-none"
           maxlength="500"
         />
-        <p class="text-xs text-neutral text-right">{{ reviewText.length }}/500 caracteres</p>
+        <p class="text-xs text-primary text-right">{{ reviewText.length }}/500 caracteres</p>
       </div>
 
       <!-- Fecha generada (informativa) -->
-      <p class="text-xs text-neutral">
+      <p class="text-xs text-primary">
         Fecha de reseña: {{ new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' }) }}
       </p>
 

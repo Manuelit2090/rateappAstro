@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, computed, ref } from 'vue';
 import { storeUbicacion as ubication } from './UI/storeUbication.ts';
-import { dataUser, loadDataUserFromAPI, logoutUser } from '../store/dataUser';
+import { dataUser, loadDataUserFromAPI } from '../store/dataUser';
 import HeaderPage from './UI/HeaderPage.vue';
 // Declaramos la variable reactiva con un estado inicial de carga
 const ciudad = ref<string>('Cargando ubicación...');
@@ -50,12 +50,7 @@ const userInitial = computed(() => {
             </p>
           </div>
 
-          <div class="mt-4 md:mt-0">
-            <button @click="logoutUser()" class="btn btn-error btn-outline btn-sm gap-2">
-              <svg xmlns="http://w3.org" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-              Cerrar sesión
-            </button>
-          </div>
+         
         </div>
       </div>
 
