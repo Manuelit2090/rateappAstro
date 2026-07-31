@@ -107,3 +107,9 @@ export const favoriteService = {
 
   getAll: () => api.get('/api/favorites'),
 };
+
+
+export const questService = 
+{
+  
+}
