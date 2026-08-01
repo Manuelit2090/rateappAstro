@@ -2,6 +2,7 @@
 import { onMounted, computed, ref } from 'vue';
 import { storeUbicacion as ubication } from './UI/storeUbication.ts';
 import { dataUser, loadDataUserFromAPI } from '../store/dataUser';
+import BadgeList from './BadgeList.vue'
 import HeaderPage from './UI/HeaderPage.vue';
 // Declaramos la variable reactiva con un estado inicial de carga
 const ciudad = ref<string>('Cargando ubicación...');
@@ -98,9 +99,12 @@ const userInitial = computed(() => {
               Ciudad: {{ ubication.ciudad}}
             </p>
           </div>
-        </div>
-      </div>
 
+          
+        </div>
+       
+      </div>
+       <BadgeList />
     </div>
 
     <!-- ESTADO SIN LOGUEAR -->
