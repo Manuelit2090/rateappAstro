@@ -100,7 +100,7 @@ async function toggleLike() {
             {{ r.distance }}
           </span>
           <span>{{ r.priceRange }}</span>
-          <span>{{ r.reviews }} reviews</span>
+          <span>{{ r.reviews.length }} reviews</span>
         </div>
         <div class="flex gap-1.5">
           <span

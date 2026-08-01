@@ -282,18 +282,7 @@ const ratingDist = [
                   <p class="text-xs text-muted-foreground mt-1">{r.reviews.length} reviews</p>
                 </div>
                 <WriteReviewWrapper client:load slug={slug} />
-                <!-- Rating distribution bars -->
-                <div class="space-y-2">
-                  {ratingDist.map((d) => (
-                      <div class="flex items-center gap-3 text-xs text-neutral">
-                        <span class="w-3 text-base-content">{d.stars}</span>
-                        <div class="flex-1 h-1.5 rounded-full bg-base-200 overflow-hidden">
-                          <div class="h-full bg-linear-to-r from-primary to-secondary" style={`width:${d.pct}%`} />
-                      </div>
-                      <span class="w-8 text-right">{d.pct}%</span>
-                    </div>
-                  ))}
-                </div>
+               
               </div>
 
               <!-- Recent reviews -->

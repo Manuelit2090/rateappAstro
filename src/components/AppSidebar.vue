@@ -34,10 +34,37 @@ onMounted(async () => {
 const items = [
   { icon: Home,         label: 'Feed',      to: '/dashboard' },
   { icon: Compass,      label: 'Discover',  to: '/discover' },
-  { icon: Trophy,       label: 'Quests',    to: '/quests', badge: 'NEW' },
+  { icon: Trophy,       label: 'Quests',    to: '/quests' },
   { icon: Heart,        label: 'Favorites', to: '/favorites' },
   { icon: CircleUser,   label: 'Profile',    to: '/profile' },
 ]
+
+async function logoutUser() {
+  try {
+    const response = await fetch('/api/auth/logout', { 
+      headers: {
+        'Content-Type': 'application/json',
+      method: 'GET',
+      credentials: 'include',
+
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data.message); // "Sesión cerrada"
+      
+      // Redirige al usuario a la página de inicio o login
+      window.location.href = '/login';
+    } else {
+      console.error('Error al cerrar sesión');
+    }
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+
+
 
 function isActive(to: string, idx: number) {
   return routePath.value === to && (idx === 0 || to !== '/')
@@ -115,7 +142,7 @@ function isActive(to: string, idx: number) {
       </button>
       <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral-content hover:text-base-content hover:bg-base-200 transition-colors" @click="logoutUser()">
         <LogOut class="h-5 w-5" />
-        <span v-if="open">Sign out</span>
+        <span v-if="open">Log Out</span>
       </button>
     </div>
   </aside>
