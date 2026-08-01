@@ -1,26 +1,87 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { Trophy, Flame, Target, Sparkles } from 'lucide-vue-next'
 import QuestCard from './QuestCard.vue'
 import SearchBar from './UI/RestaurantSearchBar.vue'
-import { quests } from '../data/quests'
-import type { Quest } from '../data/quests'
+
+interface Quest {
+  id?: number | string
+  slug: string
+  title: string
+  description: string
+  category: 'Daily' | 'Weekly' | 'Seasonal' | 'Legendary'
+  difficulty: 'Easy' | 'Medium' | 'Hard' | 'Epic'
+  reward: number
+  current: number
+  total: number
+  expiresIn: string
+  participants: number
+  tag?: string
+  icon?: unknown
+}
 
 const filters = ['All', 'Daily', 'Weekly', 'Seasonal', 'Legendary'] as const
 type Filter = typeof filters[number]
 
 const activeFilter = ref<Filter>('All')
+const quests = ref<Quest[]>([])
+const isLoading = ref(true)
+const errorMessage = ref('')
 
 const visible = computed(() =>
   activeFilter.value === 'All'
-    ? quests
-    : quests.filter((q) => q.category === (activeFilter.value as Quest['category']))
+    ? quests.value
+    : quests.value.filter((q) => q.category === (activeFilter.value as Quest['category']))
 )
 
-const totalPoints = quests.reduce((s, q) => s + q.reward, 0)
-const earned      = computed(() => quests.filter((q) => q.current >= q.total).reduce((s, q) => s + q.reward, 0))
-const available   = computed(() => totalPoints - earned.value)
-const inProgress  = computed(() => quests.filter((q) => q.current > 0 && q.current < q.total).length)
+const totalPoints = computed(() => quests.value.reduce((sum, q) => sum + q.reward, 0))
+const earned = computed(() =>
+  quests.value.filter((q) => q.current >= q.total).reduce((sum, q) => sum + q.reward, 0)
+)
+const available = computed(() => totalPoints.value - earned.value)
+const inProgress = computed(() => quests.value.filter((q) => q.current > 0 && q.current < q.total).length)
+
+const loadQuests = async () => {
+  isLoading.value = true
+  errorMessage.value = ''
+
+  try {
+    const response = await fetch('/api/quest')
+    const data = await response.json()
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || 'Unable to load quests')
+    }
+
+    quests.value = Array.isArray(data.quests)
+      ? data.quests.map((item: Record<string, any>) => ({
+          id: item.id,
+          slug: item.slug ?? String(item.id ?? ''),
+          title: item.title ?? item.slug ?? 'Quest',
+          description: item.description ?? 'Complete this quest to earn points.',
+          category: (item.category as Quest['category']) ?? 'Daily',
+          difficulty: (item.difficulty as Quest['difficulty']) ?? 'Medium',
+          reward: Number(item.reward ?? item.rewartPoints ?? 0),
+          current: Number(item.current ?? 0),
+          total: Number(item.total ?? 1),
+          expiresIn: item.expiresIn ?? item.expires_in ?? 'No deadline',
+          participants: Number(item.participants ?? 0),
+          tag: item.tag ?? '',
+          icon: item.icon ?? Target,
+        }))
+      : []
+  } catch (error) {
+    console.error('Error al cargar las quests:', error)
+    quests.value = []
+    errorMessage.value = 'No se pudieron cargar las quests en este momento.'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(() => {
+  void loadQuests()
+})
 </script>
 
 <template>
@@ -56,8 +117,12 @@ const inProgress  = computed(() => quests.filter((q) => q.current > 0 && q.curre
               Adventures for hungry humans.
             </h2>
             <p class="text-neutral-content max-w-xl">
-              {{ quests.length }} quests across the city. Complete them to climb the leaderboard
-              and unlock rare badges.
+              <template v-if="isLoading">Loading quests from the server...</template>
+              <template v-else-if="errorMessage">{{ errorMessage }}</template>
+              <template v-else>
+                {{ quests.length }} quests across the city. Complete them to climb the leaderboard
+                and unlock rare badges.
+              </template>
             </p>
           </div>
 
@@ -100,23 +165,31 @@ const inProgress  = computed(() => quests.filter((q) => q.current > 0 && q.curre
         </div>
         <div class="flex items-center gap-2 text-xs text-muted-foreground">
           <Flame class="h-3.5 w-3.5 text-peach" />
-          <span>3-day streak Â· keep it alive</span>
+          <span>3-day streak · keep it alive</span>
         </div>
       </div>
 
-      <!-- Quest grid -->
-      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-        <QuestCard v-for="q in visible" :key="q.slug" :q="q" />
+      <div v-if="isLoading" class="text-center py-20 text-muted-foreground">
+        <Target class="h-10 w-10 mx-auto mb-3 opacity-50" />
+        Loading quests...
       </div>
 
-      <!-- Empty state -->
-      <div v-if="visible.length === 0" class="text-center py-20 text-muted-foreground">
+      <div v-else-if="errorMessage" class="text-center py-20 text-muted-foreground">
+        <Target class="h-10 w-10 mx-auto mb-3 opacity-50" />
+        {{ errorMessage }}
+      </div>
+
+      <div v-else-if="visible.length === 0" class="text-center py-20 text-muted-foreground">
         <Target class="h-10 w-10 mx-auto mb-3 opacity-50" />
         No quests in this category.
       </div>
 
+      <div v-else class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <QuestCard v-for="q in visible" :key="q.slug" :q="q" />
+      </div>
+
       <footer class="py-10 text-center text-xs text-muted-foreground">
-        Â© 2026 rateapp Â· Crafted for hungry humans
+        © 2026 rateapp · Crafted for hungry humans
       </footer>
     </div>
   </main>

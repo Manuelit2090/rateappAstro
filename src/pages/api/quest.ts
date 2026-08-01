@@ -1,52 +1,49 @@
 /**
- * @file quests.ts
- * @description Endpoints para listar y consultar misiones/desafíos (quests) vigentes.
- * @route GET /api/quests
- * @dependencies src/lib/db
+ * @file quest.ts
+ * @description Endpoint para listar misiones desde la base de datos MySQL.
  */
 
 import type { APIRoute } from 'astro';
-import pool from '../../../lib/db';
+import pool from '../../lib/db';
 
 export const GET: APIRoute = async () => {
   try {
-    // Consultamos solo las quests cuya fecha de expiración sea mayor o igual a la fecha/hora actual
-    const [quests] = await pool.execute(
-      `SELECT 
-        id, 
-        slug, 
-        description, 
-        category, 
-        initial_time, 
-        expiresIn, 
-        rewartPoints 
-      FROM quests 
-      WHERE expiresIn >= NOW()`
-    ) as any[];
+    const [rows] = await pool.execute('SELECT * FROM quests') as any[];
 
-    return new Response(
-      JSON.stringify({ 
-        success: true,
-        count: quests.length,
-        quests 
-      }), 
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+    const quests = Array.isArray(rows)
+      ? rows.map((item) => ({
+          id: item.id,
+          slug: item.slug,
+          description: item.description,
+          category: item.category,
+          initial_time: item.initial_time,
+          expiresIn: item.expiresIn,
+          reward: Number(item.rewartPoints ?? 0),
+          current: Number(item.current ?? 0),
+          total: Number(item.total ?? 1),
+        }))
+      : [];
+
+    return new Response(JSON.stringify({
+      success: true,
+      quests,
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   } catch (error) {
     console.error('Error al obtener las quests:', error);
-    
-    return new Response(
-      JSON.stringify({ 
-        success: false,
-        error: 'Error interno del servidor al consultar quests' 
-      }),
-      { 
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+
+    return new Response(JSON.stringify({
+      success: false,
+      error: 'Error interno del servidor al consultar quests',
+    }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   }
 };

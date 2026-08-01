@@ -1,7 +1,21 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { Clock, Users } from 'lucide-vue-next'
-import type { Quest } from '@/data/quests'
+
+interface Quest {
+  slug: string
+  title: string
+  description: string
+  category: 'Daily' | 'Weekly' | 'Seasonal' | 'Legendary'
+  difficulty: 'Easy' | 'Medium' | 'Hard' | 'Epic'
+  reward: number
+  current: number
+  total: number
+  expiresIn: string
+  participants: number
+  tag?: string
+  icon?: unknown
+}
 
 const props = defineProps<{ q: Quest }>()
 
