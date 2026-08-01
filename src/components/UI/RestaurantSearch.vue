@@ -1,3 +1,73 @@
+<script setup>
+import { ref, computed, onMounted, watch } from 'vue';
+import RestaurantCard from '../RestaurantCard.vue';
+import { restaurantService } from '../../lib/api';
+
+const query = ref('');
+// 1. Declarar las variables que faltaban
+const results = ref([]);
+const isLoading = ref(false);
+
+// Sincroniza el input con la URL del navegador al cargar la página (?q=...)
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search);
+    query.value = params.get('q') || '';
+  }
+});
+
+// Actualiza la URL visible sin recargar la pantalla completa
+const updateSearchUrl = () => {
+  if (typeof window === 'undefined') return;
+  const url = new URL(window.location.href);
+  if (query.value.trim()) {
+    url.searchParams.set('q', query.value.trim());
+  } else {
+    url.searchParams.delete('q');
+  }
+  window.history.replaceState({}, '', url);
+};
+
+const normalizedQuery = computed(() => query.value.trim().toLowerCase());
+
+const normalizeString = (value) => {
+  if (!value) return '';
+  return String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
+// Reactividad pura de Vue: se ejecuta instantáneamente al escribir o cambiar la URL
+watch(query, async (newQuery) => {
+  if (!newQuery.trim()) {
+    results.value = [];
+    return;
+  }
+
+  try {
+    isLoading.value = true;
+    
+    const response = await restaurantService.search(normalizeString(newQuery));
+    
+    // 🔍 AQUÍ ESTÁ EL CAMBIO:
+    // Si tu API devuelve { restaurants: [...] }, accede a response.restaurants
+    // Si devuelve { data: [...] }, cambia a response.data
+    results.value = response.restaurants || response.data || response || [];
+    
+    console.log('Array final de resultados:', results.value);
+  } catch (error) {
+    console.error('Error al buscar restaurantes:', error);
+    results.value = [];
+  } finally {
+    isLoading.value = false;
+  }
+}, { immediate: true });
+</script>
+
+
+
 <template>
   <div class="space-y-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -41,62 +111,3 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted } from 'vue';
-import RestaurantCard from '../RestaurantCard.vue';
-import { restaurants } from '../../data/restaurants';
-
-const query = ref('');
-
-// Sincroniza el input con la URL del navegador al cargar la página (?q=...)
-onMounted(() => {
-  const params = new URLSearchParams(window.location.search);
-  query.value = params.get('q') || '';
-});
-
-// Actualiza la URL visible sin recargar la pantalla completa
-const updateSearchUrl = () => {
-  const url = new URL(window.location.href);
-  if (query.value.trim()) {
-    url.searchParams.set('q', query.value.trim());
-  } else {
-    url.searchParams.delete('q');
-  }
-  window.history.replaceState({}, '', url);
-};
-
-const normalizedQuery = computed(() => query.value.trim().toLowerCase());
-
-const normalizeString = (value) => {
-  if (!value) return '';
-  return String(value)
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-};
-
-// Reactividad pura de Vue: se ejecuta instantáneamente al escribir o cambiar la URL
-const results = computed(() => {
-  const terms = normalizedQuery.value.split(/\s+/).filter(Boolean);
-  if (!terms.length) return [];
-
-  return restaurants.filter((restaurant) => {
-    const tagsArray = Array.isArray(restaurant.tags) ? restaurant.tags : [];
-    const fields = [
-      restaurant.name,
-      restaurant.cuisine,
-      restaurant.category,
-      restaurant.description,
-      restaurant.address,
-      restaurant.phone,
-      restaurant.email,
-      ...tagsArray,
-    ].map(normalizeString);
-
-    return terms.every((term) =>
-      fields.some((field) => field.includes(term))
-    );
-  });
-});
-</script>

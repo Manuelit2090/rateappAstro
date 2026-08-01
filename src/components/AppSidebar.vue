@@ -5,7 +5,7 @@ import { dataUser, loadDataUserFromAPI, logoutUser, setDataUser } from '../store
 // lucide-vue-next equivalents
 import {
   Menu, Home, Compass, Trophy, Heart, Bookmark,
-  MessageSquare, Settings, LogOut, Flame, MapPin, CircleUser
+  MessageSquare, Settings, LogOut, Flame, MapPin, CircleUser, Search
 } from 'lucide-vue-next'
 
 const open = ref(true)
@@ -37,6 +37,7 @@ const items = [
   { icon: Trophy,       label: 'Quests',    to: '/quests' },
   { icon: Heart,        label: 'Favorites', to: '/favorites' },
   { icon: CircleUser,   label: 'Profile',    to: '/profile' },
+   { icon: Search,   label: 'Search',    to: '/search' },
 ]
 
 async function logoutUser() {
@@ -127,11 +128,11 @@ function isActive(to: string, idx: number) {
     <!-- Footer buttons -->
     <div class="px-3 py-4 border-t border-base-300/60 space-y-3">
       <div class="rounded-2xl border border-base-200 bg-base-200/60 p-3 text-sm text-neutral">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 overflow-hidden">
           <MapPin class="h-4 w-4 shrink-0 text-neutral-content" />
           <span class="font-semibold text-accent-content/85 ">Ubicación</span>
         </div>
-        <p class="mt-2 text-xs leading-5 text-base-content/80">
+        <p class="mt-2 text-xs leading-5 text-base-content/80 overflow-hidden">
           {{ ubication.ciudad }}
         </p>
       </div>
