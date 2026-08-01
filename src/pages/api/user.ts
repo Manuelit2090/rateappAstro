@@ -6,18 +6,19 @@
 import type { APIRoute } from 'astro';
 import pool from '../../lib/db';
 
-export const GET: APIRoute = async ({ cookies }) => {
+export const GET: APIRoute = async ({ request }) => {
   try {
-    const token = cookies.get('auth_token')?.value;
+    const url = new URL(request.url);
+    const email = url.searchParams.get('email');
 
-    if (!token) {
-      return new Response(JSON.stringify({ success: false, error: 'No autenticado' }), {
-        status: 401,
+    if (!email) {
+      return new Response(JSON.stringify({ success: false, error: 'Falta el email' }), {
+        status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const [rows] = await pool.execute('SELECT * FROM users WHERE id = ?', [token]) as any[];
+    const [rows] = await pool.execute('SELECT * FROM users WHERE email = ?', [email]) as any[];
     const user = rows?.[0];
 
     if (!user) {
@@ -34,7 +35,6 @@ export const GET: APIRoute = async ({ cookies }) => {
         name: user.name,
         email: user.email,
         phone: user.phone ?? '',
-        favoriteRestaurant: user.favoriteRestaurant ?? '',
         favoriteFood: user.favoriteFood ?? '',
         totalPoints: user.totalPoints ?? 0,
         totalReviews: user.totalReviews ?? 0,
@@ -53,30 +53,13 @@ export const GET: APIRoute = async ({ cookies }) => {
   }
 };
 
-export const PUT: APIRoute = async ({ request, cookies }) => {
+export const PUT: APIRoute = async ({ request }) => {
   try {
-    const token = cookies.get('auth_token')?.value;
-
-    if (!token) {
-      return new Response(JSON.stringify({ success: false, error: 'No autenticado' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
     const body = await request.json();
-    const {
-      id,
-      name,
-      email,
-      phone,
-      favoriteRestaurant,
-      favoriteFood,
-      password,
-    } = body || {};
+    const { email, name, phone, favoriteFood, password } = body || {};
 
-    if (!id) {
-      return new Response(JSON.stringify({ success: false, error: 'Falta el id del usuario' }), {
+    if (!email) {
+      return new Response(JSON.stringify({ success: false, error: 'Falta el email del usuario' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -90,19 +73,9 @@ export const PUT: APIRoute = async ({ request, cookies }) => {
       values.push(name);
     }
 
-    if (email !== undefined) {
-      fields.push('email = ?');
-      values.push(email);
-    }
-
     if (phone !== undefined) {
       fields.push('phone = ?');
       values.push(phone);
-    }
-
-    if (favoriteRestaurant !== undefined) {
-      fields.push('favoriteRestaurant = ?');
-      values.push(favoriteRestaurant);
     }
 
     if (favoriteFood !== undefined) {
@@ -110,12 +83,12 @@ export const PUT: APIRoute = async ({ request, cookies }) => {
       values.push(favoriteFood);
     }
 
-    if (password) {
+    if (password !== undefined && password !== '') {
       fields.push('password = ?');
       values.push(password);
     }
 
-    values.push(id);
+    values.push(email);
 
     if (fields.length === 0) {
       return new Response(JSON.stringify({ success: false, error: 'No hay campos para actualizar' }), {
@@ -124,7 +97,7 @@ export const PUT: APIRoute = async ({ request, cookies }) => {
       });
     }
 
-    await pool.execute(`UPDATE users SET ${fields.join(', ')} WHERE id = ?`, values);
+    await pool.execute(`UPDATE users SET ${fields.join(', ')} WHERE email = ?`, values);
 
     return new Response(JSON.stringify({ success: true, message: 'Cambios guardados con éxito' }), {
       status: 200,

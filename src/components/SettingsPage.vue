@@ -6,7 +6,6 @@ interface UserProfile {
   name: string
   email: string
   phone: string
-  favoriteRestaurant: string
   favoriteFood: string
   totalPoints: number
   totalReviews: number
@@ -16,7 +15,6 @@ const form = ref<UserProfile>({
   name: '',
   email: '',
   phone: '',
-  favoriteRestaurant: '',
   favoriteFood: '',
   totalPoints: 0,
   totalReviews: 0,
@@ -26,9 +24,28 @@ const password = ref('')
 const message = ref('')
 const isSaving = ref(false)
 
+const getLoggedEmail = () => {
+  if (typeof window === 'undefined') return ''
+
+  const fromStorage = localStorage.getItem('userEmail')
+  if (fromStorage) return fromStorage
+
+  const fromSession = sessionStorage.getItem('userEmail')
+  if (fromSession) return fromSession
+
+  return ''
+}
+
 const loadUser = async () => {
+  const email = getLoggedEmail()
+
+  if (!email) {
+    message.value = 'No se encontró el email del usuario autenticado.'
+    return
+  }
+
   try {
-    const response = await fetch('/api/user')
+    const response = await fetch(`/api/user?email=${encodeURIComponent(email)}`)
     const data = await response.json()
 
     if (!response.ok || !data.success) {
@@ -51,11 +68,9 @@ const saveProfile = async () => {
 
   try {
     const payload: Record<string, unknown> = {
-      id: form.value.id,
-      name: form.value.name,
       email: form.value.email,
+      name: form.value.name,
       phone: form.value.phone,
-      favoriteRestaurant: form.value.favoriteRestaurant,
       favoriteFood: form.value.favoriteFood,
     }
 
@@ -128,11 +143,6 @@ onMounted(() => {
             <label class="block">
               <span class="mb-2 block text-sm font-medium">Teléfono</span>
               <input v-model="form.phone" class="input input-bordered w-full" placeholder="Tu teléfono" />
-            </label>
-
-            <label class="block">
-              <span class="mb-2 block text-sm font-medium">Restaurante favorito</span>
-              <input v-model="form.favoriteRestaurant" class="input input-bordered w-full" placeholder="Ej. El Chalan" />
             </label>
 
             <label class="block md:col-span-2">
