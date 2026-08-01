@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { Trophy, Flame, Target, Sparkles } from 'lucide-vue-next'
 import QuestCard from './QuestCard.vue'
 import SearchBar from './UI/RestaurantSearchBar.vue'
+import { dataUser, loadDataUserFromAPI } from '../store/dataUser';
 
 interface Quest {
   id?: number | string
@@ -79,9 +80,13 @@ const loadQuests = async () => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   void loadQuests()
+   await loadDataUserFromAPI();
+  
+ 
 })
+
 </script>
 
 <template>
@@ -92,7 +97,7 @@ onMounted(() => {
       <div class="flex items-center gap-3">
         <div class="grid place-items-center h-10 w-10 rounded-xl bg-lime/15 text-primary">
           <Trophy class="h-5 w-5" />
-        </div>
+      </div>  
         <div>
           <h1 class="font-primary text-lg font-bold leading-none">Quests</h1>
           <p class="text-xs text-primary-content mt-1">Earn points. Become a tastemaker.</p>
@@ -111,37 +116,28 @@ onMounted(() => {
         <div class="relative grid md:grid-cols-[1fr_auto] gap-8 items-end">
           <div>
             <span class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-lime mb-3">
-              <Sparkles class="h-3.5 w-3.5" /> This season
+              <Sparkles class="h-3.5 w-3.5" /> Misiones
             </span>
             <h2 class="font-display text-4xl md:text-5xl font-bold leading-[1.05] mb-3">
-              Adventures for hungry humans.
+              Aventuras para humanos hambrientos
             </h2>
             <p class="text-neutral-content max-w-xl">
               <template v-if="isLoading">Loading quests from the server...</template>
               <template v-else-if="errorMessage">{{ errorMessage }}</template>
               <template v-else>
-                {{ quests.length }} quests across the city. Complete them to climb the leaderboard
-                and unlock rare badges.
+                 Completa {{ quests.length }} misiones y obtenen puntos e insignias para disfrutar al maximo tu experiencia en restaurantes.
               </template>
             </p>
           </div>
 
-          <div class="grid grid-cols-3 gap-3 md:gap-5 min-w-[300px]">
-            <!-- Stat: Earned -->
-            <div class="rounded-2xl border border-border/60 bg-background/40 backdrop-blur-sm p-4">
-              <div class="font-display text-2xl font-bold text-lime">{{ earned.toLocaleString() }}</div>
-              <div class="text-[10px] uppercase tracking-wider text-muted-foreground mt-1">Earned</div>
-            </div>
+          <div class="flex items-center gap-4 flex-wrap">
+        
             <!-- Stat: Available -->
-            <div class="rounded-2xl border border-border/60 bg-background/40 backdrop-blur-sm p-4">
-              <div class="font-display text-2xl font-bold text-peach">{{ available.toLocaleString() }}</div>
+            <div class="rounded-2xl border border-border/60 bg-background/40 backdrop-blur-sm p-4 w-full">
+              <div class="font-display text-2xl font-bold text-peach">{{ dataUser.user?.totalPoints ?? 0}}</div>
               <div class="text-[10px] uppercase tracking-wider text-muted-foreground mt-1">Available</div>
             </div>
-            <!-- Stat: Active -->
-            <div class="rounded-2xl border border-border/60 bg-background/40 backdrop-blur-sm p-4">
-              <div class="font-display text-2xl font-bold text-lime">{{ inProgress }}</div>
-              <div class="text-[10px] uppercase tracking-wider text-muted-foreground mt-1">Active</div>
-            </div>
+           
           </div>
         </div>
       </section>
@@ -165,7 +161,7 @@ onMounted(() => {
         </div>
         <div class="flex items-center gap-2 text-xs text-muted-foreground">
           <Flame class="h-3.5 w-3.5 text-peach" />
-          <span>3-day streak · keep it alive</span>
+          <span>3-day streak ï¿½ keep it alive</span>
         </div>
       </div>
 
@@ -189,7 +185,7 @@ onMounted(() => {
       </div>
 
       <footer class="py-10 text-center text-xs text-muted-foreground">
-        © 2026 rateapp · Crafted for hungry humans
+        ï¿½ 2026 rateapp ï¿½ Crafted for hungry humans
       </footer>
     </div>
   </main>

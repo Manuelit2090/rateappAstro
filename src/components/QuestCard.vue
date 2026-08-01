@@ -31,7 +31,7 @@ const done = computed(() => pct.value >= 100)
 </script>
 
 <template>
-  <article class="group relative rounded-3xl border border-base-300/60 bg-base-100/60 p-6 hover:border-primary/40 hover:shadow-[var(--shadow-card)] transition-all">
+  <article class="group relative rounded-3xl border border-base-300/60 bg-base-100/60 p-6 hover:border-primary/40 shadow-2xl shadow-neutral-900/50 hover:shadow-primary/20 transition-all duration-300">
     <!-- Tag badge -->
     <span
       v-if="q.tag"
@@ -47,29 +47,29 @@ const done = computed(() => pct.value >= 100)
       </div>
       <div class="min-w-0 flex-1">
         <div class="flex items-center gap-2 mb-1">
-          <span class="text-[10px] uppercase tracking-[0.2em] text-neutral">{{ q.category }}</span>
+          <span class="text-[10px] uppercase tracking-[0.2em] text-secondary">{{ q.category }}</span>
           <span :class="['text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded-md border', difficultyColor[q.difficulty]]">
             {{ q.difficulty }}
           </span>
         </div>
-        <h3 class="font-display text-lg font-semibold leading-tight">{{ q.title }}</h3>
+        <h3 class="font-display text-lg  font-semibold leading-tight">{{ q.title }}</h3>
       </div>
       <div class="text-right shrink-0">
         <div class="font-display text-xl font-bold text-primary leading-none">+{{ q.reward }}</div>
-        <div class="text-[10px] uppercase tracking-wider text-neutral mt-1">points</div>
+        <div class="text-[10px] uppercase tracking-wider text-info mt-1">points</div>
       </div>
     </div>
 
     <!-- Description -->
-    <p class="text-sm text-neutral mb-5 leading-relaxed">{{ q.description }}</p>
+    <p class="text-sm text-accent-content mb-5 leading-relaxed">{{ q.description }}</p>
 
     <!-- Progress bar -->
     <div class="space-y-2 mb-5">
-      <div class="flex items-center justify-between text-xs text-neutral">
+      <div class="flex items-center justify-between text-xs text-primary-content/80">
         <span>{{ q.current }} / {{ q.total }}</span>
         <span :class="done ? 'text-primary font-semibold' : ''">{{ pct }}%<template v-if="done"> · Complete</template></span>
       </div>
-      <div class="h-1.5 rounded-full bg-base-100 overflow-hidden">
+      <div class="h-1.5 rounded-full bg-accent-content overflow-hidden">
         <div
           class="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all"
           :style="{ width: `${Math.min(pct, 100)}%` }"
@@ -79,7 +79,7 @@ const done = computed(() => pct.value >= 100)
 
     <!-- Footer row -->
     <div class="flex items-center justify-between gap-3">
-      <div class="flex items-center gap-3 text-[11px] text-neutral">
+      <div class="flex items-center gap-3 text-[11px] text-secondary-content">
         <span class="inline-flex items-center gap-1.5">
           <Clock class="h-3.5 w-3.5" />
           {{ q.expiresIn }}
