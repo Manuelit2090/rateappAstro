@@ -2,6 +2,7 @@
 import { Star, MapPin, Bookmark, Heart } from 'lucide-vue-next'
 import { computed } from 'vue'
 import { dataUser, setDataUser } from '../store/dataUser'
+import { showAviso } from '../store/alerts'
 
 const props = defineProps<{ r: Restaurant }>()
 
@@ -19,10 +20,15 @@ async function toggleLike() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ slug: props.r.slug }),
     })
+  if (response.ok)
+    {
+      showAviso('Restaurante agregado a favoritos', 'success')
+
+    }
 
     if (!response.ok) {
       const error = await response.json().catch(() => null)
-      console.error('Error guardando favorito:', error?.error || response.status)
+      showAviso('Error al guardar favoritos', 'error')
       return
     }
 

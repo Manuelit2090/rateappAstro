@@ -8,6 +8,7 @@ export interface User {
     reviews: string[],
     favoriteRestaurant: string[],
     cuponsBuy: string[],
+    badges?: string[],
     currentLocation?: { 
         lat: number;
         lng: number;

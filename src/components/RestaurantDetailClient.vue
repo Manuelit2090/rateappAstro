@@ -4,6 +4,7 @@
 import { computed } from 'vue'
 import { Heart, Bookmark, Share2 } from 'lucide-vue-next'
 import { dataUser, setDataUser } from '../store/dataUser'
+import { showAviso } from '../store/alerts'
 
 interface Props {
   slug: string
@@ -26,9 +27,15 @@ async function toggleLike() {
       body: JSON.stringify({ slug: props.slug }),
     })
 
+    if (response.ok)
+    {
+      showAviso('Restaurante agregado a favoritos', 'success')
+
+    }
+
     if (!response.ok) {
       const error = await response.json().catch(() => null)
-      console.error('Error guardando favorito:', error?.error || response.status)
+      showAviso('Error al guardar favoritos', 'error')
       return
     }
 
@@ -49,6 +56,7 @@ function share() {
     navigator.share({ title: document.title, url: location.href })
   } else {
     navigator.clipboard.writeText(location.href)
+    showAviso('Enlace copiado al portapapeles', 'info')
   }
 }
 

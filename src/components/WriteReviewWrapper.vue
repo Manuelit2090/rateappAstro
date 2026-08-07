@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted  } from 'vue'
-import type { Review } from '../data/reviews'
+import { ref } from 'vue'
 import WriteReview from './WriteReview.vue'
+import { showAviso } from '../store/alerts'
+import { dataUser, loadDataUserFromAPI } from '../store/dataUser'
+import { syncBadgesForUser } from '../lib/badgeVerifier'
 
 interface Props {
   slug: string
@@ -38,10 +40,20 @@ const handleReviewSubmit = async (
       return
     }
 
-    alert('¡Reseña enviada con éxito!')
+    await loadDataUserFromAPI()
+    const badgeResult = await syncBadgesForUser(dataUser.user)
+
+    if (badgeResult.newBadges.length) {
+      showAviso(
+        `¡Reseña enviada con éxito! Has desbloqueado ${badgeResult.newBadges.length} badge${badgeResult.newBadges.length > 1 ? 's' : ''}.`,
+        'success'
+      )
+    } else {
+      showAviso('¡Reseña enviada con éxito!', 'success')
+    }
   } catch (err) {
-    console.error('Error al enviar reseña:', err)
-    error.value = 'Hubo un error al enviar tu reseña'
+    console.error(err)
+    showAviso('Error al enviar reseña', 'error')
   }
 }
 </script>
@@ -49,4 +61,5 @@ const handleReviewSubmit = async (
 <template>
   <WriteReview :restaurant-slug="props.slug" @submit="handleReviewSubmit" />
   <p v-if="error" class="text-error text-sm mt-2">{{ error }}</p>
+
 </template>

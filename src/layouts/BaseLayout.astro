@@ -2,6 +2,7 @@
 
 import AppSideBar from '../components/AppSidebar.vue'
 import MobileDock from '../components/MobileDock.vue'
+import AlertContainer from '../components/UI/alertContainer.vue'
 
 interface Props {
   title?: string
@@ -39,7 +40,8 @@ const {
     <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
   <body>
-     <div class="flex min-h-screen bg-background text-foreground">
+     <div class="flex w-full bg-background text-foreground">
+      <AlertContainer client:visible />
       <AppSideBar class="md:block hidden" client:visible/>
       <MobileDock class="md:hidden" client:visible/>
     <slot />

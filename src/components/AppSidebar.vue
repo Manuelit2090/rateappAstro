@@ -34,10 +34,11 @@ onMounted(async () => {
 const items = [
   { icon: Home,         label: 'Feed',      to: '/dashboard' },
   { icon: Compass,      label: 'Discover',  to: '/discover' },
+     { icon: Search,   label: 'Search',    to: '/search' },
+
   { icon: Trophy,       label: 'Quests',    to: '/quests' },
   { icon: Heart,        label: 'Favorites', to: '/favorites' },
   { icon: CircleUser,   label: 'Profile',    to: '/profile' },
-   { icon: Search,   label: 'Search',    to: '/search' },
 ]
 
 async function logoutUser() {

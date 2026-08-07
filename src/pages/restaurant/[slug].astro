@@ -1,14 +1,12 @@
 ---
-// src/pages/restaurant/[slug].astro
-// Equivalente de src/routes/restaurant.$slug.tsx
-import LayoutPage from '../../layouts/LayoutPage.astro'
+
+import LayoutPage from '../../layouts/BaseLayout.astro'
 import AppSidebar from '../../components/AppSidebar.vue'
 import RestaurantDetailClient from '../../components/RestaurantDetailClient.vue'
 import RestaurantDistance from '../../components/RestaurantDistance.vue'
 import WriteReviewWrapper from '../../components/WriteReviewWrapper.vue'
 import Reviews from '../../components/UI/Reviews.vue'
 import pool from '../../lib/db'
-import type { Restaurant } from '../../data/restaurants'
 
 interface SlugRow {
   slug: string
@@ -125,9 +123,8 @@ const ratingDist = [
 ---
 
 <LayoutPage title={`${r.name} — rateapp`} description={r.description}>
-  <div class="flex min-h-screen bg-base-100 text-base-content">
 
-    <AppSidebar client:load />
+
 
     <main class="flex-1 min-w-0 " >
 
@@ -332,5 +329,4 @@ const ratingDist = [
         </div>
       </div>
     </main>
-  </div>
 </LayoutPage>

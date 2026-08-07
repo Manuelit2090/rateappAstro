@@ -1,8 +1,13 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { dataUser } from '../store/dataUser'
 import listBadges from '../data/badges.json'
+import { checkBadges } from '../lib/badgeVerifier'
 
 const $listBadges = ref(listBadges)
+
+const badgeSummary = computed(() => checkBadges(dataUser.user, listBadges))
+const earnedBadgeIds = computed(() => new Set(badgeSummary.value.earnedBadgeIds))
 
 // Mapeo dinámico usando los colores semánticos del tema de DaisyUI
 const getDifficultyBadge = (difficulty) => {
@@ -21,10 +26,13 @@ const getDifficultyBadge = (difficulty) => {
     <div 
       v-for="badge in $listBadges" 
       :key="badge.id"
-      class="relative flex flex-col justify-between p-6 rounded-2xl border border-base-content/10 bg-base-200  hover:border-primary/30 shadow-2xl shadow-neutral-900/50 hover:shadow-primary/20 transition-all duration-300 overflow-hidden group "
+      :class="[
+        'relative flex flex-col justify-between p-6 rounded-2xl border border-base-content/10 bg-base-200 hover:border-primary/30 shadow-2xl shadow-neutral-900/50 hover:shadow-primary/20 transition-all duration-300 overflow-hidden group',
+        earnedBadgeIds.has(badge.id) ? 'ring-2 ring-success/70' : 'opacity-80'
+      ]"
     >
       <!-- Efecto sutil de brillo con el color Primary al pasar el cursor -->
-      <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      <div class="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
       <div class="relative z-10">
         <!-- Etiquetas superiores (Categoría y Dificultad) -->
@@ -38,9 +46,14 @@ const getDifficultyBadge = (difficulty) => {
         </div>
 
         <!-- Información de la Insignia -->
-        <h3 class="text-xl font-black text-base-content mb-2 group-hover:text-primary transition-colors">
-          {{ badge.badgeName }}
-        </h3>
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <h3 class="text-xl font-black text-base-content group-hover:text-primary transition-colors">
+            {{ badge.badgeName }}
+          </h3>
+          <span v-if="earnedBadgeIds.has(badge.id)" class="px-2.5 py-1 rounded-full bg-success/15 text-success text-xs font-bold">
+            Ganada
+          </span>
+        </div>
         <p class="text-sm text-base-content/70 leading-relaxed mb-5">
           {{ badge.badgeDescription }}
         </p>

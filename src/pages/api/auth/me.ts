@@ -2,6 +2,13 @@ import type { APIRoute } from 'astro';
 import pool from '../../../lib/db';
 import { verifyToken } from '../../../lib/auth';
 
+async function getBadgesColumnName(): Promise<string | null> {
+  const [columnsRows] = (await pool.execute('SHOW COLUMNS FROM users')) as any[];
+  const fieldNames = columnsRows.map((column: any) => column.Field);
+  const matches = ['badges', 'badge_ids', 'user_badges', 'badgeIds'];
+  return fieldNames.find((field: string) => matches.includes(field)) || null;
+}
+
 export const GET: APIRoute = async ({ cookies }) => {
   const token = cookies.get('auth_token')?.value;
 
@@ -19,6 +26,7 @@ export const GET: APIRoute = async ({ cookies }) => {
   const availableFields = new Set(columnsRows.map((column: any) => column.Field));
 
   const fields = ['id', 'name', 'email', 'totalPoints', 'totalReviews'];
+  const badgeColumn = await getBadgesColumnName();
 
   if (availableFields.has('reviews')) fields.push('reviews');
   if (availableFields.has('favoriteRestaurants')) fields.push('favoriteRestaurants');
@@ -26,8 +34,15 @@ export const GET: APIRoute = async ({ cookies }) => {
   if (availableFields.has('cuponsBuy')) fields.push('cuponsBuy');
   if (availableFields.has('couponsBuy')) fields.push('couponsBuy');
 
+  const selectFields = [...fields];
+  const badgeSelectAlias = 'badgeValue';
+
+  if (badgeColumn) {
+    selectFields.push(`\`${badgeColumn}\` AS \`${badgeSelectAlias}\``);
+  }
+
   const [rows] = await pool.execute(
-    `SELECT ${fields.join(', ')} FROM users WHERE id = ?`,
+    `SELECT ${selectFields.join(', ')} FROM users WHERE id = ?`,
     [payload.id]
   ) as any[];
 
@@ -46,6 +61,7 @@ export const GET: APIRoute = async ({ cookies }) => {
     reviews: user.reviews ?? [],
     favoriteRestaurants: user.favoriteRestaurants ?? user.favoriteRestaurant ?? [],
     favoriteRestaurant: user.favoriteRestaurant ?? user.favoriteRestaurants ?? [],
+    badges: user.badgeValue ?? user.badges ?? [],
     cuponsBuy: user.cuponsBuy ?? user.couponsBuy ?? [],
     couponsBuy: user.couponsBuy ?? user.cuponsBuy ?? [],
   };

@@ -128,6 +128,7 @@ export const favoriteService = {
   getAll: () => api.get('/api/favorites'),
 };
 
-export const questService = {
-  // Aquí puedes agregar tus servicios de quests en el futuro
+export const badgeService = {
+  getUserBadges: () => api.get('/api/auth/badges'),
+  addOrToggleBadge: (badgeId: number | string) => api.post('/api/auth/badges', { badgeId }),
 };
