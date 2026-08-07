@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import SettingsPage from '../components/SettingsPage.vue'
+---
+
+<BaseLayout
+  title="Settings — rateapp"
+  description="Manage your account settings and preferences."
+>
+  <SettingsPage client:load />
+</BaseLayout>

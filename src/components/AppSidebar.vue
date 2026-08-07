@@ -138,10 +138,13 @@ function isActive(to: string, idx: number) {
         </p>
       </div>
 
-      <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral-content hover:text-base-content hover:bg-base-200 transition-colors">
+      <a
+        href="/settings"
+        class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral-content hover:text-base-content hover:bg-base-200 transition-colors"
+      >
         <Settings class="h-5 w-5" />
         <span v-if="open">Settings</span>
-      </button>
+      </a>
       <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral-content hover:text-base-content hover:bg-base-200 transition-colors" @click="logoutUser()">
         <LogOut class="h-5 w-5" />
         <span v-if="open">Log Out</span>
