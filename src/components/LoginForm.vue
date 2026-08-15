@@ -4,8 +4,9 @@ import { loadDataUserFromAPI } from '../store/dataUser';
 import { ArrowUp } from 'lucide-vue-next'
 import { useAutoAnimate } from '@formkit/auto-animate/vue'
 
-// 1. Añadimos la reactividad para el nombre
+// 1. Añadimos la reactividad para el nombre y tipo de cuenta
 const name = ref('');
+const accountType = ref<'CLIENT' | 'RESTAURANT' | ''>('');
 const email = ref('');
 const password = ref('');
 const error = ref('');
@@ -43,7 +44,12 @@ async function handleLogin() {
     }
 
     await loadDataUserFromAPI();
-    window.location.href = '/dashboard';
+    // redirigir según tipo de cuenta
+    if (data.sys === 'RESTAURANT') {
+      window.location.href = '/admin/dashboard';
+    } else {
+      window.location.href = '/dashboard';
+    }
   } catch (err) {
     console.error('Error:', err);
     error.value = 'Error de conexión. Intenta de nuevo.';
@@ -69,13 +75,16 @@ async function handleRegister() {
 
   loading.value = true;
   try {
+    // si no se selecciona tipo, default CLIENT
+    const sysToSend = accountType.value === 'RESTAURANT' ? 'RESTAURANT' : 'CLIENT';
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: name.value.trim(), 
         email: email.value.trim(),
-        password: password.value
+        password: password.value,
+        sys: sysToSend
       }),
     });
 
@@ -89,7 +98,13 @@ async function handleRegister() {
 
     // Si el registro inicia sesión automáticamente (guarda cookie) cargamos datos
     await loadDataUserFromAPI();
-    window.location.href = '/dashboard';
+    // redirigir según tipo
+    const returnedSys = data.sys || sysToSend || 'CLIENT';
+    if (returnedSys === 'RESTAURANT') {
+      window.location.href = '/admin/dashboard';
+    } else {
+      window.location.href = '/dashboard';
+    }
   } catch (err) {
     console.error('Error:', err);
     error.value = 'Error de conexión. Intenta de nuevo.';
@@ -165,6 +180,18 @@ function changeLoginOrRegister() {
             <input v-model="name" type="text" placeholder="Ej. Carlos Pérez"
               class="input input-bordered w-full bg-base-100/80 border-base-300 focus:border-primary focus:ring-0 transition-all rounded-full" />
           </div>
+
+            <!-- Selector de tipo de cuenta -->
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text text-base-content/70">Tipo de cuenta</span>
+              </label>
+              <div class="flex gap-2">
+                <button type="button" @click="accountType = 'CLIENT'" :class="['btn', accountType === 'CLIENT' ? 'btn-primary' : 'btn-outline']">Cliente</button>
+                <button type="button" @click="accountType = 'RESTAURANT'" :class="['btn', accountType === 'RESTAURANT' ? 'btn-primary' : 'btn-outline']">Restaurant</button>
+              </div>
+              <p class="text-xs text-muted-foreground mt-2">Si no seleccionas nada, se asignará automáticamente <strong>CLIENT</strong>.</p>
+            </div>
 
           <div class="form-control">
             <label class="label">

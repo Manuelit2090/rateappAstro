@@ -11,7 +11,7 @@ import { hashPassword, generateToken } from '../../../lib/auth';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { name, email, password } = await request.json();
+    const { name, email, password, sys } = await request.json();
 
     if (!name || !email || !password) {
       return new Response(JSON.stringify({ error: 'Nombre, email y contraseña son requeridos' }), { status: 400 });
@@ -33,10 +33,13 @@ export const POST: APIRoute = async ({ request }) => {
     const password_hash = await hashPassword(password);
     const recovery_code = Math.floor(100000 + Math.random() * 900000).toString();
 
+    const allowedSys = ['CLIENT', 'RESTAURANT'];
+    const sysValue = typeof sys === 'string' && allowedSys.includes(sys) ? sys : 'CLIENT';
+
     const [result] = await pool.execute(
       `INSERT INTO users (name, email, password, totalPoints, totalReviews, recovery_code, sys, restaurant_id)
-       VALUES (?, ?, ?, 0, 0, ?, 'CLIENT', NULL)`,
-      [name, email, password_hash, recovery_code]
+       VALUES (?, ?, ?, 0, 0, ?, ?, NULL)`,
+      [name, email, password_hash, recovery_code, sysValue]
     ) as any[];
 
     const [rows] = await pool.execute(
@@ -52,7 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
       restaurant_id: customer.restaurant_id ?? null,
     });
 
-    return new Response(JSON.stringify({ message: 'Registro exitoso', id: customer.id }), {
+    return new Response(JSON.stringify({ message: 'Registro exitoso', id: customer.id, sys: customer.sys ?? sysValue }), {
       status: 201,
       headers: {
         'Set-Cookie': `auth_token=${token}; HttpOnly; Secure; Path=/; Max-Age=604800; SameSite=Strict`,

@@ -5,9 +5,9 @@
  * @depends src/components/RestaurantDashboard.vue, src/lib/auth
  */
 
-import BaseLayout from '../layouts/BaseLayout.astro';
-import RestaurantDashboard from '../components/RestaurantDashboard.vue';
-import { verifyToken } from '../lib/auth';
+import AdminLayout from '../../layouts/AdminBaseLayout.astro';
+import RestaurantDashboard from '../../components/RestaurantDashboard.vue';
+import { verifyToken } from '../../lib/auth';
 
 const sessionToken = Astro.cookies.get('auth_token')?.value;
 
@@ -17,11 +17,12 @@ if (!sessionToken) {
 
 const payload = verifyToken(sessionToken);
 
-if (!payload || payload.sys !== 'RESTAURANT' || !payload.restaurant_id) {
+if (!payload || payload.sys !== 'RESTAURANT') {
   return Astro.redirect('/login');
 }
 
 let userData = null;
+let restaurantId: number | null = null;
 
 try {
   const meResponse = await fetch(new URL('/api/auth/me', Astro.url.origin).toString(), {
@@ -31,24 +32,20 @@ try {
     },
   });
 
-  if (!meResponse.ok) {
-    return Astro.redirect('/login');
-  }
-
-  const meData = await meResponse.json();
-  userData = meData.user ?? null;
-
-  if (!userData || userData.sys !== 'RESTAURANT' || !userData.restaurant_id) {
-    return Astro.redirect('/login');
+  if (meResponse.ok) {
+    const meData = await meResponse.json();
+    userData = meData.user ?? null;
+    restaurantId = Number(userData?.restaurant_id ?? payload.restaurant_id) || null;
+  } else {
+    // no bloquear el acceso si /api/auth/me falla; permitimos que el usuario vea el dashboard
+    restaurantId = payload.restaurant_id ? Number(payload.restaurant_id) : null;
   }
 } catch (error) {
   console.error('Error cargando sesión del restaurante:', error);
-  return Astro.redirect('/login');
+  restaurantId = payload.restaurant_id ? Number(payload.restaurant_id) : null;
 }
-
-const restaurantId = Number(userData.restaurant_id ?? payload.restaurant_id);
 ---
 
-<BaseLayout>
+<AdminLayout>
   <RestaurantDashboard restaurantId={restaurantId} client:load />
-</BaseLayout>
+</AdminLayout>
