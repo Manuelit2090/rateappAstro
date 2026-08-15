@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import HeaderPage from './UI/HeaderPage.vue';
 
 interface UserProfile {
   id?: number | string
@@ -108,8 +109,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-base-100 px-4 py-8 text-base-content">
-    <div class="mx-auto max-w-5xl space-y-6">
+  <div class="w-full min-h-screen bg-base-100  text-base-content">
+        <HeaderPage title="Settings" subtitle="Gestiona tu perfil y preferencias" />
+
+    <div class="mx-auto px-6 py-6 flex flex-col gap-4">
       <div class="rounded-3xl border border-base-300 bg-base-100 p-6 shadow-sm">
         <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
           <div>

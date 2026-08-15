@@ -1,0 +1,54 @@
+/**
+ * @file restaurant-admin.astro
+ * @description Panel de administración para usuarios con rol RESTAURANT.
+ * @depends src/components/RestaurantDashboard.vue, src/lib/auth
+ */
+
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RestaurantDashboard from '../components/RestaurantDashboard.vue';
+import { verifyToken } from '../lib/auth';
+
+const sessionToken = Astro.cookies.get('auth_token')?.value;
+
+if (!sessionToken) {
+  return Astro.redirect('/login');
+}
+
+const payload = verifyToken(sessionToken);
+
+if (!payload || payload.sys !== 'RESTAURANT' || !payload.restaurant_id) {
+  return Astro.redirect('/login');
+}
+
+let userData = null;
+
+try {
+  const meResponse = await fetch(new URL('/api/auth/me', Astro.url.origin).toString(), {
+    headers: {
+      Cookie: `auth_token=${sessionToken}`,
+      Accept: 'application/json',
+    },
+  });
+
+  if (!meResponse.ok) {
+    return Astro.redirect('/login');
+  }
+
+  const meData = await meResponse.json();
+  userData = meData.user ?? null;
+
+  if (!userData || userData.sys !== 'RESTAURANT' || !userData.restaurant_id) {
+    return Astro.redirect('/login');
+  }
+} catch (error) {
+  console.error('Error cargando sesión del restaurante:', error);
+  return Astro.redirect('/login');
+}
+
+const restaurantId = Number(userData.restaurant_id ?? payload.restaurant_id);
+---
+
+<BaseLayout>
+  <RestaurantDashboard restaurantId={restaurantId} client:load />
+</BaseLayout>

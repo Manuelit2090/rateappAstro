@@ -31,21 +31,26 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const password_hash = await hashPassword(password);
-
     const recovery_code = Math.floor(100000 + Math.random() * 900000).toString();
 
     const [result] = await pool.execute(
-      `INSERT INTO users (name, email, password, totalPoints, totalReviews, recovery_code) VALUES (?, ?, ?, 0, 0, ?)`,
+      `INSERT INTO users (name, email, password, totalPoints, totalReviews, recovery_code, sys, restaurant_id)
+       VALUES (?, ?, ?, 0, 0, ?, 'CLIENT', NULL)`,
       [name, email, password_hash, recovery_code]
     ) as any[];
 
     const [rows] = await pool.execute(
-      'SELECT id, email, name FROM users WHERE id = ?',
+      'SELECT id, email, name, sys, restaurant_id FROM users WHERE id = ?',
       [result.insertId]
     ) as any[];
 
     const customer = rows[0];
-    const token = generateToken({ id: customer.id, email: customer.email, role: 'customer' });
+    const token = generateToken({
+      id: customer.id,
+      email: customer.email,
+      sys: customer.sys ?? 'CLIENT',
+      restaurant_id: customer.restaurant_id ?? null,
+    });
 
     return new Response(JSON.stringify({ message: 'Registro exitoso', id: customer.id }), {
       status: 201,

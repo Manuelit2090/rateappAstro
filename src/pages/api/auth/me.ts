@@ -26,6 +26,9 @@ export const GET: APIRoute = async ({ cookies }) => {
   const availableFields = new Set(columnsRows.map((column: any) => column.Field));
 
   const fields = ['id', 'name', 'email', 'totalPoints', 'totalReviews'];
+  if (availableFields.has('sys')) fields.push('sys');
+  if (availableFields.has('restaurant_id')) fields.push('restaurant_id');
+
   const badgeColumn = await getBadgesColumnName();
 
   if (availableFields.has('reviews')) fields.push('reviews');
@@ -56,6 +59,9 @@ export const GET: APIRoute = async ({ cookies }) => {
     id: user.id,
     name: user.name,
     email: user.email,
+    sys: user.sys ?? 'CLIENT',
+    restaurant_id: user.restaurant_id ?? null,
+    role: user.sys ?? 'CLIENT',
     totalPoints: user.totalPoints ?? 0,
     totalReviews: user.totalReviews ?? 0,
     reviews: user.reviews ?? [],
