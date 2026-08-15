@@ -1,9 +1,3 @@
-/**
- * @file middleware.ts
- * @description Middleware de Astro para proteger rutas privadas según el rol del usuario autenticado.
- * @depends astro:middleware, src/lib/auth
- */
-
 import { defineMiddleware } from 'astro:middleware';
 import { verifyToken } from './lib/auth';
 
@@ -12,7 +6,8 @@ const PRIVATE_CLIENT_PATHS = ['/dashboard', '/profile', '/favorites', '/discover
 const PRIVATE_RESTAURANT_PATHS = ['/restaurant-admin'];
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const { pathname, cookies, redirect } = context;
+  const { url, cookies, redirect } = context;
+  const pathname = url.pathname;
 
   if (pathname.startsWith('/api/')) {
     return next();
@@ -23,13 +18,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   const token = cookies.get('auth_token')?.value;
-
   if (!token) {
     return redirect('/login');
   }
 
   const payload = verifyToken(token);
-
   if (!payload) {
     return redirect('/login');
   }
@@ -44,19 +37,15 @@ export const onRequest = defineMiddleware(async (context, next) => {
     if (restaurantId && isRestaurantRoute) {
       return next();
     }
-
     if (restaurantId && pathname === '/dashboard') {
       return redirect('/restaurant-admin');
     }
-
     if (!restaurantId) {
       return redirect('/login');
     }
-
     if (isClientRoute) {
       return redirect('/restaurant-admin');
     }
-
     return next();
   }
 
