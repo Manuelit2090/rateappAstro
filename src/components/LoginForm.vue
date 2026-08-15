@@ -26,13 +26,17 @@ async function handleLogin() {
 
   loading.value = true;
   try {
+    const payload = {
+      email: email.value.trim(),
+      password: password.value,
+    };
+
+    console.log('Payload enviado:', payload);
+
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: email.value.trim(),
-        password: password.value
-      }),
+      body: JSON.stringify(payload),
     });
 
     const data = await res.json();

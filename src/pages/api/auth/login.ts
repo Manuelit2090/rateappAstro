@@ -26,6 +26,8 @@ function getRedirectPath(userSystem: 'CLIENT' | 'RESTAURANT' | 'ADMIN'): string 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = (await request.json().catch(() => null)) as Partial<{ email: string; password: string }> | null;
+    console.log('Body recibido:', body);
+
     const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : '';
     const password = typeof body?.password === 'string' ? body.password : '';
 
@@ -42,25 +44,27 @@ export const POST: APIRoute = async ({ request }) => {
     )) as [UserLoginRow[], unknown];
 
     const user = rows[0] ?? null;
+    console.log('Usuario encontrado en DB:', user);
 
     if (!user) {
-      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), {
+      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos: usuario no encontrado' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
     if (typeof user.password !== 'string' || user.password.length === 0) {
-      return new Response(JSON.stringify({ error: 'Credenciales inválidas' }), {
+      return new Response(JSON.stringify({ error: 'Credenciales inválidas: contraseña vacía' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const passwordMatches = await verifyPassword(password, user.password);
+    const isPasswordValid = await verifyPassword(password, user.password);
+    console.log('Resultado de bcrypt:', isPasswordValid);
 
-    if (!passwordMatches) {
-      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), {
+    if (!isPasswordValid) {
+      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos: bcrypt no coincide' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
