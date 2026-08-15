@@ -3,36 +3,59 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import ProfileCard from '../components/ProfileCard.vue'
 import RestaurantGrid from '../components/RestaurantGrid.vue'
 import HeaderPage from '../components/UI/HeaderPage.vue'
-
-// Importaciones de servicios para el servidor
+import { verifyToken } from '../lib/auth'
 import { restaurantService } from '../lib/api'
 
-// 1. CONTROL DE ACCESO EN EL SERVIDOR
-// Leemos la cookie o token de sesión directamente en el servidor
 const sessionToken = Astro.cookies.get('auth_token')?.value;
 
 if (!sessionToken) {
   return Astro.redirect('/login');
 }
 
-// 2. PETICIONES EN PARALELO DESDE EL SERVIDOR (Ultra rápido)
+const payload = verifyToken(sessionToken);
+
+if (!payload) {
+  return Astro.redirect('/login');
+}
+
 let userData = null;
 let initialRestaurants = [];
 
 try {
-  // Realizamos las llamadas utilizando el token del servidor
-  const [userResponse, restResponse] = await Promise.all([
-    fetch('https://tuweb.com', {
-      headers: { 'Authorization': `Bearer ${sessionToken}` }
-    }).then(res => res.json()),
-    
-    restaurantService.search('', undefined, 1)
-  ]);
+  const meResponse = await fetch(new URL('/api/auth/me', Astro.url.origin).toString(), {
+    headers: {
+      Cookie: `auth_token=${sessionToken}`,
+      Accept: 'application/json',
+    },
+  });
 
-  userData = userResponse.user ?? { name: 'Explorador', totalPoints: 0, totalReviews: 0 };
+  if (!meResponse.ok) {
+    return Astro.redirect('/login');
+  }
+
+  const meData = await meResponse.json();
+  userData = meData.user ?? null;
+
+  if (!userData) {
+    return Astro.redirect('/login');
+  }
+
+  const userSystem = userData.sys ?? 'CLIENT';
+  const restaurantId = userData.restaurant_id ?? null;
+
+  if (userSystem === 'RESTAURANT' && restaurantId) {
+    return Astro.redirect('/restaurant-admin');
+  }
+
+  if (userSystem !== 'CLIENT' && userSystem !== 'ADMIN') {
+    return Astro.redirect('/login');
+  }
+
+  const restResponse = await restaurantService.search('', undefined, 1);
   initialRestaurants = restResponse.restaurants ?? [];
 } catch (error) {
-  console.error('Error cargando datos en SSR:', error);
+  console.error('Error cargando datos del dashboard SSR:', error);
+  return Astro.redirect('/login');
 }
 
 const filterTabs = ['Todos', 'Tendencia', 'Promocionados'];
@@ -40,12 +63,10 @@ const filterTabs = ['Todos', 'Tendencia', 'Promocionados'];
 
 <BaseLayout>
   <main class="flex-1 min-w-0">
-    <!-- Header estático: No se hidrata en el cliente (0% JavaScript adicional) -->
     <HeaderPage title="Dashboard" subtitle="Descubre nuevos restaurantes cerca de tí" />
 
     <div class="px-6 md:px-10 py-8 space-y-8 max-w-350 mx-auto">
       <div class="flex flex-col gap-4">
-        <!-- Pasamos userData como prop inicial para pintarlo al instante -->
         <ProfileCard initialUser={userData} client:load />
       </div>
 
@@ -70,7 +91,6 @@ const filterTabs = ['Todos', 'Tendencia', 'Promocionados'];
           </div>
         </div>
 
-        <!-- Pasamos la lista de restaurantes precargada -->
         <RestaurantGrid initialRestaurants={initialRestaurants} client:load />
       </section>
 

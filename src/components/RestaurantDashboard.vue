@@ -17,6 +17,10 @@ interface RestaurantProfile {
   location: string
 }
 
+const props = defineProps<{
+  restaurantId?: number | string | null
+}>()
+
 const restaurant = ref<RestaurantProfile>({
   name: '',
   category: '',
@@ -37,6 +41,10 @@ const isSaving = ref(false)
 const activeTab = ref<'profile' | 'stats'>('profile')
 
 const getRestaurantId = () => {
+  if (props.restaurantId) {
+    return String(props.restaurantId)
+  }
+
   if (typeof window === 'undefined') return ''
 
   const fromStorage = localStorage.getItem('restaurantId')

@@ -18,7 +18,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const [rows] = await pool.execute(
-      'SELECT id, name, email, password FROM users WHERE email = ?',
+      'SELECT id, name, email, password, sys, restaurant_id FROM users WHERE email = ?',
       [email]
     ) as any[];
 
@@ -28,11 +28,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), { status: 401 });
     }
 
-    console.log('--- INTENTO DE LOGIN ---');
-    console.log('Usuario encontrado en BD:', customer);
     const match = await verifyPassword(password, customer.password);
-    console.log('¿La contraseña coincide?:', match);
-    console.log('------------------------');
 
     if (!match) {
       return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), { status: 401 });
@@ -48,7 +44,13 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    const token = generateToken({ id: customer.id, email: customer.email, role: 'customer' });
+    const userSystem = customer.sys ?? 'CLIENT';
+    const token = generateToken({
+      id: customer.id,
+      email: customer.email,
+      sys: userSystem,
+      restaurant_id: customer.restaurant_id ?? null,
+    });
 
     return new Response(JSON.stringify({ message: 'Login exitoso', id: customer.id }), {
       status: 200,
