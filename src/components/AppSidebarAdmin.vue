@@ -45,7 +45,7 @@ function isActive(to: string, idx: number) {
           <span class="font-display text-2xl font-bold text-lime">app</span>
           <span class="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_12px_var(--p)]" />
       </div>
-             <p class="text-sm text-muted-foreground">
+             <p class="text-xs text-muted-foreground">
               For businesses
             </p>
         </div>
