@@ -5,9 +5,8 @@ import { dataUser, loadDataUserFromAPI, logoutUser, setDataUser } from '../store
 // lucide-vue-next equivalents
 import {
   Menu, Home, Compass, Trophy, Heart, Bookmark,
-  MessageSquare, Settings, LogOut, Flame, MapPin, CircleUser, Search
+  MessageSquare, Settings, LogOut, Flame, MapPin, CircleUser, Search, TicketPercent
 } from 'lucide-vue-next'
-
 const open = ref(true)
 const routePath = ref('/')
 
@@ -35,7 +34,7 @@ const items = [
   { icon: Home,         label: 'Feed',      to: '/dashboard' },
   { icon: Compass,      label: 'Discover',  to: '/discover' },
      { icon: Search,   label: 'Search',    to: '/search' },
-
+  { icon: TicketPercent, label: 'Shop',     to: '/shop' },
   { icon: Trophy,       label: 'Quests',    to: '/quests' },
   { icon: Heart,        label: 'Favorites', to: '/favorites' },
   { icon: CircleUser,   label: 'Profile',    to: '/profile' },

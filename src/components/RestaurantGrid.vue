@@ -3,11 +3,23 @@ import { ref, onMounted } from 'vue'
 import RestaurantCard from './RestaurantCard.vue'
 import { restaurantService } from '../lib/api'
 
-const restaurants = ref<any[]>([])
-const loading = ref(true)
+// 1. Definimos las Props para recibir datos desde Astro
+const props = defineProps<{
+  initialRestaurants?: any[]
+}>()
+
+// 2. Inicializamos el estado con los datos del servidor (si existen)
+const restaurants = ref<any[]>(props.initialRestaurants ?? [])
+// Si ya tenemos datos del servidor, no mostramos el spinner de carga
+const loading = ref(!props.initialRestaurants) 
 const error = ref('')
 
 async function loadRestaurants() {
+  // Si ya tenemos datos iniciales, no hace falta hacer el fetch en el onMounted
+  if (props.initialRestaurants && props.initialRestaurants.length > 0) {
+    return
+  }
+
   loading.value = true
   error.value = ''
 

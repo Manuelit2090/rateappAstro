@@ -159,10 +159,7 @@ onMounted(async () => {
             {{ f }}
           </button>
         </div>
-        <div class="flex items-center gap-2 text-xs text-muted-foreground">
-          <Flame class="h-3.5 w-3.5 text-peach" />
-          <span>3-day streak � keep it alive</span>
-        </div>
+
       </div>
 
       <div v-if="isLoading" class="text-center py-20 text-muted-foreground">

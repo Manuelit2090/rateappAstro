@@ -115,43 +115,6 @@ async function searchRestaurants(category?: string) {
           </div>
         </div>
       </section>
-<!-- 
-     
-      <section>
-        <div class="flex items-end justify-between mb-5">
-          <div>
-            <h3 class="font-display text-2xl font-bold">Browse by craving</h3>
-            <p class="text-sm text-neutral mt-1">Tell us what you're in the mood for</p>
-          </div>
-        </div>
-        <div class="grid grid-cols-4 md:grid-cols-8 gap-3">
-          <button
-            v-for="c in categories"
-            :key="c.label"
-            class="group flex flex-col items-center justify-center gap-2 aspect-square rounded-2xl border border-base-300/60 bg-base-100/60 hover:border-primary/40 hover:bg-base-100 transition-all"
-          >
-            <span class="text-2xl group-hover:scale-110 transition-transform">{{ c.icon }}</span>
-            <span class="text-[11px] font-medium text-neutral group-hover:text-base-content">{{ c.label }}</span>
-          </button>
-        </div>
-      </section> -->
-
-      <!-- Moods -->
-      <!-- <section>
-        <div class="flex items-center gap-2 mb-4">
-          <Flame class="h-4 w-4 text-secondary" />
-          <h3 class="font-display text-sm uppercase tracking-[0.2em] text-neutral">Curated moods</h3>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <button
-            v-for="m in moods"
-            :key="m"
-            class="px-4 h-10 rounded-full border border-base-300/60 bg-base-100/60 text-sm hover:border-secondary/50 hover:text-secondary transition"
-          >
-            {{ m }}
-          </button>
-        </div>
-      </section> -->
 
       <!-- Restaurant feed -->
       <section>

@@ -2,24 +2,51 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import ProfileCard from '../components/ProfileCard.vue'
 import RestaurantGrid from '../components/RestaurantGrid.vue'
-import RequireAuth from '../components/RequireAuth.vue'
 import HeaderPage from '../components/UI/HeaderPage.vue'
 
-const filterTabs = ['Todos', 'Tendencia', 'Promocionados']
+// Importaciones de servicios para el servidor
+import { restaurantService } from '../lib/api'
+
+// 1. CONTROL DE ACCESO EN EL SERVIDOR
+// Leemos la cookie o token de sesión directamente en el servidor
+const sessionToken = Astro.cookies.get('auth_token')?.value;
+
+if (!sessionToken) {
+  return Astro.redirect('/login');
+}
+
+// 2. PETICIONES EN PARALELO DESDE EL SERVIDOR (Ultra rápido)
+let userData = null;
+let initialRestaurants = [];
+
+try {
+  // Realizamos las llamadas utilizando el token del servidor
+  const [userResponse, restResponse] = await Promise.all([
+    fetch('https://tuweb.com', {
+      headers: { 'Authorization': `Bearer ${sessionToken}` }
+    }).then(res => res.json()),
+    
+    restaurantService.search('', undefined, 1)
+  ]);
+
+  userData = userResponse.user ?? { name: 'Explorador', totalPoints: 0, totalReviews: 0 };
+  initialRestaurants = restResponse.restaurants ?? [];
+} catch (error) {
+  console.error('Error cargando datos en SSR:', error);
+}
+
+const filterTabs = ['Todos', 'Tendencia', 'Promocionados'];
 ---
 
 <BaseLayout>
-  <!-- Control de sesión inmediato en el cliente (mientras no uses middleware de Astro) -->
-  <RequireAuth client:load />
-
   <main class="flex-1 min-w-0">
-    <!-- OPTIMIZADO: Sin client:load porque es texto estático -->
+    <!-- Header estático: No se hidrata en el cliente (0% JavaScript adicional) -->
     <HeaderPage title="Dashboard" subtitle="Descubre nuevos restaurantes cerca de tí" />
 
     <div class="px-6 md:px-10 py-8 space-y-8 max-w-350 mx-auto">
       <div class="flex flex-col gap-4">
-        <!-- Hidrata el perfil cuando el hilo principal esté libre -->
-        <ProfileCard client:idle />
+        <!-- Pasamos userData como prop inicial para pintarlo al instante -->
+        <ProfileCard initialUser={userData} client:load />
       </div>
 
       <section>
@@ -43,8 +70,8 @@ const filterTabs = ['Todos', 'Tendencia', 'Promocionados']
           </div>
         </div>
 
-        <!-- ¡Perfecto! Solo se descarga el JavaScript de la grilla cuando entra en la pantalla -->
-        <RestaurantGrid client:visible />
+        <!-- Pasamos la lista de restaurantes precargada -->
+        <RestaurantGrid initialRestaurants={initialRestaurants} client:load />
       </section>
 
       <footer class="py-10 text-center text-xs text-muted-foreground">

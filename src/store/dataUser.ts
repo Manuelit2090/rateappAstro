@@ -38,6 +38,9 @@ export function setDataUser(user: User | SessionUser) {
  * @returns Promise que resuelve cuando se cargan los datos
  */
 export async function loadDataUserFromAPI() {
+   if (dataUser.user) {
+    return; 
+  }
   if (typeof window === 'undefined') return;
   try {
     const response = await fetch('/api/auth/me', {
