@@ -1,13 +1,31 @@
 /**
  * @file login.ts
- * @description Endpoint POST para autenticación de usuarios. Verifica credenciales y genera JWT.
+ * @description Endpoint POST para autenticación de usuarios. Verifica credenciales,
+ * genera un JWT y devuelve la ruta de redirección correcta según el tipo de usuario.
  * @route POST /api/auth/login
  * @dependencies src/lib/db, src/lib/auth
  */
 
 import type { APIRoute } from 'astro';
+import type { RowDataPacket } from 'mysql2';
 import pool from '../../../lib/db';
 import { verifyPassword, generateToken, hashPassword } from '../../../lib/auth';
+
+type UserLoginRow = RowDataPacket & {
+  id: number;
+  email: string;
+  password: string;
+  sys: 'CLIENT' | 'RESTAURANT' | 'ADMIN' | null;
+  restaurant_id: number | null;
+};
+
+function getRedirectPath(userSystem: 'CLIENT' | 'RESTAURANT' | 'ADMIN'): string {
+  return userSystem === 'RESTAURANT' ? '/restaurant-admin' : '/dashboard';
+}
+
+function buildAuthCookie(token: string): string {
+  return `auth_token=${token}; HttpOnly; Secure; Path=/; Max-Age=604800; SameSite=Strict`;
+}
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -15,7 +33,10 @@ export const POST: APIRoute = async ({ request }) => {
     const emailNormalized = typeof email === 'string' ? email.trim().toLowerCase() : email;
 
     if (!email || !password) {
-      return new Response(JSON.stringify({ error: 'Email y contraseña son requeridos' }), { status: 400 });
+      return new Response(JSON.stringify({ error: 'Email y contraseña son requeridos' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     const [rows] = await pool.execute(
@@ -23,7 +44,7 @@ export const POST: APIRoute = async ({ request }) => {
       [emailNormalized]
     ) as any[];
 
-    const customer = rows[0];
+    const user = rows[0] ?? null;
 
     if (!customer) {
       console.debug('Login failed: no user for email', emailNormalized);
@@ -39,22 +60,30 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), { status: 401 });
     }
 
-    const isBcryptPassword = typeof customer.password === 'string' && customer.password.startsWith('$2');
+    const passwordMatches = await verifyPassword(password, user.password);
+
+    if (!passwordMatches) {
+      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const isBcryptPassword = user.password.startsWith('$2');
 
     if (!isBcryptPassword) {
       const newHash = await hashPassword(password);
-      await pool.execute(
-        'UPDATE users SET password = ? WHERE id = ?',
-        [newHash, customer.id]
-      );
+      await pool.execute('UPDATE users SET password = ? WHERE id = ?', [newHash, user.id]);
     }
 
-    const userSystem = customer.sys ?? 'CLIENT';
+    const userSystem: 'CLIENT' | 'RESTAURANT' | 'ADMIN' =
+      user.sys === 'RESTAURANT' || user.sys === 'ADMIN' ? user.sys : 'CLIENT';
+
     const token = generateToken({
-      id: customer.id,
-      email: customer.email,
+      id: user.id,
+      email: user.email,
       sys: userSystem,
-      restaurant_id: customer.restaurant_id ?? null,
+      restaurant_id: user.restaurant_id ?? null,
     });
 
     const isProd = Boolean(process.env.NODE_ENV === 'production' || import.meta.env.PROD);
@@ -69,6 +98,9 @@ export const POST: APIRoute = async ({ request }) => {
     });
   } catch (error) {
     console.error('Error en login:', error);
-    return new Response(JSON.stringify({ error: 'Error interno del servidor' }), { status: 500 });
+    return new Response(JSON.stringify({ error: 'Error interno del servidor' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 };
