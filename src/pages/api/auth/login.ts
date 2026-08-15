@@ -9,7 +9,7 @@
 import type { APIRoute } from 'astro';
 import type { RowDataPacket } from 'mysql2';
 import pool from '../../../lib/db';
-import { verifyPassword, generateToken, hashPassword } from '../../../lib/auth';
+import { verifyPassword, generateToken, hashPassword, buildAuthCookie } from '../../../lib/auth';
 
 type UserLoginRow = RowDataPacket & {
   id: number;
@@ -21,10 +21,6 @@ type UserLoginRow = RowDataPacket & {
 
 function getRedirectPath(userSystem: 'CLIENT' | 'RESTAURANT' | 'ADMIN'): string {
   return userSystem === 'RESTAURANT' ? '/restaurant-admin' : '/dashboard';
-}
-
-function buildAuthCookie(token: string): string {
-  return `auth_token=${token}; HttpOnly; Secure; Path=/; Max-Age=604800; SameSite=Strict`;
 }
 
 export const POST: APIRoute = async ({ request }) => {

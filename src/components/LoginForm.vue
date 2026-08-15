@@ -42,8 +42,10 @@ async function handleLogin() {
       return;
     }
 
+    const destination = data.redirect || (data.user?.sys === 'RESTAURANT' ? '/restaurant-admin' : '/dashboard');
+
     await loadDataUserFromAPI();
-    window.location.href = '/dashboard';
+    window.location.assign(destination);
   } catch (err) {
     console.error('Error:', err);
     error.value = 'Error de conexión. Intenta de nuevo.';
@@ -87,9 +89,11 @@ async function handleRegister() {
       return;
     }
 
+    const destination = data.redirect || '/dashboard';
+
     // Si el registro inicia sesión automáticamente (guarda cookie) cargamos datos
     await loadDataUserFromAPI();
-    window.location.href = '/dashboard';
+    window.location.assign(destination);
   } catch (err) {
     console.error('Error:', err);
     error.value = 'Error de conexión. Intenta de nuevo.';

@@ -7,7 +7,10 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const SECRET = import.meta.env.JWT_SECRET;
+const SECRET =
+  typeof import.meta.env.JWT_SECRET === 'string' && import.meta.env.JWT_SECRET.length > 0
+    ? import.meta.env.JWT_SECRET
+    : 'rateapp-development-secret-change-me';
 
 export type UserSystem = 'CLIENT' | 'RESTAURANT' | 'ADMIN';
 
@@ -70,6 +73,11 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
  * @param payload - Objeto con datos del usuario (id, email, sys, restaurant_id)
  * @returns String con el token JWT firmado
  */
+export function buildAuthCookie(token: string): string {
+  const secureFlag = import.meta.env.PROD ? '; Secure' : '';
+  return `auth_token=${token}; HttpOnly; Path=/; Max-Age=604800; SameSite=Lax${secureFlag}`;
+}
+
 export function generateToken(payload: TokenPayload): string {
   const normalizedSystem = normalizeUserSystem(payload.sys ?? payload.role);
 
@@ -99,9 +107,19 @@ export function verifyToken(token: string): {
   try {
     const decoded = jwt.verify(token, SECRET) as any;
 
+    if (!decoded || typeof decoded !== 'object') {
+      return null;
+    }
+
+    const id = Number(decoded.id);
+    const email = typeof decoded.email === 'string' ? decoded.email : '';
+    if (!Number.isFinite(id) || !email) {
+      return null;
+    }
+
     return {
-      id: Number(decoded.id),
-      email: String(decoded.email),
+      id,
+      email,
       sys: normalizeUserSystem(decoded.sys ?? decoded.role),
       restaurant_id: decoded.restaurant_id ?? null,
       role: decoded.role ?? decoded.sys ?? 'CLIENT',
