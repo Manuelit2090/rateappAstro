@@ -80,11 +80,20 @@ export const POST: APIRoute = async ({ request }) => {
     const userSystem: 'CLIENT' | 'RESTAURANT' | 'ADMIN' =
       user.sys === 'RESTAURANT' || user.sys === 'ADMIN' ? user.sys : 'CLIENT';
 
+    const restaurantId: number | null = user.restaurant_id ?? null;
+
+    if (userSystem === 'RESTAURANT' && restaurantId === null) {
+      return new Response(
+        JSON.stringify({ error: 'Cuenta de restaurante sin restaurante asociado.' }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     const token = generateToken({
       id: user.id,
       email: user.email,
       sys: userSystem,
-      restaurant_id: user.restaurant_id ?? null,
+      restaurant_id: restaurantId,
     });
 
     const redirectPath = getRedirectPath(userSystem);
@@ -97,7 +106,7 @@ export const POST: APIRoute = async ({ request }) => {
           id: user.id,
           email: user.email,
           sys: userSystem,
-          restaurant_id: user.restaurant_id ?? null,
+          restaurant_id: restaurantId,
         },
       }),
       {

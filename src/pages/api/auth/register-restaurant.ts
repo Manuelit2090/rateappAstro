@@ -84,7 +84,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const restaurantId = Number(restaurantInsert.insertId);
 
-    if (!restaurantId) {
+    if (!Number.isInteger(restaurantId) || restaurantId <= 0) {
       return new Response(
         JSON.stringify({ error: 'No se pudo crear el restaurante.' }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
@@ -101,7 +101,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const userId = Number(userInsert.insertId);
 
-    if (!userId) {
+    if (!Number.isInteger(userId) || userId <= 0) {
       await pool.execute('DELETE FROM restaurants WHERE id = ?', [restaurantId]);
       return new Response(
         JSON.stringify({ error: 'No se pudo crear el usuario del restaurante.' }),
@@ -123,7 +123,7 @@ export const POST: APIRoute = async ({ request }) => {
         user: {
           id: userId,
           email,
-          sys: 'RESTAURANT',
+          sys: 'RESTAURANT' as const,
           restaurant_id: restaurantId,
         },
       }),
