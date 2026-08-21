@@ -8,11 +8,11 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/node": "^10.1.1",
-    "@astrojs/vue": "^4.5.3",
+    "@astrojs/node": "^11.1.4",
+    "@astrojs/vue": "^7.0.2",
     "@formkit/auto-animate": "^0.10.0",
     "@nanostores/vue": "^1.1.0",
-    "astro": "^7.0.7",
+    "astro": "^7.2.4",
     "bcryptjs": "^2.4.3",
     "dotenv": "^17.4.2",
     "jsonwebtoken": "^9.0.3",
