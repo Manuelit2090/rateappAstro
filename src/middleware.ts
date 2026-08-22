@@ -33,7 +33,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   const userSystem = payload.sys ?? 'CLIENT';
   const restaurantId = payload.restaurant_id ?? null;
-<<<<<<< HEAD
 
   const isRestaurantRoute = PRIVATE_RESTAURANT_PATHS.some((route) => pathname === route || pathname.startsWith(`${route}/`));
   const isClientRoute = PRIVATE_CLIENT_PATHS.some((route) => pathname === route || pathname.startsWith(`${route}/`));
@@ -51,12 +50,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
       return next();
     }
 
-=======
-  const isRestaurantRoute = isProtectedPath(pathname, PRIVATE_RESTAURANT_PATHS);
-  const isClientRoute = isProtectedPath(pathname, PRIVATE_CLIENT_PATHS);
-
-  if (userSystem === 'RESTAURANT') {
->>>>>>> 0986f03d3c674bf383135790935109e11b42d2db
     if (!restaurantId) {
       return redirect('/login');
     }
