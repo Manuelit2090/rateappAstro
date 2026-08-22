@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-	"pid": 45314,
-=======
-	"pid": 9704,
->>>>>>> 395efca4aa920e8e8aab7cb1b2673601021b3054
+	"pid": 3382,
 	"port": 4321,
 	"url": "http://localhost:4321",
 	"urls": {
@@ -13,9 +9,5 @@
 		"network": []
 	},
 	"background": false,
-<<<<<<< HEAD
-	"startedAt": "2026-08-15T16:26:52.666Z"
-=======
-	"startedAt": "2026-08-15T16:34:08.707Z"
->>>>>>> 395efca4aa920e8e8aab7cb1b2673601021b3054
+	"startedAt": "2026-08-22T12:13:31.335Z"
 }

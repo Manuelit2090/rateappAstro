@@ -52,7 +52,7 @@ async function toggleLike() {
       <!-- Image -->
       <div class="relative aspect-[16/10] overflow-hidden">
         <img
-          :src="typeof r.image === 'object' ? r.image.src : r.image"
+          :src="typeof r.image === 'object' ? r.image.src : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSNfFd3Ldcdi2eQVHpLNWGrUtQY22FPA2sjnTNTD2llw&s=10'"
           :alt="r.name"
           loading="lazy"
           class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"

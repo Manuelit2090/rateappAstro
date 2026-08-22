@@ -1,7 +1,67 @@
 ---
-import AdminBaseLayout from '../../layouts/AdminBaseLayout.astro'
+
+
+import AdminBaseLayout from '../../layouts/AdminBaseLayout.astro';
+import RestaurantProfileGrid from '../../components/RestaurantProfileGrid.vue';
+import { verifyToken } from '../../lib/auth';
+
+const token = Astro.cookies.get('auth_token')?.value;
+
+if (!token) {
+  return Astro.redirect('/login');
+}
+
+const payload = verifyToken(token);
+
+if (!payload || payload.sys !== 'RESTAURANT') {
+  return Astro.redirect('/login');
+}
+
+let restaurant = null;
+
+try {
+  const meResponse = await fetch(new URL('/api/auth/me', Astro.url.origin).toString(), {
+    headers: {
+      Cookie: `auth_token=${token}`,
+      Accept: 'application/json',
+    },
+  });
+
+  if (!meResponse.ok) {
+    throw new Error('No se pudo obtener la sesión del restaurante');
+  }
+
+  const meData = await meResponse.json();
+  const restaurantId = Number(meData.user?.restaurant_id ?? payload.restaurant_id) || null;
+
+  if (restaurantId) {
+    const restaurantResponse = await fetch(new URL(`/api/restaurant?id=${restaurantId}`, Astro.url.origin).toString(), {
+      headers: {
+        Cookie: `auth_token=${token}`,
+        Accept: 'application/json',
+      },
+    });
+
+    if (restaurantResponse.ok) {
+      const restaurantData = await restaurantResponse.json();
+      restaurant = restaurantData.restaurant ?? null;
+    }
+  }
+} catch (error) {
+  console.error('Error cargando el restaurante del dashboard:', error);
+}
 ---
 
 <AdminBaseLayout title="Estadísticas — Admin">
-  
+  <main class="min-h-screen w-full bg-base-100 p-6 text-base-content">
+    <div class="mx-auto w-full space-y-6">
+      <header class="rounded-3xl border border-base-300 bg-base-100 p-6 shadow-sm">
+        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Dashboard</p>
+        <h1 class="mt-3 text-3xl font-bold">Estadísticas del restaurante</h1>
+        <p class="mt-2 text-base-content/70">Aquí puedes ver la información del negocio asociado a tu cuenta.</p>
+      </header>
+
+      <RestaurantProfileGrid restaurant={restaurant} client:load />
+    </div>
+  </main>
 </AdminBaseLayout>
