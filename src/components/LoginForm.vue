@@ -27,13 +27,17 @@ async function handleLogin() {
 
   loading.value = true;
   try {
+    const payload = {
+      email: email.value.trim(),
+      password: password.value,
+    };
+
+    console.log('Payload enviado:', payload);
+
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: email.value.trim(),
-        password: password.value
-      }),
+      body: JSON.stringify(payload),
     });
 
     const data = await res.json();
@@ -43,13 +47,19 @@ async function handleLogin() {
       return;
     }
 
+    const destination = data.redirect || (data.user?.sys === 'RESTAURANT' ? '/restaurant-admin' : '/dashboard');
+
     await loadDataUserFromAPI();
+<<<<<<< HEAD
     // redirigir según tipo de cuenta
     if (data.sys === 'RESTAURANT') {
       window.location.href = '/admin/dashboard';
     } else {
       window.location.href = '/dashboard';
     }
+=======
+    window.location.assign(destination);
+>>>>>>> 0986f03d3c674bf383135790935109e11b42d2db
   } catch (err) {
     console.error('Error:', err);
     error.value = 'Error de conexión. Intenta de nuevo.';
@@ -96,8 +106,11 @@ async function handleRegister() {
       return;
     }
 
+    const destination = data.redirect || '/dashboard';
+
     // Si el registro inicia sesión automáticamente (guarda cookie) cargamos datos
     await loadDataUserFromAPI();
+<<<<<<< HEAD
     // redirigir según tipo
     const returnedSys = data.sys || sysToSend || 'CLIENT';
     if (returnedSys === 'RESTAURANT') {
@@ -105,6 +118,9 @@ async function handleRegister() {
     } else {
       window.location.href = '/dashboard';
     }
+=======
+    window.location.assign(destination);
+>>>>>>> 0986f03d3c674bf383135790935109e11b42d2db
   } catch (err) {
     console.error('Error:', err);
     error.value = 'Error de conexión. Intenta de nuevo.';

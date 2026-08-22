@@ -9,7 +9,7 @@
 import type { APIRoute } from 'astro';
 import type { RowDataPacket } from 'mysql2';
 import pool from '../../../lib/db';
-import { verifyPassword, generateToken, hashPassword } from '../../../lib/auth';
+import { verifyPassword, generateToken, hashPassword, buildAuthCookie } from '../../../lib/auth';
 
 type UserLoginRow = RowDataPacket & {
   id: number;
@@ -23,14 +23,18 @@ function getRedirectPath(userSystem: 'CLIENT' | 'RESTAURANT' | 'ADMIN'): string 
   return userSystem === 'RESTAURANT' ? '/restaurant-admin' : '/dashboard';
 }
 
-function buildAuthCookie(token: string): string {
-  return `auth_token=${token}; HttpOnly; Secure; Path=/; Max-Age=604800; SameSite=Strict`;
-}
-
 export const POST: APIRoute = async ({ request }) => {
   try {
+<<<<<<< HEAD
     const { email, password } = await request.json();
     const emailNormalized = typeof email === 'string' ? email.trim().toLowerCase() : email;
+=======
+    const body = (await request.json().catch(() => null)) as Partial<{ email: string; password: string }> | null;
+    console.log('Body recibido:', body);
+
+    const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : '';
+    const password = typeof body?.password === 'string' ? body.password : '';
+>>>>>>> 0986f03d3c674bf383135790935109e11b42d2db
 
     if (!email || !password) {
       return new Response(JSON.stringify({ error: 'Email y contraseña son requeridos' }), {
@@ -45,7 +49,9 @@ export const POST: APIRoute = async ({ request }) => {
     ) as any[];
 
     const user = rows[0] ?? null;
+    console.log('Usuario encontrado en DB:', user);
 
+<<<<<<< HEAD
     if (!customer) {
       console.debug('Login failed: no user for email', emailNormalized);
       return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), { status: 401 });
@@ -58,12 +64,27 @@ export const POST: APIRoute = async ({ request }) => {
       const isBcrypt = typeof customer.password === 'string' && customer.password.startsWith('$2');
       console.debug('Login failed: password mismatch for user id', customer.id, 'isBcrypt=', isBcrypt, 'pwdLen=', typeof customer.password === 'string' ? customer.password.length : 'n/a', 'sample=', pwdSample);
       return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), { status: 401 });
+=======
+    if (!user) {
+      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos: usuario no encontrado' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
-    const passwordMatches = await verifyPassword(password, user.password);
+    if (typeof user.password !== 'string' || user.password.length === 0) {
+      return new Response(JSON.stringify({ error: 'Credenciales inválidas: contraseña vacía' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
+>>>>>>> 0986f03d3c674bf383135790935109e11b42d2db
+    }
 
-    if (!passwordMatches) {
-      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), {
+    const isPasswordValid = await verifyPassword(password, user.password);
+    console.log('Resultado de bcrypt:', isPasswordValid);
+
+    if (!isPasswordValid) {
+      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos: bcrypt no coincide' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -79,16 +100,26 @@ export const POST: APIRoute = async ({ request }) => {
     const userSystem: 'CLIENT' | 'RESTAURANT' | 'ADMIN' =
       user.sys === 'RESTAURANT' || user.sys === 'ADMIN' ? user.sys : 'CLIENT';
 
+    const restaurantId: number | null = user.restaurant_id ?? null;
+
+    if (userSystem === 'RESTAURANT' && restaurantId === null) {
+      return new Response(
+        JSON.stringify({ error: 'Cuenta de restaurante sin restaurante asociado.' }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     const token = generateToken({
       id: user.id,
       email: user.email,
       sys: userSystem,
-      restaurant_id: user.restaurant_id ?? null,
+      restaurant_id: restaurantId,
     });
 
     const isProd = Boolean(process.env.NODE_ENV === 'production' || import.meta.env.PROD);
     const secureFlag = isProd ? 'Secure; ' : '';
 
+<<<<<<< HEAD
     return new Response(JSON.stringify({ message: 'Login exitoso', id: customer.id, sys: userSystem }), {
       status: 200,
       headers: {
@@ -96,6 +127,27 @@ export const POST: APIRoute = async ({ request }) => {
         'Content-Type': 'application/json',
       },
     });
+=======
+    return new Response(
+      JSON.stringify({
+        message: 'Login exitoso',
+        redirect: redirectPath,
+        user: {
+          id: user.id,
+          email: user.email,
+          sys: userSystem,
+          restaurant_id: restaurantId,
+        },
+      }),
+      {
+        status: 200,
+        headers: {
+          'Set-Cookie': buildAuthCookie(token),
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+>>>>>>> 0986f03d3c674bf383135790935109e11b42d2db
   } catch (error) {
     console.error('Error en login:', error);
     return new Response(JSON.stringify({ error: 'Error interno del servidor' }), {

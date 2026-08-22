@@ -10,7 +10,7 @@
 import type { APIRoute } from 'astro';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../../lib/db';
-import { generateToken, hashPassword } from '../../../lib/auth';
+import { generateToken, hashPassword, buildAuthCookie } from '../../../lib/auth';
 
 type RestaurantRegistrationBody = {
   email: string;
@@ -24,10 +24,6 @@ type RestaurantRegistrationBody = {
 type UserExistsRow = RowDataPacket & {
   id: number;
 };
-
-function buildAuthCookie(token: string): string {
-  return `auth_token=${token}; HttpOnly; Secure; Path=/; Max-Age=604800; SameSite=Strict`;
-}
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -76,65 +72,71 @@ export const POST: APIRoute = async ({ request }) => {
       .replace(/^-+|-+$/g, '')
       .slice(0, 80) || 'restaurant';
 
-    const [restaurantInsert] = (await pool.execute(
-      `INSERT INTO restaurants (name, slug, address, category)
-       VALUES (?, ?, ?, ?)`,
-      [restaurantName, restaurantSlug, address, category]
-    )) as [ResultSetHeader, unknown];
+    const connection = await pool.getConnection();
 
-    const restaurantId = Number(restaurantInsert.insertId);
+    try {
+      await connection.beginTransaction();
 
-    if (!restaurantId) {
-      return new Response(
-        JSON.stringify({ error: 'No se pudo crear el restaurante.' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
+      const [restaurantInsert] = (await connection.execute(
+        `INSERT INTO restaurants (name, slug, address, category)
+         VALUES (?, ?, ?, ?)`,
+        [restaurantName, restaurantSlug, address, category]
+      )) as [ResultSetHeader, unknown];
 
-    const passwordHash = await hashPassword(password);
+      const restaurantId = Number(restaurantInsert.insertId);
 
-    const [userInsert] = (await pool.execute(
-      `INSERT INTO users (name, email, password, sys, restaurant_id)
-       VALUES (?, ?, ?, 'RESTAURANT', ?)`,
-      [name, email, passwordHash, restaurantId]
-    )) as [ResultSetHeader, unknown];
-
-    const userId = Number(userInsert.insertId);
-
-    if (!userId) {
-      await pool.execute('DELETE FROM restaurants WHERE id = ?', [restaurantId]);
-      return new Response(
-        JSON.stringify({ error: 'No se pudo crear el usuario del restaurante.' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const token = generateToken({
-      id: userId,
-      email,
-      sys: 'RESTAURANT',
-      restaurant_id: restaurantId,
-    });
-
-    return new Response(
-      JSON.stringify({
-        message: 'Registro de restaurante exitoso',
-        redirect: '/restaurant-admin',
-        user: {
-          id: userId,
-          email,
-          sys: 'RESTAURANT',
-          restaurant_id: restaurantId,
-        },
-      }),
-      {
-        status: 201,
-        headers: {
-          'Set-Cookie': buildAuthCookie(token),
-          'Content-Type': 'application/json',
-        },
+      if (!Number.isInteger(restaurantId) || restaurantId <= 0) {
+        throw new Error('No se pudo crear el restaurante.');
       }
-    );
+
+      const passwordHash = await hashPassword(password);
+
+      const [userInsert] = (await connection.execute(
+        `INSERT INTO users (name, email, password, sys, restaurant_id)
+         VALUES (?, ?, ?, 'RESTAURANT', ?)`,
+        [name, email, passwordHash, restaurantId]
+      )) as [ResultSetHeader, unknown];
+
+      const userId = Number(userInsert.insertId);
+
+      if (!Number.isInteger(userId) || userId <= 0) {
+        throw new Error('No se pudo crear el usuario del restaurante.');
+      }
+
+      await connection.commit();
+
+      const token = generateToken({
+        id: userId,
+        email,
+        sys: 'RESTAURANT',
+        restaurant_id: restaurantId,
+      });
+
+      return new Response(
+        JSON.stringify({
+          message: 'Registro de restaurante exitoso',
+          redirect: '/restaurant-admin',
+          user: {
+            id: userId,
+            email,
+            sys: 'RESTAURANT' as const,
+            restaurant_id: restaurantId,
+          },
+        }),
+        {
+          status: 201,
+          headers: {
+            'Set-Cookie': buildAuthCookie(token),
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
   } catch (error) {
     console.error('Error en registro de restaurante:', error);
     return new Response(
