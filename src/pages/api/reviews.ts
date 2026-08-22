@@ -30,8 +30,8 @@
  */
 
 import type { APIRoute } from 'astro';
-import pool from '../../../lib/db';
-import { verifyToken } from '../../../lib/auth';
+import pool from '../../lib/db';
+import { verifyToken } from '../../lib/auth';
 
 interface ReviewItem {
   item: string;

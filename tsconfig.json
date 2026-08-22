@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "baseUrl": "./",
     "paths": {
       "@lib/*": ["src/lib/*"],

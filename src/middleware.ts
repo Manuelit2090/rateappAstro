@@ -1,15 +1,11 @@
-import { defineMiddleware } from 'astro:middleware';
+import type { MiddlewareHandler } from 'astro';
 import { verifyToken } from './lib/auth';
 
 const PUBLIC_PATHS = new Set(['/login', '/register', '/', '/forgot-password']);
 const PRIVATE_CLIENT_PATHS = ['/dashboard', '/profile', '/favorites', '/discover', '/search', '/settings', '/quests', '/shop'];
 const PRIVATE_RESTAURANT_PATHS = ['/restaurant-admin', '/admin'];
 
-function isProtectedPath(pathname: string, routes: string[]): boolean {
-  return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
-}
-
-export const onRequest = defineMiddleware(async (context, next) => {
+export const onRequest: MiddlewareHandler = async (context, next) => {
   const { url, cookies, redirect } = context;
   const pathname = url.pathname;
 
@@ -78,4 +74,4 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   return next();
-});
+};

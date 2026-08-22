@@ -92,9 +92,10 @@ export const restaurantService = {
   getNearby: (lat: number, lon: number, radius: number = 10) =>
     api.get(`/api/restaurants/nearby?lat=${lat}&lon=${lon}&radius=${radius}`),
   
-  search: (q: string, category?: string) => {
+  search: (q: string, category?: string, page?: number) => {
     let url = `/api/restaurants/search?q=${q}`;
     if (category) url += `&category=${category}`;
+    if (page) url += `&page=${page}`;
     return api.get(url);
   },
 

@@ -129,35 +129,35 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-base-100 px-4 py-8 text-base-content">
+  <div class="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-100 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-6xl space-y-6">
-      <div class="rounded-3xl border border-base-300 bg-base-100 p-6 shadow-sm">
+      <div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
         <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
           <div>
-            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Restaurant Admin</p>
-            <h1 class="text-3xl font-bold">Panel de control del restaurante</h1>
-            <p class="mt-2 text-sm text-base-content/70">
+            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-orange-400">Restaurant Admin</p>
+            <h1 class="text-3xl font-bold tracking-tight">Ajustes del restaurante</h1>
+            <p class="mt-2 text-sm text-zinc-400">
               Edita la información de tu negocio y revisa métricas clave.
             </p>
           </div>
         </div>
       </div>
 
-      <div v-if="message" class="rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">
+      <div v-if="message" class="rounded-xl border border-orange-500/30 bg-orange-500/10 px-4 py-3 text-sm text-orange-300">
         {{ message }}
       </div>
 
       <div class="flex gap-3">
         <button
-          class="btn"
-          :class="activeTab === 'profile' ? 'btn-primary' : 'btn-ghost'"
+          class="rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+          :class="activeTab === 'profile' ? 'bg-orange-500 text-zinc-950' : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100'"
           @click="activeTab = 'profile'"
         >
           Perfil del Restaurante
         </button>
         <button
-          class="btn"
-          :class="activeTab === 'stats' ? 'btn-primary' : 'btn-ghost'"
+          class="rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+          :class="activeTab === 'stats' ? 'bg-orange-500 text-zinc-950' : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100'"
           @click="activeTab = 'stats'"
         >
           Estadísticas Rápidas
@@ -165,75 +165,75 @@ onMounted(() => {
       </div>
 
       <div v-if="activeTab === 'profile'" class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <section class="rounded-3xl border border-base-300 bg-base-100 p-6 shadow-sm">
-          <h2 class="text-xl font-semibold">Información del negocio</h2>
+        <section class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
+          <h2 class="text-xl font-semibold">Información del Restaurante</h2>
           <div class="mt-6 grid gap-4 md:grid-cols-2">
             <label class="block">
-              <span class="mb-2 block text-sm font-medium">Nombre</span>
-              <input v-model="restaurant.name" class="input input-bordered w-full" />
+              <span class="mb-2 block text-sm font-medium text-zinc-300">Nombre</span>
+              <input v-model="restaurant.name" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block">
-              <span class="mb-2 block text-sm font-medium">Categoría</span>
-              <input v-model="restaurant.category" class="input input-bordered w-full" />
+              <span class="mb-2 block text-sm font-medium text-zinc-300">Categoría</span>
+              <input v-model="restaurant.category" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block">
-              <span class="mb-2 block text-sm font-medium">Tipo de cocina</span>
-              <input v-model="restaurant.cuisine" class="input input-bordered w-full" />
+              <span class="mb-2 block text-sm font-medium text-zinc-300">Tipo de cocina</span>
+              <input v-model="restaurant.cuisine" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block">
-              <span class="mb-2 block text-sm font-medium">Rango de precios</span>
-              <input v-model="restaurant.priceRange" class="input input-bordered w-full" />
+              <span class="mb-2 block text-sm font-medium text-zinc-300">Rango de precios</span>
+              <input v-model="restaurant.priceRange" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block">
-              <span class="mb-2 block text-sm font-medium">Teléfono</span>
-              <input v-model="restaurant.phone" class="input input-bordered w-full" />
+              <span class="mb-2 block text-sm font-medium text-zinc-300">Teléfono</span>
+              <input v-model="restaurant.phone" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block">
-              <span class="mb-2 block text-sm font-medium">Correo</span>
-              <input v-model="restaurant.email" type="email" class="input input-bordered w-full" />
+              <span class="mb-2 block text-sm font-medium text-zinc-300">Correo</span>
+              <input v-model="restaurant.email" type="email" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block md:col-span-2">
-              <span class="mb-2 block text-sm font-medium">Dirección</span>
-              <input v-model="restaurant.address" class="input input-bordered w-full" />
+              <span class="mb-2 block text-sm font-medium text-zinc-300">Dirección</span>
+              <input v-model="restaurant.address" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block md:col-span-2">
-              <span class="mb-2 block text-sm font-medium">Descripción</span>
-              <textarea v-model="restaurant.description" class="textarea textarea-bordered w-full min-h-[120px]" />
+              <span class="mb-2 block text-sm font-medium text-zinc-300">Descripción</span>
+              <textarea v-model="restaurant.description" class="min-h-30 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
-            <label class="flex items-center gap-3 rounded-2xl border border-base-300 px-4 py-3 md:col-span-2">
-              <input v-model="restaurant.promoted" type="checkbox" class="checkbox checkbox-primary" />
+            <label class="flex items-center gap-3 rounded-lg border border-zinc-800 px-4 py-3 md:col-span-2">
+              <input v-model="restaurant.promoted" type="checkbox" class="h-4 w-4 accent-orange-500" />
               <span class="text-sm font-medium">Promocionado</span>
             </label>
           </div>
 
           <div class="mt-6 flex justify-end">
-            <button class="btn btn-primary" :disabled="isSaving" @click="saveRestaurant">
+            <button class="rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-bold text-zinc-950 transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-50" :disabled="isSaving" @click="saveRestaurant">
               {{ isSaving ? 'Guardando...' : 'Guardar cambios' }}
             </button>
           </div>
         </section>
 
         <aside class="space-y-6">
-          <div class="rounded-3xl border border-base-300 bg-base-100 p-6 shadow-sm">
+          <div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
             <h3 class="text-lg font-semibold">Resumen rápido</h3>
             <div class="mt-4 space-y-3">
-              <div class="rounded-2xl bg-primary/10 p-4">
-                <p class="text-sm text-base-content/70">Estado</p>
-                <p class="text-lg font-semibold text-primary">
+              <div class="rounded-lg border border-orange-500/20 bg-orange-500/10 p-4">
+                <p class="text-sm text-zinc-400">Estado</p>
+                <p class="text-lg font-semibold text-orange-400">
                   {{ restaurant.promoted ? 'Promocionado' : 'Normal' }}
                 </p>
               </div>
-              <div class="rounded-2xl bg-secondary/10 p-4">
-                <p class="text-sm text-base-content/70">Ubicación</p>
-                <p class="text-lg font-semibold text-secondary">{{ restaurant.location || 'Sin ubicación' }}</p>
+              <div class="rounded-lg border border-zinc-800 bg-zinc-950/70 p-4">
+                <p class="text-sm text-zinc-400">Ubicación</p>
+                <p class="text-lg font-semibold text-zinc-100">{{ restaurant.location || 'Sin ubicación' }}</p>
               </div>
             </div>
           </div>
@@ -241,17 +241,17 @@ onMounted(() => {
       </div>
 
       <div v-else-if="activeTab === 'stats'" class="grid gap-6 md:grid-cols-3">
-        <div class="rounded-3xl border border-base-300 bg-base-100 p-6 shadow-sm">
-          <p class="text-sm text-base-content/70">Rating actual</p>
-          <p class="mt-2 text-3xl font-bold text-primary">{{ restaurant.rating }}</p>
+        <div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
+          <p class="text-sm text-zinc-400">Rating actual</p>
+          <p class="mt-2 text-3xl font-bold text-orange-400">{{ restaurant.rating }}</p>
         </div>
-        <div class="rounded-3xl border border-base-300 bg-base-100 p-6 shadow-sm">
-          <p class="text-sm text-base-content/70">Reseñas recibidas</p>
-          <p class="mt-2 text-3xl font-bold text-secondary">{{ restaurant.rating ? '24' : '0' }}</p>
+        <div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
+          <p class="text-sm text-zinc-400">Reseñas recibidas</p>
+          <p class="mt-2 text-3xl font-bold text-emerald-400">{{ restaurant.rating ? '24' : '0' }}</p>
         </div>
-        <div class="rounded-3xl border border-base-300 bg-base-100 p-6 shadow-sm">
-          <p class="text-sm text-base-content/70">Distancia registrada</p>
-          <p class="mt-2 text-3xl font-bold text-accent">{{ restaurant.distance }}</p>
+        <div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
+          <p class="text-sm text-zinc-400">Distancia registrada</p>
+          <p class="mt-2 text-3xl font-bold text-sky-400">{{ restaurant.distance }}</p>
         </div>
       </div>
     </div>

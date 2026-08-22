@@ -19,7 +19,7 @@ if (!payload) {
 }
 
 let userData = null;
-let initialRestaurants = [];
+let initialRestaurants: unknown[] = [];
 
 try {
   const meResponse = await fetch(new URL('/api/auth/me', Astro.url.origin).toString(), {
@@ -51,7 +51,7 @@ try {
     return Astro.redirect('/login');
   }
 
-  const restResponse = await restaurantService.search('', undefined, 1);
+  const restResponse = await restaurantService.search('') as { restaurants?: unknown[] };
   initialRestaurants = restResponse.restaurants ?? [];
 } catch (error) {
   console.error('Error cargando datos del dashboard SSR:', error);

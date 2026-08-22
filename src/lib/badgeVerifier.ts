@@ -104,7 +104,7 @@ export function checkBadges(
   )
 
   const earnedBadges = allBadges.filter((badge) => {
-    const requirements = badge.requisitos ?? {}
+    const requirements: BadgeDefinition['requisitos'] = badge.requisitos
     const meetsReviews = reviewCount >= (requirements.reviewsRequirement ?? 0)
     const meetsViews = viewCount >= (requirements.viewRequirement ?? 0)
     return meetsReviews && meetsViews

@@ -5,16 +5,10 @@
  * @depends src/components/RestaurantDashboard.vue, src/lib/auth
  */
 
-<<<<<<< HEAD:src/pages/admin/settings.astro
-import AdminLayout from '../../layouts/AdminBaseLayout.astro';
+
+import AdminBaseLayout from '../../layouts/AdminBaseLayout.astro';
 import RestaurantDashboard from '../../components/RestaurantDashboard.vue';
 import { verifyToken } from '../../lib/auth';
-=======
-
-import BaseLayout from '../layouts/BaseLayout.astro';
-import RestaurantDashboard from '../components/RestaurantDashboard.vue';
-import { verifyToken } from '../lib/auth';
->>>>>>> d10a8819 (errores de mrd):src/pages/restaurant-admin.astro
 
 const sessionToken = Astro.cookies.get('auth_token')?.value;
 
@@ -53,6 +47,6 @@ try {
 }
 ---
 
-<AdminLayout>
+<AdminBaseLayout title="Ajustes del restaurante — Admin">
   <RestaurantDashboard restaurantId={restaurantId} client:load />
-</AdminLayout>
+</AdminBaseLayout>

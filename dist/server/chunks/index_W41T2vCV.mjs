@@ -1,0 +1,159 @@
+import { r as __exportAll } from "./rolldown-runtime_CE-6LUnI.mjs";
+import { d as maybeRenderHead, i as renderComponent, p as addAttribute, u as renderTemplate } from "./server_DEZ-lMdc.mjs";
+import { t as createComponent } from "./compiler_ukgsXu7P.mjs";
+import { t as $$LayoutPage } from "./LayoutPage_VTAUcAZr.mjs";
+/* empty css                 */
+//#region src/components/astro/header.astro
+var $$Header = createComponent(($$result, $$props, $$slots) => {
+	return renderTemplate`${maybeRenderHead($$result)}<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-bg/90 backdrop-blur-md border border-stone-200/10 shadow-2xl rounded-br-4xl rounded-bl-4xl" id="headerAncla"><!-- Top Right/Center: App Name and Location --><div class="flex items-center gap-4"><a href="/"><h1 class="text-xl font-extrabold text-primary font-headline tracking-tight">RateApp</h1></a></div><div class="flex items-center gap-1"><nav class="hidden md:visible md:flex justify-center items-center gap-6 border-l border-stone-200/10"><a href="/dashboard"><button class="btn btn-neutral">Ir al dashboard</button></a><a href="/login"><button class="btn btn-primary">Iniciar Sesion</button></a></nav></div></header>`;
+}, "C:/Users/Estudiante/rateappAstro/src/components/astro/header.astro", void 0);
+//#endregion
+//#region src/components/astro/home.astro
+var $$Home = createComponent(($$result, $$props, $$slots) => {
+	return renderTemplate`${maybeRenderHead($$result)}<section class="bg-bg text-on-surface font-body max-w-auto mx-auto overflow-x-hidden min-h-dvh">${renderComponent($$result, "HeaderUi", $$Header, {})}<main class="mt-20 pt-12 px-4 space-y-32 max-w-7xl mx-auto"><!-- ─── HERO: Qué es la app ─── --><section class="text-center space-y-6 py-8 md:grid-cols-[minmax(70%,1fr)_2fr] md:grid gap-10 items-center"><div class="md:w-full flex flex-col gap-6 items-center md:items-start md:text-start"><h1 class="text-5xl md:text-6xl font-bold leading-tight tracking-tight">Descubre los mejores<br><span class="text-primary">restaurantes</span> cerca de ti</h1><p class="text-base-content/60 text-lg  mx-auto leading-relaxed">La única app de reseñas que va más allá de las estrellas. Evalúa<strong class="text-base-content">iluminación</strong>,<strong class="text-base-content">calidad de la comida</strong>,<strong class="text-base-content">comodidad</strong> y más — para que siempre sepas exactamente qué esperar antes de ir.</p></div><!-- Categorías de reseña --><div class="flex flex-wrap justify-center gap-3 pt-2">${[
+		{
+			emoji: "🍽️",
+			label: "Comida"
+		},
+		{
+			emoji: "💡",
+			label: "Iluminación"
+		},
+		{
+			emoji: "🛋️",
+			label: "Comodidad"
+		},
+		{
+			emoji: "🔊",
+			label: "Ambiente"
+		},
+		{
+			emoji: "⚡",
+			label: "Servicio"
+		},
+		{
+			emoji: "💰",
+			label: "Relación precio-valor"
+		}
+	].map(({ emoji, label }) => renderTemplate`<div class="badge badge-ghost badge-lg gap-2 py-4 px-4"><span>${emoji}</span><span>${label}</span></div>`)}</div></section><!-- ─── STATS ─── --><section class="stats stats-vertical md:stats-horizontal shadow w-full bg-base-200 border border-base-300"><div class="stat"><div class="stat-figure text-primary"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div><div class="stat-title">Usuarios activos</div><div class="stat-value text-primary">12,400+</div><div class="stat-desc">Creciendo cada semana</div></div><div class="stat"><div class="stat-figure text-secondary"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg></div><div class="stat-title">Reseñas publicadas</div><div class="stat-value text-secondary">86,000+</div><div class="stat-desc">Con criterios detallados</div></div><div class="stat"><div class="stat-figure text-accent"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg></div><div class="stat-title">Restaurantes registrados</div><div class="stat-value text-accent">3,200+</div><div class="stat-desc">En toda la región</div></div></section><!-- ─── CÓMO FUNCIONA ─── --><section class="space-y-10"><div class="text-center space-y-3"><h2 class="text-3xl md:text-4xl font-bold">¿Cómo funciona?</h2><p class="text-base-content/60 max-w-xl mx-auto">Reseñar nunca había sido tan fácil — ni tan recompensante.</p></div><div class="grid md:grid-cols-3 gap-6">${[
+		{
+			step: "01",
+			icon: "🔍",
+			title: "Explora restaurantes",
+			desc: "Busca por nombre, cocina, barrio o cualquier criterio. Filtra por lo que más te importa."
+		},
+		{
+			step: "02",
+			icon: "✍️",
+			title: "Escribe una reseña detallada",
+			desc: "Califica iluminación, comida, comodidad, servicio y más. Tu experiencia completa, no solo una estrella."
+		},
+		{
+			step: "03",
+			icon: "🎁",
+			title: "Gana puntos y canjea premios",
+			desc: "Acumula puntos por cada reseña y canjéalos por cupones y descuentos en tus lugares favoritos."
+		}
+	].map(({ step, icon, title, desc }) => renderTemplate`<div class="card bg-base-200 border border-base-300 hover:border-primary transition-colors duration-300"><div class="card-body gap-4"><div class="flex items-center gap-3"><span class="text-3xl">${icon}</span><span class="text-4xl font-bold text-base-content/10 font-mono">${step}</span></div><h3 class="card-title text-lg">${title}</h3><p class="text-base-content/60 text-sm leading-relaxed">${desc}</p></div></div>`)}</div></section><!-- ─── PUNTOS Y RECOMPENSAS ─── --><section class="relative overflow-hidden rounded-3xl bg-base-200 border border-base-300 p-8 md:p-12"><!-- Decoración de fondo --><div class="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div><div class="absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-secondary/10 blur-3xl pointer-events-none"></div><div class="relative grid md:grid-cols-2 gap-10 items-center"><div class="space-y-5"><div class="badge badge-primary badge-lg gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Sistema de recompensas</div><h2 class="text-3xl md:text-4xl font-bold leading-tight">Reseña, acumula<br>y <span class="text-primary">gana beneficios</span></h2><p class="text-base-content/60 leading-relaxed">Cada reseña que publiques te da puntos. Cuanto más detallada, más puntos. Acumula hasta desbloquear cupones y descuentos exclusivos en los restaurantes de la plataforma.</p><ul class="space-y-3">${[
+		"Puntos por cada reseña publicada",
+		"Bonos por reseñas con foto",
+		"Puntos extra por reseñas detalladas",
+		"Cupones canjeables en restaurantes aliados",
+		"Insignias y rangos de reseñador"
+	].map((item) => renderTemplate`<li class="flex items-center gap-3 text-sm"><span class="text-primary"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg></span>${item}</li>`)}</ul></div><!-- Tarjeta de ejemplo de puntos --><div class="flex flex-col gap-4"><div class="card bg-base-100 border border-base-300 shadow-lg"><div class="card-body"><div class="flex items-center justify-between mb-2"><span class="text-sm text-base-content/60">Tus puntos acumulados</span><span class="badge badge-primary">Nivel Gold</span></div><div class="text-5xl font-bold text-primary font-mono">2,480</div><div class="divider my-2"></div><div class="space-y-2">${[
+		{
+			label: "Reseña en La Paloma",
+			pts: "+120"
+		},
+		{
+			label: "Foto incluida (bonus)",
+			pts: "+30"
+		},
+		{
+			label: "Reseña detallada (bonus)",
+			pts: "+50"
+		}
+	].map(({ label, pts }) => renderTemplate`<div class="flex items-center justify-between text-sm"><span class="text-base-content/70">${label}</span><span class="text-success font-semibold">${pts} pts</span></div>`)}</div></div></div><div class="grid grid-cols-2 gap-4"><div class="card bg-primary/10 border border-primary/30"><div class="card-body p-4 text-center"><div class="text-2xl font-bold text-primary">🎟️</div><div class="text-xs font-semibold mt-1">Cupón 15% OFF</div><div class="text-[10px] text-base-content/50 mt-0.5">1,500 pts</div></div></div><div class="card bg-secondary/10 border border-secondary/30"><div class="card-body p-4 text-center"><div class="text-2xl font-bold text-secondary">🍕</div><div class="text-xs font-semibold mt-1">Postre gratis</div><div class="text-[10px] text-base-content/50 mt-0.5">800 pts</div></div></div></div></div></div></section><!-- ─── PARA NEGOCIOS ─── --><section class="space-y-10"><div class="text-center space-y-3"><div class="badge badge-secondary badge-lg mx-auto gap-2">🏪 Para restaurantes</div><h2 class="text-3xl md:text-4xl font-bold">Haz crecer tu negocio<br><span class="text-secondary">con visibilidad real</span></h2><p class="text-base-content/60 max-w-2xl mx-auto leading-relaxed">Únete a la plataforma que conecta a los mejores restaurantes con clientes que buscan exactamente lo que tú ofreces.</p></div><div class="grid md:grid-cols-3 gap-6">${[
+		{
+			icon: "📈",
+			title: "Aumenta tu visibilidad",
+			desc: "Aparece en búsquedas relevantes y llega a miles de usuarios que ya están buscando lugares como el tuyo.",
+			color: "primary"
+		},
+		{
+			icon: "💸",
+			title: "Incrementa tus ingresos",
+			desc: "Los restaurantes con reseñas detalladas generan hasta un 40% más de visitas y conversiones que los que no las tienen.",
+			color: "secondary"
+		},
+		{
+			icon: "🤝",
+			title: "Conéctate con tu público",
+			desc: "Responde reseñas, lanza promociones exclusivas para la comunidad y construye una relación directa con tus clientes.",
+			color: "accent"
+		}
+	].map(({ icon, title, desc, color }) => renderTemplate`<div${addAttribute(`card bg-base-200 border border-${color}/30 hover:border-${color} hover:shadow-lg hover:shadow-${color}/10 transition-all duration-300`, "class")}><div class="card-body gap-4"><div${addAttribute(`text-4xl`, "class")}>${icon}</div><h3${addAttribute(`card-title text-${color}`, "class")}>${title}</h3><p class="text-base-content/60 text-sm leading-relaxed">${desc}</p></div></div>`)}</div><!-- Características para negocios --><div class="grid md:grid-cols-2 gap-4">${[
+		{
+			icon: "📊",
+			label: "Panel de analíticas en tiempo real"
+		},
+		{
+			icon: "💬",
+			label: "Responde reseñas directamente"
+		},
+		{
+			icon: "🎯",
+			label: "Campañas de cupones dirigidas"
+		},
+		{
+			icon: "🏆",
+			label: "Insignia de negocio verificado"
+		},
+		{
+			icon: "📸",
+			label: "Galería de fotos del restaurante"
+		},
+		{
+			icon: "📍",
+			label: "Perfil con menú y horarios"
+		}
+	].map(({ icon, label }) => renderTemplate`<div class="flex items-center gap-3 p-4 rounded-xl bg-base-200 border border-base-300"><span class="text-xl">${icon}</span><span class="text-sm font-medium">${label}</span></div>`)}</div></section><!-- ─── TESTIMONIOS ─── --><section class="space-y-8"><div class="text-center space-y-2"><h2 class="text-3xl font-bold">Lo que dicen nuestros usuarios</h2></div><div class="grid md:grid-cols-3 gap-6">${[
+		{
+			name: "Laura M.",
+			role: "Foodie habitual",
+			avatar: "LM",
+			text: "Por fin una app que me dice si el lugar tiene buena iluminación para fotos. ¡Mis reseñas ahora tienen sentido!",
+			rating: 5
+		},
+		{
+			name: "Carlos R.",
+			role: "Dueño de restaurante",
+			avatar: "CR",
+			text: "Desde que me uní, mis reservaciones aumentaron un 30%. La visibilidad en la plataforma es increíble.",
+			rating: 5
+		},
+		{
+			name: "Sofía P.",
+			role: "Exploradora gastronómica",
+			avatar: "SP",
+			text: "Ya llevo 3 meses y he canjeado 4 cupones. ¡Reseñar se ha vuelto mi hobbie favorito!",
+			rating: 5
+		}
+	].map(({ name, role, avatar, text, rating }) => renderTemplate`<div class="card bg-base-200 border border-base-300"><div class="card-body gap-4"><div class="flex items-center gap-3"><div class="avatar placeholder"><div class="bg-primary text-primary-content rounded-full w-10"><span class="text-sm font-bold">${avatar}</span></div></div><div><div class="font-semibold text-sm">${name}</div><div class="text-base-content/50 text-xs">${role}</div></div></div><div class="rating rating-sm">${Array.from({ length: rating }).map(() => renderTemplate`<input type="radio" class="mask mask-star-2 bg-warning" checked disabled>`)}</div><p class="text-sm text-base-content/70 leading-relaxed">"${text}"</p></div></div>`)}</div></section><!-- ─── CTA FINAL ─── --><section class="relative overflow-hidden rounded-3xl bg-primary/10 border border-primary/30 text-center p-10 md:p-16 space-y-6"><div class="absolute -top-20 left-1/2 -translate-x-1/2 h-60 w-60 rounded-full bg-primary/20 blur-3xl pointer-events-none"></div><div class="relative space-y-4"><div class="text-5xl">🚀</div><h2 class="text-3xl md:text-5xl font-bold">¿Listo para empezar?</h2><p class="text-base-content/60 max-w-lg mx-auto text-lg">Únete a miles de personas que ya descubren, reseñan y ganan con cada visita a un restaurante.</p><div class="flex flex-col sm:flex-row gap-4 justify-center pt-2"><a href="/dashboard" class="btn btn-primary btn-lg gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>Ir al dashboard</a><a href="#" class="btn btn-outline btn-lg">Ver cómo funciona</a></div></div></section></main><!-- ─── FOOTER ─── --><footer class="footer footer-center p-10 mt-20 bg-base-200 border-t border-base-300 text-base-content gap-6"><div class="grid grid-flow-col gap-6"><a href="/login" class="link link-hover text-sm">Login</a><a href="/dashboard" class="link link-hover text-sm">Dashboard</a></div><div><p class="text-base-content/50 text-sm">RateApp © ${(/* @__PURE__ */ new Date()).getFullYear()}</p></div></footer></section>`;
+}, "C:/Users/Estudiante/rateappAstro/src/components/astro/home.astro", void 0);
+//#endregion
+//#region src/pages/index.astro
+var pages_exports = /* @__PURE__ */ __exportAll({
+	default: () => $$Index,
+	file: () => $$file,
+	url: () => ""
+});
+var $$Index = createComponent(($$result, $$props, $$slots) => {
+	return renderTemplate`${renderComponent($$result, "LayoutPage", $$LayoutPage, {}, { "default": ($$result) => renderTemplate`${renderComponent($$result, "Home", $$Home, {})}` })}`;
+}, "C:/Users/Estudiante/rateappAstro/src/pages/index.astro", void 0);
+var $$file = "C:/Users/Estudiante/rateappAstro/src/pages/index.astro";
+//#endregion
+//#region \0virtual:astro:page:src/pages/index@_@astro
+var page = () => pages_exports;
+//#endregion
+export { page };
