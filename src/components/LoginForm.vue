@@ -47,15 +47,11 @@ async function handleLogin() {
       return;
     }
 
-    const destination = data.redirect || (data.user?.sys === 'RESTAURANT' ? '/restaurant-admin' : '/dashboard');
+    const destination = data.redirect || (
+      data.sys === 'RESTAURANT' || data.sys === 'ADMIN' ? '/admin/dashboard' : '/dashboard'
+    );
 
     await loadDataUserFromAPI();
-    // redirigir según tipo de cuenta
-    if (data.sys === 'RESTAURANT') {
-      window.location.href = '/admin/dashboard';
-    } else {
-      window.location.href = '/dashboard';
-    }
     window.location.assign(destination);
   } catch (err) {
     console.error('Error:', err);

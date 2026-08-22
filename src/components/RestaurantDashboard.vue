@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 interface RestaurantProfile {
   id?: number | string
@@ -15,6 +15,10 @@ interface RestaurantProfile {
   email: string
   address: string
   location: string
+}
+
+interface ReviewSummary {
+  rating: number
 }
 
 const props = defineProps<{
@@ -39,6 +43,8 @@ const restaurant = ref<RestaurantProfile>({
 const message = ref('')
 const isSaving = ref(false)
 const activeTab = ref<'profile' | 'stats'>('profile')
+const reviewSummaries = ref<ReviewSummary[]>([])
+const isLoadingReviews = ref(false)
 
 const getRestaurantId = () => {
   if (props.restaurantId) {
@@ -81,6 +87,29 @@ const loadRestaurant = async () => {
     message.value = 'No se pudo cargar la información del restaurante.'
   }
 }
+
+/**
+ * Carga las reseñas del restaurante asociado a la sesión.
+ * @returns Promise resuelta al terminar la consulta.
+ */
+const loadReviewSummary = async () => {
+  isLoadingReviews.value = true
+  try {
+    const response = await fetch('/api/admin/reviews')
+    const data = await response.json()
+    if (!response.ok) throw new Error(data.error || 'No se pudieron cargar las reseñas')
+    reviewSummaries.value = Array.isArray(data.reviews) ? data.reviews : []
+  } catch (error) {
+    console.error('Error cargando resumen de reseñas:', error)
+  } finally {
+    isLoadingReviews.value = false
+  }
+}
+
+const reviewAverage = computed(() => {
+  if (!reviewSummaries.value.length) return '0.0'
+  return (reviewSummaries.value.reduce((sum, review) => sum + review.rating, 0) / reviewSummaries.value.length).toFixed(1)
+})
 
 const saveRestaurant = async () => {
   isSaving.value = true
@@ -125,6 +154,7 @@ const saveRestaurant = async () => {
 
 onMounted(() => {
   void loadRestaurant()
+  void loadReviewSummary()
 })
 </script>
 
@@ -208,10 +238,6 @@ onMounted(() => {
               <textarea v-model="restaurant.description" class="min-h-30 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
-            <label class="flex items-center gap-3 rounded-lg border border-zinc-800 px-4 py-3 md:col-span-2">
-              <input v-model="restaurant.promoted" type="checkbox" class="h-4 w-4 accent-orange-500" />
-              <span class="text-sm font-medium">Promocionado</span>
-            </label>
           </div>
 
           <div class="mt-6 flex justify-end">
@@ -242,12 +268,12 @@ onMounted(() => {
 
       <div v-else-if="activeTab === 'stats'" class="grid gap-6 md:grid-cols-3">
         <div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
-          <p class="text-sm text-zinc-400">Rating actual</p>
-          <p class="mt-2 text-3xl font-bold text-orange-400">{{ restaurant.rating }}</p>
+          <p class="text-sm text-zinc-400">Promedio general</p>
+          <p class="mt-2 text-3xl font-bold text-orange-400">{{ isLoadingReviews ? '...' : reviewAverage }}</p>
         </div>
         <div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
           <p class="text-sm text-zinc-400">Reseñas recibidas</p>
-          <p class="mt-2 text-3xl font-bold text-emerald-400">{{ restaurant.rating ? '24' : '0' }}</p>
+          <p class="mt-2 text-3xl font-bold text-emerald-400">{{ isLoadingReviews ? '...' : reviewSummaries.length }}</p>
         </div>
         <div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
           <p class="text-sm text-zinc-400">Distancia registrada</p>

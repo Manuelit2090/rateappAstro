@@ -1,15 +1,13 @@
 ---
 import AdminBaseLayout from '../../layouts/AdminBaseLayout.astro'
+import RestaurantAnalytics from '../../components/RestaurantAnalytics.vue'
 ---
 
 <AdminBaseLayout title="Estadísticas — Admin">
   <main class="flex-1 min-h-screen p-6 md:p-10">
     <div class="max-w-7xl mx-auto">
       <h1 class="text-2xl font-semibold mb-4">Estadísticas</h1>
-      <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div class="rounded-lg border p-4 bg-base-100/50">Gráfico de actividad (placeholder)</div>
-        <div class="rounded-lg border p-4 bg-base-100/50">Métricas claves (placeholder)</div>
-      </section>
+      <RestaurantAnalytics client:load />
     </div>
   </main>
 </AdminBaseLayout>

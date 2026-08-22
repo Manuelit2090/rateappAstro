@@ -13,18 +13,14 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     return next();
   }
 
-  if (PUBLIC_PATHS.has(pathname)) {
-    return next();
-  }
-
   const token = cookies.get('auth_token')?.value;
   if (!token) {
-    return redirect('/login');
+    return PUBLIC_PATHS.has(pathname) ? next() : redirect('/login');
   }
 
   const payload = verifyToken(token);
   if (!payload) {
-    return redirect('/login');
+    return PUBLIC_PATHS.has(pathname) ? next() : redirect('/login');
   }
 
   const userSystem = payload.sys ?? 'CLIENT';
@@ -35,15 +31,19 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
   const isAdminPath = pathname === '/admin' || pathname.startsWith('/admin/');
 
   if (userSystem === 'RESTAURANT') {
+    if (PUBLIC_PATHS.has(pathname)) {
+      return redirect('/admin/dashboard');
+    }
+
+    if (isAdminPath) {
+      return next();
+    }
+
     if (restaurantId && isRestaurantRoute) {
       return next();
     }
     if (restaurantId && pathname === '/dashboard') {
-      return redirect('/restaurant-admin');
-    }
-    // Allow access to /admin routes even if restaurant_id is not yet set
-    if (!restaurantId && isAdminPath) {
-      return next();
+      return redirect('/admin/dashboard');
     }
 
     if (!restaurantId) {
@@ -51,11 +51,11 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     }
 
     if (isClientRoute) {
-      return redirect('/restaurant-admin');
+      return redirect('/admin/dashboard');
     }
 
     if (pathname === '/dashboard') {
-      return redirect('/restaurant-admin');
+      return redirect('/admin/dashboard');
     }
 
     return next();

@@ -53,7 +53,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (!match) {
       const isBcrypt = typeof customer.password === 'string' && customer.password.startsWith('$2');
-      console.debug('Login failed: password mismatch for user id', customer.id, 'isBcrypt=', isBcrypt, 'pwdLen=', typeof customer.password === 'string' ? customer.password.length : 'n/a', 'sample=', pwdSample);
+      console.debug('Login failed: password mismatch for user id', customer.id, 'isBcrypt=', isBcrypt, 'pwdLen=', typeof customer.password === 'string' ? customer.password.length : 'n/a');
 
       return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), {
         status: 401,
@@ -92,7 +92,14 @@ export const POST: APIRoute = async ({ request }) => {
     const isProd = process.env.NODE_ENV === 'production';
     const secureFlag = isProd ? 'Secure; ' : '';
 
-    return new Response(JSON.stringify({ message: 'Login exitoso', id: user.id, sys: userSystem }), {
+    const redirectPath = userSystem === 'RESTAURANT' ? '/admin/dashboard' : '/dashboard';
+
+    return new Response(JSON.stringify({
+      message: 'Login exitoso',
+      id: customer.id,
+      sys: userSystem,
+      redirect: redirectPath,
+    }), {
       status: 200,
       headers: {
         'Set-Cookie': `auth_token=${token}; HttpOnly; ${secureFlag}Path=/; Max-Age=604800; SameSite=Strict`,

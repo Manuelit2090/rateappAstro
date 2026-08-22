@@ -22,23 +22,23 @@ var onRequest$1 = async (context, next) => {
 	const { url, cookies, redirect } = context;
 	const pathname = url.pathname;
 	if (pathname.startsWith("/api/") || pathname.startsWith("/_astro/") || pathname.startsWith("/assets/")) return next();
-	if (PUBLIC_PATHS.has(pathname)) return next();
 	const token = cookies.get("auth_token")?.value;
-	if (!token) return redirect("/login");
+	if (!token) return PUBLIC_PATHS.has(pathname) ? next() : redirect("/login");
 	const payload = verifyToken(token);
-	if (!payload) return redirect("/login");
+	if (!payload) return PUBLIC_PATHS.has(pathname) ? next() : redirect("/login");
 	const userSystem = payload.sys ?? "CLIENT";
 	const restaurantId = payload.restaurant_id ?? null;
 	const isRestaurantRoute = PRIVATE_RESTAURANT_PATHS.some((route) => pathname === route || pathname.startsWith(`${route}/`));
 	const isClientRoute = PRIVATE_CLIENT_PATHS.some((route) => pathname === route || pathname.startsWith(`${route}/`));
 	const isAdminPath = pathname === "/admin" || pathname.startsWith("/admin/");
 	if (userSystem === "RESTAURANT") {
+		if (PUBLIC_PATHS.has(pathname)) return redirect("/admin/dashboard");
+		if (isAdminPath) return next();
 		if (restaurantId && isRestaurantRoute) return next();
-		if (restaurantId && pathname === "/dashboard") return redirect("/restaurant-admin");
-		if (!restaurantId && isAdminPath) return next();
+		if (restaurantId && pathname === "/dashboard") return redirect("/admin/dashboard");
 		if (!restaurantId) return redirect("/login");
-		if (isClientRoute) return redirect("/restaurant-admin");
-		if (pathname === "/dashboard") return redirect("/restaurant-admin");
+		if (isClientRoute) return redirect("/admin/dashboard");
+		if (pathname === "/dashboard") return redirect("/admin/dashboard");
 		return next();
 	}
 	if (userSystem === "ADMIN") return next();
