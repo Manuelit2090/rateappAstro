@@ -1,10 +1,11 @@
-/**
- * @file login.ts
- * @description Endpoint POST para autenticación de usuarios. Verifica credenciales,
- * genera un JWT y devuelve la ruta de redirección correcta según el tipo de usuario.
- * @route POST /api/auth/login
- * @dependencies src/lib/db, src/lib/auth
- */
+/** 
+
+* @file login.ts
+* @description Endpoint POST para autenticación de usuarios. Verifica credenciales,
+* genera un JWT y devuelve la ruta de redirección correcta según el tipo de usuario.
+* @route POST /api/auth/login
+* @dependencies src/lib/db, src/lib/auth
+*/
 
 import type { APIRoute } from 'astro';
 import type { RowDataPacket } from 'mysql2';
@@ -19,14 +20,10 @@ type UserLoginRow = RowDataPacket & {
   restaurant_id: number | null;
 };
 
-function getRedirectPath(userSystem: 'CLIENT' | 'RESTAURANT' | 'ADMIN'): string {
-  return userSystem === 'RESTAURANT' ? '/restaurant-admin' : '/dashboard';
-}
-
 export const POST: APIRoute = async ({ request }) => {
   try {
     const { email, password } = await request.json();
-    const emailNormalized = typeof email === 'string' ? email.trim().toLowerCase() : email;
+    const emailNormalized = typeof email === 'string' ? email.trim().toLowerCase() : email; 
 
     if (!email || !password) {
       return new Response(JSON.stringify({ error: 'Email y contraseña son requeridos' }), {
@@ -35,49 +32,47 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
+    // Tipamos la consulta correctamente con UserLoginRow
     const [rows] = await pool.execute(
-      'SELECT id, name, email, password, sys, restaurant_id FROM users WHERE LOWER(email) = ?',
+      'SELECT id, email, password, sys, restaurant_id FROM users WHERE LOWER(email) = ?',
       [emailNormalized]
-    ) as any[];
+    ) as [UserLoginRow[], any];
 
-    const user = rows[0] ?? null;
-    console.log('Usuario encontrado en DB:', user);
+    const customer = rows[0] ?? null;
+    console.log('Usuario encontrado en DB:', customer);
 
-    if (!user) {
+    if (!customer) {
       console.debug('Login failed: no user for email', emailNormalized);
-      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), { status: 401 });
+      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
-    const match = await verifyPassword(password, user.password);
+    const match = await verifyPassword(password, customer.password);
 
     if (!match) {
-      const pwdSample = typeof user.password === 'string' ? (user.password.slice(0, 6) + '...' + user.password.slice(-3)) : String(user.password);
-      const isBcrypt = typeof user.password === 'string' && user.password.startsWith('$2');
-      console.debug('Login failed: password mismatch for user id', user.id, 'isBcrypt=', isBcrypt, 'pwdLen=', typeof user.password === 'string' ? user.password.length : 'n/a', 'sample=', pwdSample);
-      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), { status: 401 });
-    }
+      const isBcrypt = typeof customer.password === 'string' && customer.password.startsWith('$2');
+      console.debug('Login failed: password mismatch for user id', customer.id, 'isBcrypt=', isBcrypt, 'pwdLen=', typeof customer.password === 'string' ? customer.password.length : 'n/a', 'sample=', pwdSample);
 
-    const isPasswordValid = await verifyPassword(password, user.password);
-    console.log('Resultado de bcrypt:', isPasswordValid);
-
-    if (!isPasswordValid) {
-      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos: bcrypt no coincide' }), {
+      return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const isBcryptPassword = user.password.startsWith('$2');
-
+    // Si la contraseña no estaba encriptada con bcrypt, la actualizamos automáticamente
+    const isBcryptPassword = customer.password.startsWith('$2');
     if (!isBcryptPassword) {
       const newHash = await hashPassword(password);
-      await pool.execute('UPDATE users SET password = ? WHERE id = ?', [newHash, user.id]);
+      await pool.execute('UPDATE users SET password = ? WHERE id = ?', [newHash, customer.id]);
     }
 
+    // Definición del rol del sistema
     const userSystem: 'CLIENT' | 'RESTAURANT' | 'ADMIN' =
-      user.sys === 'RESTAURANT' || user.sys === 'ADMIN' ? user.sys : 'CLIENT';
+      customer.sys === 'RESTAURANT' || customer.sys === 'ADMIN' ? customer.sys : 'CLIENT';
 
-    const restaurantId: number | null = user.restaurant_id ?? null;
+    const restaurantId: number | null = customer.restaurant_id ?? null;
 
     if (userSystem === 'RESTAURANT' && restaurantId === null) {
       return new Response(
@@ -86,9 +81,10 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
+    // Generación del token JWT
     const token = generateToken({
-      id: user.id,
-      email: user.email,
+      id: customer.id,
+      email: customer.email,
       sys: userSystem,
       restaurant_id: restaurantId,
     });
@@ -103,11 +99,12 @@ export const POST: APIRoute = async ({ request }) => {
         'Content-Type': 'application/json',
       },
     });
-  } catch (error) {
-    console.error('Error en login:', error);
-    return new Response(JSON.stringify({ error: 'Error interno del servidor' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
+
+} catch (error) {
+  console.error('Error en login:', error);
+  return new Response(JSON.stringify({ error: 'Error interno del servidor' }), {
+    status: 500,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
 };

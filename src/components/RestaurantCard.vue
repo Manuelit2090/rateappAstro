@@ -20,8 +20,7 @@ async function toggleLike() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ slug: props.r.slug }),
     })
-  if (response.ok)
-    {
+    if (response.ok) {
       showAviso('Restaurante agregado a favoritos', 'success')
 
     }
@@ -44,45 +43,34 @@ async function toggleLike() {
 </script>
 
 <template>
-  <a
-    :href="`/restaurant/${r.slug}`"
-    class="group block rounded-3xl overflow-hidden border border-base-300/60 bg-base-100/60 hover:border-primary/40 shadow-2xl shadow-neutral-900/50 hover:shadow-primary/20 transition-all duration-300"
-  >
+  <a :href="`/restaurant/${r.slug}`"
+    class="group block rounded-3xl overflow-hidden border border-base-300/60 bg-base-100/60 hover:border-primary/40 shadow-2xl shadow-neutral-900/50 hover:shadow-primary/20 transition-all duration-300">
     <article>
       <!-- Image -->
       <div class="relative aspect-[16/10] overflow-hidden">
         <img
-          :src="typeof r.image === 'object' ? r.image.src : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSNfFd3Ldcdi2eQVHpLNWGrUtQY22FPA2sjnTNTD2llw&s=10'"
-          :alt="r.name"
-          loading="lazy"
-          class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
+          :src="typeof r.image === 'object' && r.image !== null ? r.image.src : (typeof r.image === 'string' ? r.image : 'https://pub-d80845b9e313461db9d75fa6897f1bf3.r2.dev/avatar-user.jpg')"
+          :alt="r.name" loading="lazy"
+          class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div class="absolute inset-0 bg-gradient-to-t from-base-100/90 via-base-100/10 to-transparent" />
 
-        <span
-          v-if="r.promoted"
-          class="absolute top-4 left-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary text-primary-content text-[10px] font-bold uppercase tracking-wider shadow-[0_0_24px_-4px_var(--p)]"
-        >
+        <span v-if="r.promoted"
+          class="absolute top-4 left-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary text-primary-content text-[10px] font-bold uppercase tracking-wider shadow-[0_0_24px_-4px_var(--p)]">
           <span class="h-1.5 w-1.5 rounded-full bg-lime-foreground animate-pulse" />
           Promoted
         </span>
 
         <!-- Action buttons -->
         <div class="absolute top-4 right-4 flex gap-2">
-          <button
-            type="button"
-            @click.prevent="toggleLike"
-            :class="[
-              'grid place-items-center h-9 w-9 rounded-full backdrop-blur-md border transition-colors',
-              liked
-                ? 'bg-secondary text-secondary-content border-secondary'
-                : 'bg-base-100/60 border-base-300/60 hover:bg-secondary hover:text-secondary-content'
-            ]"
-            :aria-label="liked ? 'Unlike' : 'Like'"
-          >
+          <button type="button" @click.prevent="toggleLike" :class="[
+            'grid place-items-center h-9 w-9 rounded-full backdrop-blur-md border transition-colors',
+            liked
+              ? 'bg-secondary text-secondary-content border-secondary'
+              : 'bg-base-100/60 border-base-300/60 hover:bg-secondary hover:text-secondary-content'
+          ]" :aria-label="liked ? 'Unlike' : 'Like'">
             <Heart class="h-4 w-4" :class="liked ? 'fill-current' : ''" />
           </button>
-         
+
         </div>
 
         <!-- Name / rating overlay -->
@@ -109,11 +97,8 @@ async function toggleLike() {
           <span>{{ r.reviews.length }} reviews</span>
         </div>
         <div class="flex gap-1.5">
-          <span
-            v-for="tag in r.tags"
-            :key="tag"
-            class="text-[10px] text-accent-content/75 uppercase tracking-wider px-2 py-1 rounded-full border border-base-300/60 "
-          >
+          <span v-for="tag in r.tags" :key="tag"
+            class="text-[10px] text-accent-content/75 uppercase tracking-wider px-2 py-1 rounded-full border border-base-300/60 ">
             {{ tag }}
           </span>
         </div>
