@@ -110,7 +110,6 @@ async function handleRegister() {
 
     // Si el registro inicia sesión automáticamente (guarda cookie) cargamos datos
     await loadDataUserFromAPI();
-<<<<<<< HEAD
     // redirigir según tipo
     const returnedSys = data.sys || sysToSend || 'CLIENT';
     if (returnedSys === 'RESTAURANT') {
@@ -118,9 +117,6 @@ async function handleRegister() {
     } else {
       window.location.href = '/dashboard';
     }
-=======
-    window.location.assign(destination);
->>>>>>> 0986f03d3c674bf383135790935109e11b42d2db
   } catch (err) {
     console.error('Error:', err);
     error.value = 'Error de conexión. Intenta de nuevo.';
