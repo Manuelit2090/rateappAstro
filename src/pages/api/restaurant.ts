@@ -195,6 +195,7 @@ export const GET: APIRoute = async ({ request }) => {
         id: restaurant.id,
         name: restaurant.name,
         slug: restaurant.slug,
+        image: restaurant.image,
         category: restaurant.category,
         cuisine: restaurant.cuisine,
         description: restaurant.description,
@@ -227,6 +228,7 @@ export const PUT: APIRoute = async ({ request }) => {
     const {
       id,
       name,
+      image,
       category,
       cuisine,
       description,
@@ -247,6 +249,7 @@ export const PUT: APIRoute = async ({ request }) => {
     await pool.execute(
       `UPDATE restaurants SET
         name = ?,
+        image = ?,
         category = ?,
         cuisine = ?,
         description = ?,
@@ -256,7 +259,7 @@ export const PUT: APIRoute = async ({ request }) => {
         priceRange = ?,
         promoted = ?
       WHERE id = ?`,
-      [name, category, cuisine, description, phone, email, address, priceRange, promoted, id]
+      [name, image || null, category, cuisine, description, phone, email, address, priceRange, promoted, id]
     );
 
     return new Response(JSON.stringify({ success: true, message: 'Restaurante actualizado correctamente' }), {

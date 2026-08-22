@@ -8,6 +8,7 @@
 
 import AdminBaseLayout from '../../layouts/AdminBaseLayout.astro';
 import RestaurantDashboard from '../../components/RestaurantDashboard.vue';
+import SubmitImages from '../../components/UI/submitImages.vue';
 import { verifyToken } from '../../lib/auth';
 
 const sessionToken = Astro.cookies.get('auth_token')?.value;
@@ -24,6 +25,7 @@ if (!payload || payload.sys !== 'RESTAURANT') {
 
 let userData = null;
 let restaurantId: number | null = null;
+let restaurantImage: string | null = null;
 
 try {
   const meResponse = await fetch(new URL('/api/auth/me', Astro.url.origin).toString(), {
@@ -45,8 +47,30 @@ try {
   console.error('Error cargando sesión del restaurante:', error);
   restaurantId = payload.restaurant_id ? Number(payload.restaurant_id) : null;
 }
+
+// Obtener datos del restaurante (imagen) si tenemos id
+if (restaurantId) {
+  try {
+    const rResp = await fetch(new URL(`/api/restaurant?id=${restaurantId}`, Astro.url.origin).toString(), {
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (rResp.ok) {
+      const rData = await rResp.json();
+      restaurantImage = rData.restaurant?.image ?? null;
+    }
+  } catch (err) {
+    console.error('Error cargando restaurante:', err);
+  }
+}
 ---
 
 <AdminBaseLayout title="Ajustes del restaurante — Admin">
   <RestaurantDashboard restaurantId={restaurantId} client:load />
+  <div style="margin-top:24px">
+    <h3>Imagen del restaurante</h3>
+    <SubmitImages restaurantId={restaurantId} initialImage={restaurantImage} client:load />
+  </div>
 </AdminBaseLayout>
