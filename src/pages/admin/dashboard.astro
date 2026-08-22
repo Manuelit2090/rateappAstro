@@ -1,5 +1,4 @@
 ---
-<<<<<<< HEAD
 
 
 import AdminBaseLayout from '../../layouts/AdminBaseLayout.astro';
@@ -66,67 +65,3 @@ try {
     </div>
   </main>
 </AdminBaseLayout>
-=======
-import AdminBaseLayout from '../../layouts/AdminBaseLayout.astro'
----
-
-<AdminBaseLayout title="Panel de control — Restaurantes">
-  <main class="flex-1 min-h-screen p-6 md:p-10">
-    <div class="max-w-7xl mx-auto">
-      <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <div>
-          <h1 class="text-2xl md:text-3xl font-semibold">Panel de control de restaurantes</h1>
-          <p class="text-sm text-muted-foreground mt-1">Resumen rápido y accesos a estadísticas y configuración.</p>
-        </div>
-      </header>
-
-      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        <article class="rounded-lg border border-base-300/60 p-4 bg-base-100/50">
-          <h2 class="text-sm font-medium text-neutral">Restaurantes activos</h2>
-          <p class="text-3xl font-bold mt-2">124</p>
-        </article>
-
-        <article class="rounded-lg border border-base-300/60 p-4 bg-base-100/50">
-          <h2 class="text-sm font-medium text-neutral">Reseñas esta semana</h2>
-          <p class="text-3xl font-bold mt-2">872</p>
-        </article>
-
-        <article class="rounded-lg border border-base-300/60 p-4 bg-base-100/50">
-          <h2 class="text-sm font-medium text-neutral">Puntuación promedio</h2>
-          <p class="text-3xl font-bold mt-2">4.3</p>
-        </article>
-      </section>
-
-      <section class="rounded-lg border border-base-300/60 p-4 bg-base-100/50">
-        <h3 class="text-lg font-semibold mb-3">Últimos restaurantes registrados</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="text-left text-muted-foreground">
-                <th class="py-2 pr-4">Nombre</th>
-                <th class="py-2 pr-4">Ciudad</th>
-                <th class="py-2 pr-4">Puntuación</th>
-                <th class="py-2">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="border-t border-base-300/40">
-                <td class="py-3">La Buena Mesa</td>
-                <td class="py-3">Madrid</td>
-                <td class="py-3">4.7</td>
-                <td class="py-3">Ver</td>
-              </tr>
-              <tr class="border-t border-base-300/40">
-                <td class="py-3">Sabor y Punto</td>
-                <td class="py-3">Barcelona</td>
-                <td class="py-3">4.5</td>
-                <td class="py-3">Ver</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-  </main>
-</AdminBaseLayout>
->>>>>>> 0986f03d3c674bf383135790935109e11b42d2db
