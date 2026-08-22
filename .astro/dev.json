@@ -6,7 +6,8 @@
 		"local": [
 			"http://localhost:4321/"
 		],
-		"network": []
+		"network": [],
+		"networkInterfaceNames": []
 	},
 	"background": false,
 	"startedAt": "2026-08-22T14:15:28.507Z"

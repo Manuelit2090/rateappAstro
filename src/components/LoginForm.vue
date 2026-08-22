@@ -47,9 +47,7 @@ async function handleLogin() {
       return;
     }
 
-    const destination = data.redirect || (
-      data.sys === 'RESTAURANT' || data.sys === 'ADMIN' ? '/admin/dashboard' : '/dashboard'
-    );
+    const destination = data.redirect || (data.user?.sys === 'RESTAURANT' ? '/admin/dashboard' : '/dashboard');
 
     await loadDataUserFromAPI();
     window.location.assign(destination);
