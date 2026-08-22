@@ -50,16 +50,13 @@ async function handleLogin() {
     const destination = data.redirect || (data.user?.sys === 'RESTAURANT' ? '/restaurant-admin' : '/dashboard');
 
     await loadDataUserFromAPI();
-<<<<<<< HEAD
     // redirigir según tipo de cuenta
     if (data.sys === 'RESTAURANT') {
       window.location.href = '/admin/dashboard';
     } else {
       window.location.href = '/dashboard';
     }
-=======
     window.location.assign(destination);
->>>>>>> 0986f03d3c674bf383135790935109e11b42d2db
   } catch (err) {
     console.error('Error:', err);
     error.value = 'Error de conexión. Intenta de nuevo.';
