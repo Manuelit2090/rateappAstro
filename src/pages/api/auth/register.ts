@@ -45,7 +45,7 @@ export const POST: APIRoute = async ({ request }) => {
     const [result] = await pool.execute(
       `INSERT INTO users (name, email, password, totalPoints, totalReviews, recovery_code, sys, restaurant_id)
        VALUES (?, ?, ?, 0, 0, ?, ?, NULL)`,
-      [name, email, password_hash, recovery_code, sysValue]
+      [name, email, passwordHash, recoveryCode, sysValue]
     ) as any[];
 
     const [rows] = (await pool.execute(
