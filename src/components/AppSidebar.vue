@@ -81,7 +81,7 @@ function isActive(to: string, idx: number) {
     ]"
   >
     <!-- Header / Logo -->
-    <div class="flex items-center gap-3 px-5 h-20 border-b border-base-300/60">
+    <div class="flex items-center gap-3 px-5 h-20 ">
       <button
         @click="open = !open"
         class="grid place-items-center h-10 w-10 rounded-xl bg-base-200 hover:bg-primary/10 hover:text-primary transition-colors"

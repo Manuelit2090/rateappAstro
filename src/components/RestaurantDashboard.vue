@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import SubmitImages from './UI/submitImages.vue';
 
 interface RestaurantProfile {
   id?: number | string
@@ -173,23 +174,20 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-if="message" class="rounded-xl border border-orange-500/30 bg-orange-500/10 px-4 py-3 text-sm text-orange-300">
+      <div v-if="message"
+        class="rounded-xl border border-orange-500/30 bg-orange-500/10 px-4 py-3 text-sm text-orange-300">
         {{ message }}
       </div>
 
       <div class="flex gap-3">
-        <button
-          class="rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+        <button class="rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
           :class="activeTab === 'profile' ? 'bg-orange-500 text-zinc-950' : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100'"
-          @click="activeTab = 'profile'"
-        >
+          @click="activeTab = 'profile'">
           Perfil del Restaurante
         </button>
-        <button
-          class="rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+        <button class="rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
           :class="activeTab === 'stats' ? 'bg-orange-500 text-zinc-950' : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100'"
-          @click="activeTab = 'stats'"
-        >
+          @click="activeTab = 'stats'">
           Estadísticas Rápidas
         </button>
       </div>
@@ -200,48 +198,60 @@ onMounted(() => {
           <div class="mt-6 grid gap-4 md:grid-cols-2">
             <label class="block">
               <span class="mb-2 block text-sm font-medium text-zinc-300">Nombre</span>
-              <input v-model="restaurant.name" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
+              <input v-model="restaurant.name"
+                class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block">
               <span class="mb-2 block text-sm font-medium text-zinc-300">Categoría</span>
-              <input v-model="restaurant.category" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
+              <input v-model="restaurant.category"
+                class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block">
               <span class="mb-2 block text-sm font-medium text-zinc-300">Tipo de cocina</span>
-              <input v-model="restaurant.cuisine" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
+              <input v-model="restaurant.cuisine"
+                class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block">
               <span class="mb-2 block text-sm font-medium text-zinc-300">Rango de precios</span>
-              <input v-model="restaurant.priceRange" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
+              <input v-model="restaurant.priceRange"
+                class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block">
               <span class="mb-2 block text-sm font-medium text-zinc-300">Teléfono</span>
-              <input v-model="restaurant.phone" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
+              <input v-model="restaurant.phone"
+                class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block">
               <span class="mb-2 block text-sm font-medium text-zinc-300">Correo</span>
-              <input v-model="restaurant.email" type="email" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
+              <input v-model="restaurant.email" type="email"
+                class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block md:col-span-2">
               <span class="mb-2 block text-sm font-medium text-zinc-300">Dirección</span>
-              <input v-model="restaurant.address" class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
+              <input v-model="restaurant.address"
+                class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
             <label class="block md:col-span-2">
               <span class="mb-2 block text-sm font-medium text-zinc-300">Descripción</span>
-              <textarea v-model="restaurant.description" class="min-h-30 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
+              <textarea v-model="restaurant.description"
+                class="min-h-30 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2.5 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500" />
             </label>
 
-          </div>
 
+          </div>
+          <SubmitImages :restaurantId="restaurantId"
+            :initialImage="restaurant.image || 'https://pub-d80845b9e313461db9d75fa6897f1bf3.r2.dev/avatar-user.jpg'" />
           <div class="mt-6 flex justify-end">
-            <button class="rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-bold text-zinc-950 transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-50" :disabled="isSaving" @click="saveRestaurant">
+            <button
+              class="rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-bold text-zinc-950 transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-50"
+              :disabled="isSaving" @click="saveRestaurant">
               {{ isSaving ? 'Guardando...' : 'Guardar cambios' }}
             </button>
           </div>
@@ -273,7 +283,8 @@ onMounted(() => {
         </div>
         <div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
           <p class="text-sm text-zinc-400">Reseñas recibidas</p>
-          <p class="mt-2 text-3xl font-bold text-emerald-400">{{ isLoadingReviews ? '...' : reviewSummaries.length }}</p>
+          <p class="mt-2 text-3xl font-bold text-emerald-400">{{ isLoadingReviews ? '...' : reviewSummaries.length }}
+          </p>
         </div>
         <div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
           <p class="text-sm text-zinc-400">Distancia registrada</p>

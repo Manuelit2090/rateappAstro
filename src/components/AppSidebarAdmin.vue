@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 // lucide icons
-import { Menu, Home, BarChart, Settings } from 'lucide-vue-next'
+import { Menu, Home, BarChart, Settings, LogOut, Ticket, TicketX } from 'lucide-vue-next'
+import { dataUser, loadDataUserFromAPI, logoutUser, setDataUser } from '../store/dataUser';
 
 const open = ref(true)
 const routePath = ref('/')
@@ -13,12 +14,41 @@ onMounted(() => {
 const items = [
   { icon: Home, label: 'Home', to: '/admin/dashboard' },
   { icon: BarChart, label: 'Estadísticas', to: '/admin/analytics' },
+    { icon: Ticket, label: 'Crear Cupon', to: '/admin/createCupon' },
+  { icon: TicketX, label: 'Redimir Cupon', to: '/admin/redeemCoupon' },
+
   { icon: Settings, label: 'Settings', to: '/admin/settings' },
 ]
 
 function isActive(to: string, idx: number) {
   return routePath.value === to && (idx === 0 || to !== '/')
 }
+
+async function logoutUser() {
+  try {
+    const response = await fetch('/api/auth/logout', { 
+      headers: {
+        'Content-Type': 'application/json',
+      method: 'GET',
+      credentials: 'include',
+
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data.message); // "Sesión cerrada"
+      
+      // Redirige al usuario a la página de inicio o login
+      window.location.href = '/login';
+    } else {
+      console.error('Error al cerrar sesión');
+    }
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+
 </script>
 
 <template>
@@ -73,6 +103,13 @@ function isActive(to: string, idx: number) {
       </a>
     </nav>
 
+    <div class="px-3 py-4 border-t border-base-300/60 space-y-3">
+      
+      <button class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral-content hover:text-base-content hover:bg-base-200 transition-colors" @click="logoutUser()">
+        <LogOut class="h-5 w-5" />
+        <span v-if="open">Log Out</span>
+      </button>
+    </div>
   </aside>
  </div>
 </template>

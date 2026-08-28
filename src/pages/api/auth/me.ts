@@ -55,6 +55,16 @@ export const GET: APIRoute = async ({ cookies }) => {
     return new Response(JSON.stringify({ error: 'Usuario no encontrado' }), { status: 404 });
   }
 
+  // Ensure cuponsBuy is parsed JSON and normalized to objects with expected keys
+  let parsedCupons: any = user.cuponsBuy ?? user.couponsBuy ?? [];
+  if (typeof parsedCupons === 'string') {
+    try {
+      parsedCupons = JSON.parse(parsedCupons);
+    } catch {
+      parsedCupons = [];
+    }
+  }
+
   const normalizedUser = {
     id: user.id,
     name: user.name,
@@ -68,8 +78,8 @@ export const GET: APIRoute = async ({ cookies }) => {
     favoriteRestaurants: user.favoriteRestaurants ?? user.favoriteRestaurant ?? [],
     favoriteRestaurant: user.favoriteRestaurant ?? user.favoriteRestaurants ?? [],
     badges: user.badgeValue ?? user.badges ?? [],
-    cuponsBuy: user.cuponsBuy ?? user.couponsBuy ?? [],
-    couponsBuy: user.couponsBuy ?? user.cuponsBuy ?? [],
+    cuponsBuy: parsedCupons,
+    couponsBuy: parsedCupons,
   };
 
   return new Response(JSON.stringify({ user: normalizedUser }), {

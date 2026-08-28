@@ -9,6 +9,7 @@ const s3 = new S3Client({
     accessKeyId: import.meta.env.R2_ACCESS_KEY_ID,
     secretAccessKey: import.meta.env.R2_SECRET_ACCESS_KEY,
   },
+    requestChecksumCalculation: "WHEN_SUPPORTED", 
 });
 
 export const POST: APIRoute = async ({ request }) => {

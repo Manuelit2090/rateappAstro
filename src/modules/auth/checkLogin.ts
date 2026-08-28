@@ -4,7 +4,7 @@
  * @dependencies src/lib/api
  */
 
-import type { User } from '../../data/user';
+import type { User, CouponBuy } from '../../data/user';
 
 /**
  * Verifica las credenciales del usuario contra la API de login.
@@ -44,7 +44,7 @@ export async function checkLogin(email: string, password: string): Promise<User 
       reviews: userData.user.reviews || [],
       favoriteRestaurant:
         userData.user.favoriteRestaurant || userData.user.favoriteRestaurants || [],
-      cuponsBuy: userData.user.cuponsBuy || userData.user.couponsBuy || [],
+      cuponsBuy: (userData.user.cuponsBuy || userData.user.couponsBuy || []) as CouponBuy[],
       currentLocation: { lat: 0, lng: 0 }
     };
 

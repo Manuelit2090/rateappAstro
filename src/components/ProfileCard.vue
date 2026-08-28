@@ -18,12 +18,10 @@ const userDisplay = computed(() => {
 const stats = computed(() => [
   { icon: Sparkles, value: userDisplay.value?.totalPoints ?? 0, label: 'Puntos', highlight: true },
   { icon: TrendingUp, value: userDisplay.value?.totalReviews ?? 0, label: 'Reseñas', highlight: false },
-  { icon: Award, value: 0, label: 'Insignias', highlight: false },
+  { icon: Award, value: userDisplay.value?.cuponsBuy.length ?? 0, label: 'Cupones', highlight: false },
 ])
 
 onMounted(() => {
-  // 3. SINCRONIZACIÓN PERFECTA:
-  // Si Astro nos dio datos y el store del cliente sigue vacío, lo rellenamos formalmente
   if (props.initialUser && !dataUser.user) {
     setDataUser(props.initialUser);
   }
