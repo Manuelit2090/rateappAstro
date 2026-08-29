@@ -1,324 +1,289 @@
----
-import "../../styles/global.css";
-
----
-
-<section
-  class="bg-bg text-on-surface font-body max-w-auto mx-auto overflow-x-hidden min-h-dvh"
->
-
-<header
-  class=" top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 "
-  id="headerAncla"
->
-  <!-- Top Right/Center: App Name and Location -->
-  <div class="flex items-center gap-4">
-    <a href="/">
-      <h1
-        class="text-xl font-extrabold text-primary font-headline tracking-tight"
-      >
-        RateApp
-      </h1>
-    </a>
-  </div>
-
-
-
-  <div class="flex items-center gap-1">
-    <nav
-      class="hidden md:visible md:flex justify-center items-center gap-6 border-l border-stone-200/10"
-    >
-        <a href="/dashboard"><button class="btn btn-neutral">Ir al dashboard</button></a>
-      <a href="/login"><button class="btn btn-primary">Iniciar Sesion</button></a>
-    </nav>
-
-    
-  </div>
-</header>
-  <main class="mt-20 pt-12 px-4 space-y-32 max-w-7xl mx-auto">
-    <section
-      class="text-center space-y-6 py-8 md:grid-cols-[minmax(70%,1fr)_2fr] md:grid gap-10 items-center"
-    >
-      <div
-        class="md:w-full flex flex-col gap-6 items-center md:items-start md:text-start"
-      >
-        <h1 class="text-5xl md:text-6xl font-bold leading-tight tracking-tight">
-          Descubre los mejores<br />
-          <span class="text-primary">restaurantes</span> cerca de ti
-        </h1>
-
-        <p
-          class="text-base-content/60 text-lg  mx-auto leading-relaxed"
+<section class="min-h-dvh max-w-full overflow-x-hidden bg-base-100">
+  <!-- ═══ HEADER ═══ -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-base-100/85">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <span class="font-display italic text-2xl font-semibold text-primary"
+          >RateApp</span
         >
-          La única app de reseñas que va más allá de las estrellas. Evalúa
-          <strong class="text-base-content">iluminación</strong>,
-          <strong class="text-base-content">calidad de la comida</strong>,
-          <strong class="text-base-content">comodidad</strong> y más — para que siempre
-          sepas exactamente qué esperar antes de ir.
-        </p>
-      </div>
-      <!-- Categorías de reseña -->
-      <div class="flex flex-wrap justify-center gap-3 pt-2">
-        {
-          [
-            { emoji: "🍽️", label: "Comida" },
-            { emoji: "💡", label: "Iluminación" },
-            { emoji: "🛋️", label: "Comodidad" },
-            { emoji: "🔊", label: "Ambiente" },
-            { emoji: "⚡", label: "Servicio" },
-            { emoji: "💰", label: "Relación precio-valor" },
-          ].map(({ emoji, label }) => (
-            <div class="badge badge-ghost badge-lg gap-2 py-4 px-4">
-              <span>{emoji}</span>
-              <span>{label}</span>
-            </div>
-          ))
-        }
-      </div>
-    </section>
+        <span
+          class="hidden sm:inline text-[11px] font-mono uppercase tracking-[0.2em] text-base-content/40 border-l border-base-300 pl-2 ml-1"
+          >Envigado</span
+        >
+      </a>
+      <nav class="flex items-center gap-2 sm:gap-4">
+        <a
+          href="#como-funciona"
+          class="hidden md:inline text-sm text-base-content/70 hover:text-base-content transition-colors px-2"
+          >Cómo funciona</a
+        >
+        <a
+          href="#negocios"
+          class="hidden md:inline text-sm text-base-content/70 hover:text-base-content transition-colors px-2"
+          >Para negocios</a
+        >
+        <a
+          href="/login"
+          class="text-sm font-medium px-4 py-2 rounded-full text-base-content/80 hover:text-base-content hover:bg-base-200 transition-colors"
+          >Iniciar sesión</a
+        >
+        <a
+          href="/dashboard"
+          class="text-sm font-semibold px-4 py-2 rounded-full bg-primary text-primary-content hover:brightness-110 transition shadow-lg shadow-primary/20"
+          >Ir al dashboard</a
+        >
+      </nav>
+    </div>
+  </header>
 
-    <!-- ─── STATS ─── -->
-    <section
-      class="stats stats-vertical md:stats-horizontal shadow w-full bg-base-200 border border-base-300"
-    >
-      <div class="stat">
-        <div class="stat-figure text-primary">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-            ></path>
-          </svg>
-        </div>
-        <div class="stat-title">Usuarios activos</div>
-        <div class="stat-value text-primary">12,400+</div>
-        <div class="stat-desc">Creciendo cada semana</div>
-      </div>
-      <div class="stat">
-        <div class="stat-figure text-secondary">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-            ></path>
-          </svg>
-        </div>
-        <div class="stat-title">Reseñas publicadas</div>
-        <div class="stat-value text-secondary">86,000+</div>
-        <div class="stat-desc">Con criterios detallados</div>
-      </div>
-      <div class="stat">
-        <div class="stat-figure text-accent">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-            ></path>
-          </svg>
-        </div>
-        <div class="stat-title">Restaurantes registrados</div>
-        <div class="stat-value text-accent">3,200+</div>
-        <div class="stat-desc">En toda la región</div>
-      </div>
-    </section>
-
-    <!-- ─── CÓMO FUNCIONA ─── -->
-    <section class="space-y-10">
-      <div class="text-center space-y-3">
-        <h2 class="text-3xl md:text-4xl font-bold">¿Cómo funciona?</h2>
-        <p class="text-base-content/60 max-w-xl mx-auto">
-          Reseñar nunca había sido tan fácil — ni tan recompensante.
-        </p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-6">
-        {
-          [
-            {
-              step: "01",
-              icon: "🔍",
-              title: "Explora restaurantes",
-              desc: "Busca por nombre, cocina, barrio o cualquier criterio. Filtra por lo que más te importa.",
-            },
-            {
-              step: "02",
-              icon: "✍️",
-              title: "Escribe una reseña detallada",
-              desc: "Califica iluminación, comida, comodidad, servicio y más. Tu experiencia completa, no solo una estrella.",
-            },
-            {
-              step: "03",
-              icon: "🎁",
-              title: "Gana puntos y canjea premios",
-              desc: "Acumula puntos por cada reseña y canjéalos por cupones y descuentos en tus lugares favoritos.",
-            },
-          ].map(({ step, icon, title, desc }) => (
-            <div class="card bg-base-200 border border-base-300 hover:border-primary transition-colors duration-300">
-              <div class="card-body gap-4">
-                <div class="flex items-center gap-3">
-                  <span class="text-3xl">{icon}</span>
-                  <span class="text-4xl font-bold text-base-content/10 font-mono">
-                    {step}
-                  </span>
-                </div>
-                <h3 class="card-title text-lg">{title}</h3>
-                <p class="text-base-content/60 text-sm leading-relaxed">
-                  {desc}
-                </p>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <!-- ─── PUNTOS Y RECOMPENSAS ─── -->
-    <section
-      class="relative overflow-hidden rounded-3xl bg-base-200 border border-base-300 p-8 md:p-12"
-    >
-      <!-- Decoración de fondo -->
+  <main>
+    <!-- ═══ HERO ═══ -->
+    <section class="relative px-6 my-4 pt-24 pb-32 overflow-hidden">
       <div
-        class="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-primary/10 blur-3xl pointer-events-none"
+        class="relative max-w-7xl mx-auto grid lg:grid-cols-12 gap-14 lg:gap-10 items-center"
       >
-      </div>
-      <div
-        class="absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-secondary/10 blur-3xl pointer-events-none"
-      >
-      </div>
-
-      <div class="relative grid md:grid-cols-2 gap-10 items-center">
-        <div class="space-y-5">
-          <div class="badge badge-primary badge-lg gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+        <!-- copy -->
+        <div class="lg:col-span-6 flex flex-row gap-7 py-12 mt-6">
+          <div>
+            <h1
+              class="font-display text-5xl md:text-6xl xl:text-7xl leading-[1.03] tracking-tight text-base-content"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-            Sistema de recompensas
-          </div>
+              Pide la cuenta.
+              <br />
+              <span class="italic font-medium text-primary"
+                >Nosotros ya sabemos</span
+              >
+              <br />
+              si valía la pena.
+            </h1>
 
-          <h2 class="text-3xl md:text-4xl font-bold leading-tight">
-            Reseña, acumula<br />y <span class="text-primary"
-              >gana beneficios</span
+            <p class="text-base-content/65 text-lg leading-relaxed max-w-md">
+              Nada de estrellas genéricas. Calificamos comida, servicio,
+              ambiente e iluminación por separado — y te pagamos en puntos por
+              contarlo.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-4 pt-2">
+              <a
+                href="/dashboard"
+                class="group inline-flex items-center gap-2 bg-primary text-primary-content font-semibold px-6 py-4 rounded-full shadow-xl shadow-primary/25 hover:brightness-110 transition"
+              >
+                Ir al dashboard
+                <svg
+                  class="w-4 h-4 transition-transform group-hover:translate-x-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg
+                >
+              </a>
+              <a
+                href="#como-funciona"
+                class="text-base-content/70 hover:text-base-content font-medium px-2 py-3.5 transition-colors"
+              >
+                Cómo funciona ↓
+              </a>
+            </div>
+            
+          </div>
+          <div>
+              <img
+                src="https://pub-d80845b9e313461db9d75fa6897f1bf3.r2.dev/devicesPicture.png"
+                alt="devicesPicture"
+              />
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CÓMO FUNCIONA — "el menú" (3 tiempos) ═══ -->
+    <section
+      id="como-funciona"
+      class="px-6 py-24 bg-base-200 border-y border-base-300"
+    >
+      <div class="max-w-7xl mx-auto">
+<div class="w-full max-w-xl mx-auto">
+  <div class="carousel rounded-box">
+    <div class="carousel-item">
+      <img src="https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp" alt="Burger" />
+    </div>
+    <div class="carousel-item">
+      <img src="https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.webp" alt="Burger" />
+    </div>
+  </div>
+</div>
+        <div class="reveal max-w-2xl mb-16" data-reveal>
+          <span class="course-eyebrow text-xs text-secondary uppercase"
+            >El menú de la app</span
+          >
+          <h2 class="font-display text-4xl md:text-5xl mt-3 leading-tight">
+            Tres tiempos, <span class="italic text-primary"
+              >una experiencia completa</span
             >
           </h2>
+        </div>
 
-          <p class="text-base-content/60 leading-relaxed">
-            Cada reseña que publiques te da puntos. Cuanto más detallada, más
-            puntos. Acumula hasta desbloquear cupones y descuentos exclusivos en
-            los restaurantes de la plataforma.
+        <div
+          class="grid md:grid-cols-3 gap-px bg-base-300 rounded-2xl overflow-hidden border border-base-300"
+        >
+          <div class="reveal bg-base-100 p-8 flex flex-col gap-4" data-reveal>
+            <span class="course-eyebrow text-[11px] text-primary uppercase"
+              >Entrada</span
+            >
+            <h3 class="font-display text-2xl">Descubre lo que buscas</h3>
+            <p class="text-base-content/60 text-sm leading-relaxed">
+              Filtra por lo que de verdad importa: mesa silenciosa para una
+              cita, enchufe para trabajar, o el lugar con mejor luz para tus
+              fotos.
+            </p>
+          </div>
+
+          <div
+            class="reveal bg-base-100 p-8 flex flex-col gap-4"
+            data-reveal
+            style="transition-delay:.08s"
+          >
+            <span class="course-eyebrow text-[11px] text-primary uppercase"
+              >Plato fuerte</span
+            >
+            <h3 class="font-display text-2xl">Califica en detalle</h3>
+            <p class="text-base-content/60 text-sm leading-relaxed">
+              Comida, servicio, ambiente e iluminación se puntúan por separado.
+              Tu reseña se lee como se lee una cuenta: clara, ítem por ítem.
+            </p>
+          </div>
+
+          <div
+            class="reveal bg-base-100 p-8 flex flex-col gap-4"
+            data-reveal
+            style="transition-delay:.16s"
+          >
+            <span class="course-eyebrow text-[11px] text-primary uppercase"
+              >Postre</span
+            >
+            <h3 class="font-display text-2xl">Gana y canjea</h3>
+            <p class="text-base-content/60 text-sm leading-relaxed">
+              Cada reseña deja puntos. Los cambias por cupones reales en los
+              restaurantes que ya conoces — sin letras pequeñas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ PUNTOS Y RECOMPENSAS — "el vuelto" ═══ -->
+    <section class="px-6 py-24">
+      <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-14 items-center">
+        <div class="lg:col-span-6 reveal flex flex-col gap-6" data-reveal>
+          <span class="course-eyebrow text-xs text-secondary uppercase"
+            >Puntos & recompensas</span
+          >
+          <h2 class="font-display text-4xl md:text-5xl leading-tight">
+            Tu opinión es el <span class="italic text-primary">vuelto</span> que sí
+            te llevas
+          </h2>
+          <p class="text-base-content/65 leading-relaxed max-w-md">
+            Cada aporte suma puntos directos a tu billetera. Escribe reseñas
+            detalladas, súbeles fotos reales y canjea por platos o descuentos
+            cuando quieras.
           </p>
 
-          <ul class="space-y-3">
-            {
-              [
-                "Puntos por cada reseña publicada",
-                "Bonos por reseñas con foto",
-                "Puntos extra por reseñas detalladas",
-                "Cupones canjeables en restaurantes aliados",
-                "Insignias y rangos de reseñador",
-              ].map((item) => (
-                <li class="flex items-center gap-3 text-sm">
-                  <span class="text-primary">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                  {item}
-                </li>
-              ))
-            }
-          </ul>
+          <div
+            class="grid sm:grid-cols-2 gap-x-8 gap-y-5 pt-2 font-mono text-sm"
+          >
+            <div class="flex items-baseline justify-between dashed-rule pb-2">
+              <span class="text-base-content/60 font-body">Reseña básica</span>
+              <span class="text-accent">+50</span>
+            </div>
+            <div class="flex items-baseline justify-between dashed-rule pb-2">
+              <span class="text-base-content/60 font-body">Fotos reales</span>
+              <span class="text-accent">+30</span>
+            </div>
+            <div class="flex items-baseline justify-between dashed-rule pb-2">
+              <span class="text-base-content/60 font-body"
+                >Detalle completo</span
+              >
+              <span class="text-accent">+40</span>
+            </div>
+            <div class="flex items-baseline justify-between dashed-rule pb-2">
+              <span class="text-base-content/60 font-body">Canje</span>
+              <span class="text-base-content/40">inmediato</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Tarjeta de ejemplo de puntos -->
-        <div class="flex flex-col gap-4">
-          <div class="card bg-base-100 border border-base-300 shadow-lg">
-            <div class="card-body">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-sm text-base-content/60"
-                  >Tus puntos acumulados</span
+        <div
+          class="lg:col-span-6 reveal"
+          data-reveal
+          style="transition-delay:.1s"
+        >
+          <div
+            class="bg-neutral text-neutral-content rounded-3xl p-7 md:p-9 border border-base-300"
+          >
+            <div class="flex justify-between items-start">
+              <div>
+                <p
+                  class="text-xs font-mono uppercase tracking-widest text-neutral-content/50"
                 >
-                <span class="badge badge-primary">Nivel Gold</span>
+                  Mi billetera
+                </p>
+                <p
+                  class="font-display text-5xl font-semibold mt-2 tabular-nums"
+                >
+                  1,850<span
+                    class="text-lg font-mono text-neutral-content/40 ml-2"
+                    >pts</span
+                  >
+                </p>
               </div>
-              <div class="text-5xl font-bold text-primary font-mono">2,480</div>
-              <div class="divider my-2"></div>
-              <div class="space-y-2">
-                {
-                  [
-                    { label: "Reseña en La Paloma", pts: "+120" },
-                    { label: "Foto incluida (bonus)", pts: "+30" },
-                    { label: "Reseña detallada (bonus)", pts: "+50" },
-                  ].map(({ label, pts }) => (
-                    <div class="flex items-center justify-between text-sm">
-                      <span class="text-base-content/70">{label}</span>
-                      <span class="text-success font-semibold">{pts} pts</span>
-                    </div>
-                  ))
-                }
-              </div>
+              <span
+                class="text-[11px] font-mono uppercase tracking-wide border border-secondary/50 text-secondary rounded-full px-3 py-1"
+                >Nivel top</span
+              >
             </div>
-          </div>
 
-          <div class="grid grid-cols-2 gap-4">
-            <div class="card bg-primary/10 border border-primary/30">
-              <div class="card-body p-4 text-center">
-                <div class="text-2xl font-bold text-primary">🎟️</div>
-                <div class="text-xs font-semibold mt-1">Cupón 15% OFF</div>
-                <div class="text-[10px] text-base-content/50 mt-0.5">
-                  1,500 pts
+            <div class="grid grid-cols-2 gap-4 mt-8">
+              <div
+                class="bg-base-100 text-base-content rounded-2xl p-4 flex flex-col gap-3"
+              >
+                <div class="flex justify-between items-center">
+                  <span class="text-2xl">🎟️</span>
+                  <span class="text-[11px] font-mono text-secondary"
+                    >1,200 pts</span
+                  >
                 </div>
+                <p class="text-sm font-semibold leading-snug">
+                  20% off en la cuenta
+                </p>
+                <p class="text-[11px] text-base-content/50">
+                  15+ restaurantes aliados
+                </p>
+                <button
+                  class="mt-1 text-xs font-semibold bg-primary text-primary-content rounded-full py-2 hover:brightness-110 transition"
+                  >Canjear</button
+                >
               </div>
-            </div>
-            <div class="card bg-secondary/10 border border-secondary/30">
-              <div class="card-body p-4 text-center">
-                <div class="text-2xl font-bold text-secondary">🍕</div>
-                <div class="text-xs font-semibold mt-1">Postre gratis</div>
-                <div class="text-[10px] text-base-content/50 mt-0.5">
-                  800 pts
+              <div
+                class="bg-base-100 text-base-content rounded-2xl p-4 flex flex-col gap-3"
+              >
+                <div class="flex justify-between items-center">
+                  <span class="text-2xl">🍰</span>
+                  <span class="text-[11px] font-mono text-secondary"
+                    >600 pts</span
+                  >
                 </div>
+                <p class="text-sm font-semibold leading-snug">
+                  Postre de la casa
+                </p>
+                <p class="text-[11px] text-base-content/50">Consumos +$40k</p>
+                <button
+                  class="mt-1 text-xs font-semibold bg-accent text-accent-content rounded-full py-2 hover:brightness-110 transition"
+                  >Canjear</button
+                >
               </div>
             </div>
           </div>
@@ -326,193 +291,195 @@ import "../../styles/global.css";
       </div>
     </section>
 
-    <!-- ─── PARA NEGOCIOS ─── -->
-    <section class="space-y-10">
-      <div class="text-center space-y-3">
-        <div class="badge badge-secondary badge-lg mx-auto gap-2">
-          🏪 Para restaurantes
-        </div>
-        <h2 class="text-3xl md:text-4xl font-bold">
-          Haz crecer tu negocio<br />
-          <span class="text-secondary">con visibilidad real</span>
-        </h2>
-        <p class="text-base-content/60 max-w-2xl mx-auto leading-relaxed">
-          Únete a la plataforma que conecta a los mejores restaurantes con
-          clientes que buscan exactamente lo que tú ofreces.
-        </p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-6">
-        {
-          [
-            {
-              icon: "📈",
-              title: "Aumenta tu visibilidad",
-              desc: "Aparece en búsquedas relevantes y llega a miles de usuarios que ya están buscando lugares como el tuyo.",
-              color: "primary",
-            },
-            {
-              icon: "💸",
-              title: "Incrementa tus ingresos",
-              desc: "Los restaurantes con reseñas detalladas generan hasta un 40% más de visitas y conversiones que los que no las tienen.",
-              color: "secondary",
-            },
-            {
-              icon: "🤝",
-              title: "Conéctate con tu público",
-              desc: "Responde reseñas, lanza promociones exclusivas para la comunidad y construye una relación directa con tus clientes.",
-              color: "accent",
-            },
-          ].map(({ icon, title, desc, color }) => (
-            <div
-              class={`card bg-base-200 border border-${color}/30 hover:border-${color} hover:shadow-lg hover:shadow-${color}/10 transition-all duration-300`}
-            >
-              <div class="card-body gap-4">
-                <div class={`text-4xl`}>{icon}</div>
-                <h3 class={`card-title text-${color}`}>{title}</h3>
-                <p class="text-base-content/60 text-sm leading-relaxed">
-                  {desc}
-                </p>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-
-      <!-- Características para negocios -->
-      <div class="grid md:grid-cols-2 gap-4">
-        {
-          [
-            { icon: "📊", label: "Panel de analíticas en tiempo real" },
-            { icon: "💬", label: "Responde reseñas directamente" },
-            { icon: "🎯", label: "Campañas de cupones dirigidas" },
-            { icon: "🏆", label: "Insignia de negocio verificado" },
-            { icon: "📸", label: "Galería de fotos del restaurante" },
-            { icon: "📍", label: "Perfil con menú y horarios" },
-          ].map(({ icon, label }) => (
-            <div class="flex items-center gap-3 p-4 rounded-xl bg-base-200 border border-base-300">
-              <span class="text-xl">{icon}</span>
-              <span class="text-sm font-medium">{label}</span>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <!-- ─── TESTIMONIOS ─── -->
-    <section class="space-y-8">
-      <div class="text-center space-y-2">
-        <h2 class="text-3xl font-bold">Lo que dicen nuestros usuarios</h2>
-      </div>
-      <div class="grid md:grid-cols-3 gap-6">
-        {
-          [
-            {
-              name: "Laura M.",
-              role: "Foodie habitual",
-              avatar: "LM",
-              text: "Por fin una app que me dice si el lugar tiene buena iluminación para fotos. ¡Mis reseñas ahora tienen sentido!",
-              rating: 5,
-            },
-            {
-              name: "Carlos R.",
-              role: "Dueño de restaurante",
-              avatar: "CR",
-              text: "Desde que me uní, mis reservaciones aumentaron un 30%. La visibilidad en la plataforma es increíble.",
-              rating: 5,
-            },
-            {
-              name: "Sofía P.",
-              role: "Exploradora gastronómica",
-              avatar: "SP",
-              text: "Ya llevo 3 meses y he canjeado 4 cupones. ¡Reseñar se ha vuelto mi hobbie favorito!",
-              rating: 5,
-            },
-          ].map(({ name, role, avatar, text, rating }) => (
-            <div class="card bg-base-200 border border-base-300">
-              <div class="card-body gap-4">
-                <div class="flex items-center gap-3">
-                  <div class="avatar placeholder">
-                    <div class="bg-primary text-primary-content rounded-full w-10">
-                      <span class="text-sm font-bold">{avatar}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="font-semibold text-sm">{name}</div>
-                    <div class="text-base-content/50 text-xs">{role}</div>
-                  </div>
-                </div>
-                <div class="rating rating-sm">
-                  {Array.from({ length: rating }).map(() => (
-                    <input
-                      type="radio"
-                      class="mask mask-star-2 bg-warning"
-                      checked
-                      disabled
-                    />
-                  ))}
-                </div>
-                <p class="text-sm text-base-content/70 leading-relaxed">
-                  "{text}"
-                </p>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <!-- ─── CTA FINAL ─── -->
+    <!-- ═══ PARA NEGOCIOS ═══ -->
     <section
-      class="relative overflow-hidden rounded-3xl bg-primary/10 border border-primary/30 text-center p-10 md:p-16 space-y-6"
+      id="negocios"
+      class="px-6 py-24 bg-base-200 border-y border-base-300"
+    >
+      <div class="max-w-7xl mx-auto">
+        <div class="reveal max-w-2xl mb-16" data-reveal>
+          <span class="course-eyebrow text-xs text-secondary uppercase"
+            >Para restaurantes y socios</span
+          >
+          <h2 class="font-display text-4xl md:text-5xl mt-3 leading-tight">
+            La cocina detrás de <span class="italic text-primary"
+              >tus datos</span
+            >
+          </h2>
+          <p class="text-base-content/60 mt-4 leading-relaxed">
+            Conecta con comensales que ya saben qué buscan — y muéstrales
+            exactamente por qué eres tú.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <div
+            class="reveal bg-base-100 border border-base-300 rounded-2xl p-7 hover:border-secondary/50 transition-colors"
+            data-reveal
+          >
+            <div class="text-3xl mb-4">📈</div>
+            <h3 class="font-display text-xl mb-2">Visibilidad calificada</h3>
+            <p class="text-base-content/60 text-sm leading-relaxed">
+              Muestra tus puntos fuertes reales — música, espacio, menú — a
+              quien busca justamente eso.
+            </p>
+          </div>
+          <div
+            class="reveal bg-base-100 border border-base-300 rounded-2xl p-7 hover:border-secondary/50 transition-colors"
+            data-reveal
+            style="transition-delay:.08s"
+          >
+            <div class="text-3xl mb-4">📊</div>
+            <h3 class="font-display text-xl mb-2">Analítica en vivo</h3>
+            <p class="text-base-content/60 text-sm leading-relaxed">
+              Ve cómo perciben tu servicio día a día, sin esperar una encuesta
+              trimestral.
+            </p>
+          </div>
+          <div
+            class="reveal bg-base-100 border border-base-300 rounded-2xl p-7 hover:border-secondary/50 transition-colors"
+            data-reveal
+            style="transition-delay:.16s"
+          >
+            <div class="text-3xl mb-4">🎯</div>
+            <h3 class="font-display text-xl mb-2">Promociones dirigidas</h3>
+            <p class="text-base-content/60 text-sm leading-relaxed">
+              Crea cupones propios dentro del sistema de puntos para llenar
+              mesas en horas bajas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CTA FINAL ═══ -->
+    <section
+      class="relative px-6 py-28 bg-neutral text-neutral-content text-center overflow-hidden"
     >
       <div
-        class="absolute -top-20 left-1/2 -translate-x-1/2 h-60 w-60 rounded-full bg-primary/20 blur-3xl pointer-events-none"
+        class="absolute -top-24 left-1/2 -translate-x-1/2 h-72 w-72 rounded-full bg-primary/20 blur-[100px] pointer-events-none"
       >
       </div>
-
-      <div class="relative space-y-4">
-        <div class="text-5xl">🚀</div>
-        <h2 class="text-3xl md:text-5xl font-bold">¿Listo para empezar?</h2>
-        <p class="text-base-content/60 max-w-lg mx-auto text-lg">
-          Únete a miles de personas que ya descubren, reseñan y ganan con cada
-          visita a un restaurante.
+      <div class="relative max-w-2xl mx-auto reveal" data-reveal>
+        <span class="course-eyebrow text-xs text-secondary uppercase"
+          >La cuenta, por favor</span
+        >
+        <h2 class="font-display text-4xl md:text-6xl mt-4 leading-tight">
+          Tu próxima <span class="italic text-primary">buena mesa</span> está a un
+          tap
+        </h2>
+        <p class="text-neutral-content/60 text-lg mt-5 leading-relaxed">
+          Entra a tu panel, descubre lugares cerca de ti o administra tu propio
+          restaurante.
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center pt-2">
-          <a href="/dashboard" class="btn btn-primary btn-lg gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-            </svg>
-            Ir al dashboard
-          </a>
-          <a href="#" class="btn btn-outline btn-lg">Ver cómo funciona</a>
-        </div>
+        <a
+          href="/dashboard"
+          class="inline-flex items-center gap-3 mt-8 bg-primary text-primary-content font-semibold px-8 py-4 rounded-full shadow-xl shadow-primary/30 hover:brightness-110 transition"
+        >
+          Ir al dashboard
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2.5"
+            ><path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg
+          >
+        </a>
       </div>
     </section>
-  </main>
 
-  <!-- ─── FOOTER ─── -->
-  <footer
-    class="footer footer-center p-10 mt-20 bg-base-200 border-t border-base-300 text-base-content gap-6"
-  >
-    <div class="grid grid-flow-col gap-6">
-      <a href="/login" class="link link-hover text-sm">Login</a>
-      <a href="/dashboard" class="link link-hover text-sm">Dashboard</a>
-    </div>
-    <div>
-      <p class="text-base-content/50 text-sm">
-        RateApp © {new Date().getFullYear()}
-      </p>
-    </div>
-  </footer>
+    <footer
+      class="px-6 py-8 border-t border-base-300 text-center text-xs text-base-content/40 font-mono"
+    >
+      © 2026 RateApp · Envigado, Antioquia
+    </footer>
+
+    <script>
+      const items = document.querySelectorAll("[data-reveal]");
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("in");
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.15 },
+      );
+      items.forEach((el) => io.observe(el));
+    </script>
+
+    <style is:global>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      
+
+      .dashed-rule {
+        border-bottom: 1.5px dashed #c9b98f;
+      }
+
+      .stamp {
+        border: 2.5px solid var(--color-primary);
+        color: var(--color-primary);
+        transform: rotate(-11deg);
+        border-radius: 9999px;
+        opacity: 0.9;
+      }
+
+      .barcode {
+        background-image: repeating-linear-gradient(
+          90deg,
+          #2a1b12 0px,
+          #2a1b12 2px,
+          transparent 2px,
+          transparent 5px,
+          #2a1b12 5px,
+          #2a1b12 6px,
+          transparent 6px,
+          transparent 10px
+        );
+        height: 34px;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .course-eyebrow {
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 0.14em;
+      }
+
+      ::selection {
+        background: var(--color-primary);
+        color: var(--color-primary-content);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .reveal {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        html {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+  </main>
 </section>
