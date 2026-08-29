@@ -1,37 +1,22 @@
-<template>
-  <div class="uploader-container">
-    <div v-if="initialImage" class="current">
-      <p>Imagen actual:</p>
-      <img :src="currentImage || initialImage" alt="Imagen actual" class="preview" />
-    </div>
-
-    <input type="file" @change="handleFileChange" accept="image/*" />
-    <button @click="uploadImage" :disabled="!selectedFile || isUploading || !restaurantId">
-      {{ isUploading ? 'Subiendo...' : (currentImage || initialImage ? 'Actualizar Imagen' : 'Subir Imagen') }}
-    </button>
-
-    <div v-if="imageUrl" class="result">
-      <p>¡Subido con éxito!</p>
-      <input type="text" :value="imageUrl" readonly />
-      <img :src="imageUrl" alt="Imagen subida" class="preview" />
-    </div>
-  </div>
-</template>
-
 <script setup>
-import { ref, toRefs } from 'vue';
+import { ref, watch, toRef } from 'vue';
 
 const props = defineProps({
   restaurantId: { type: Number, required: true },
   initialImage: { type: String, default: '' },
 });
 
-const { restaurantId, initialImage } = toRefs(props);
-
+// Safe reactive bindings without invalid destructured declarations
 const selectedFile = ref(null);
 const isUploading = ref(false);
 const imageUrl = ref('');
-const currentImage = ref('');
+
+// Initialize and keep in sync using a simple watcher
+const currentImage = ref(props.initialImage);
+
+watch(() => props.initialImage, (newVal) => {
+  currentImage.value = newVal;
+});
 
 const handleFileChange = (event) => {
   const file = event.target.files[0];
@@ -39,9 +24,9 @@ const handleFileChange = (event) => {
 };
 
 const uploadImage = async () => {
-  if (!selectedFile.value || !restaurantId.value) return;
-
+  if (!selectedFile.value || !props.restaurantId) return;
   isUploading.value = true;
+
   try {
     const presigned = await fetch('/api/get-presigned-url', {
       method: 'POST',
@@ -53,7 +38,6 @@ const uploadImage = async () => {
     });
 
     if (!presigned.ok) throw new Error('No se pudo obtener URL firmada');
-
     const { uploadUrl, fileUrl } = await presigned.json();
 
     const uploadResponse = await fetch(uploadUrl, {
@@ -64,11 +48,10 @@ const uploadImage = async () => {
 
     if (!uploadResponse.ok) throw new Error('Error subiendo a R2');
 
-    // Guardar en DB llamando al endpoint de restaurante
     const saveResp = await fetch('/api/restaurant', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: restaurantId.value, image: fileUrl }),
+      body: JSON.stringify({ id: props.restaurantId, image: fileUrl }),
     });
 
     if (!saveResp.ok) throw new Error('Error guardando URL en la base de datos');
@@ -85,8 +68,33 @@ const uploadImage = async () => {
 };
 </script>
 
-<style scoped>
-.uploader-container { border: 1px dashed #ccc; padding: 20px; text-align: center; }
-.preview { max-width: 300px; margin-top: 15px; display: block; }
-.current { margin-bottom: 12px; }
-</style>
+<template>
+  <div class="flex flex-col gap-2 items-start">
+    <p class="text-2xl font-bold">Sube la imagen de tu restaurante</p>
+
+    <div v-if="currentImage">
+      <img :src="currentImage" alt="Imagen actual" class="preview" />
+    </div>
+
+    <input 
+      class="file-input file-input-warning" 
+      type="file" 
+      @change="handleFileChange" 
+      accept="image/*" 
+    />
+
+    <button 
+      @click="uploadImage" 
+      :disabled="!selectedFile || isUploading || !props.restaurantId" 
+      class="btn btn-primary"
+    >
+      {{ isUploading ? 'Subiendo...' : (currentImage ? 'Actualizar Imagen' : 'Subir Imagen') }}
+    </button>
+
+    <div v-if="imageUrl" class="result">
+      <p>¡Subido con éxito!</p>
+      <input type="text" :value="imageUrl" readonly />
+      <img :src="imageUrl" alt="Imagen subida" class="preview" />
+    </div>
+  </div>
+</template>

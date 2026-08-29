@@ -56,7 +56,7 @@ export const GET: APIRoute = async ({ request }) => {
 export const PUT: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { email, name, phone, favoriteFood, password } = body || {};
+    const { email, name, phone, favoriteFood, password, cuponsBuy } = body || {};
 
     if (!email) {
       return new Response(JSON.stringify({ success: false, error: 'Falta el email del usuario' }), {
@@ -81,6 +81,30 @@ export const PUT: APIRoute = async ({ request }) => {
     if (favoriteFood !== undefined) {
       fields.push('favoriteFood = ?');
       values.push(favoriteFood);
+    }
+
+    if (cuponsBuy !== undefined) {
+      if (!Array.isArray(cuponsBuy)) {
+        return new Response(JSON.stringify({ success: false, error: 'cuponsBuy debe ser un arreglo' }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+
+      // Validar cada entrada: { id, code, state }
+      const allowedStates = new Set(['canjeado', 'no canjeado']);
+
+      for (const item of cuponsBuy) {
+        if (!item || (typeof item.id === 'undefined') || typeof item.code !== 'string' || !allowedStates.has(item.state)) {
+          return new Response(JSON.stringify({ success: false, error: 'Cada elemento de cuponsBuy debe tener { id, code, state } con state "canjeado" o "no canjeado"' }), {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+      }
+
+      fields.push('cuponsBuy = ?');
+      values.push(JSON.stringify(cuponsBuy));
     }
 
     if (password !== undefined && password !== '') {

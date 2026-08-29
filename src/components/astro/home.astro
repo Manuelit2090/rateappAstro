@@ -1,16 +1,41 @@
 ---
 import "../../styles/global.css";
-import HeaderUi from "./header.astro";
 
 ---
 
 <section
   class="bg-bg text-on-surface font-body max-w-auto mx-auto overflow-x-hidden min-h-dvh"
 >
-  <HeaderUi />
 
+<header
+  class=" top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 "
+  id="headerAncla"
+>
+  <!-- Top Right/Center: App Name and Location -->
+  <div class="flex items-center gap-4">
+    <a href="/">
+      <h1
+        class="text-xl font-extrabold text-primary font-headline tracking-tight"
+      >
+        RateApp
+      </h1>
+    </a>
+  </div>
+
+
+
+  <div class="flex items-center gap-1">
+    <nav
+      class="hidden md:visible md:flex justify-center items-center gap-6 border-l border-stone-200/10"
+    >
+        <a href="/dashboard"><button class="btn btn-neutral">Ir al dashboard</button></a>
+      <a href="/login"><button class="btn btn-primary">Iniciar Sesion</button></a>
+    </nav>
+
+    
+  </div>
+</header>
   <main class="mt-20 pt-12 px-4 space-y-32 max-w-7xl mx-auto">
-    <!-- ─── HERO: Qué es la app ─── -->
     <section
       class="text-center space-y-6 py-8 md:grid-cols-[minmax(70%,1fr)_2fr] md:grid gap-10 items-center"
     >

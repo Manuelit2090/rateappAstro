@@ -8,7 +8,6 @@
 
 import AdminBaseLayout from '../../layouts/AdminBaseLayout.astro';
 import RestaurantDashboard from '../../components/RestaurantDashboard.vue';
-import SubmitImages from '../../components/UI/submitImages.vue';
 import { verifyToken } from '../../lib/auth';
 
 const sessionToken = Astro.cookies.get('auth_token')?.value;
@@ -69,8 +68,5 @@ if (restaurantId) {
 
 <AdminBaseLayout title="Ajustes del restaurante — Admin">
   <RestaurantDashboard restaurantId={restaurantId} client:load />
-  <div style="margin-top:24px">
-    <h3>Imagen del restaurante</h3>
-    <SubmitImages restaurantId={restaurantId} initialImage={restaurantImage} client:load />
-  </div>
+  
 </AdminBaseLayout>

@@ -61,7 +61,7 @@ importers:
         specifier: ^4.60.3
         version: 4.62.5
       '@tailwindcss/vite':
-        specifier: ^4.1.0
+        specifier: ^4.3.3
         version: 4.3.3(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0))
       '@types/bcryptjs':
         specifier: ^2.4.6
@@ -73,7 +73,7 @@ importers:
         specifier: ^5.6.17
         version: 5.7.20
       tailwindcss:
-        specifier: ^4.1.0
+        specifier: ^4.3.3
         version: 4.3.3
       typescript:
         specifier: ^5.8.0
@@ -976,6 +976,7 @@ packages:
     resolution: {integrity: sha512-6RHPJR1g/uvdYU8uXBnfq3nlqyZCP82Fr6NHgfGoaIeSh0YEqnX/x6uA9MmJJbnSH7swqX4F+CkGdUF+6doiQA==}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@shikijs/core@4.4.3':
     resolution: {integrity: sha512-QCR4q2ZO/ILJEuwiBMel4wdcTDb1JGwfjKTxPDF6x8ixOaluPrVqIn06C99AcRPhmYlBR56d/Fb+GN58GzExpg==}

@@ -1,0 +1,121 @@
+---
+/**
+ * @file redeemCoupon.astro
+ * @description Panel para canjear cupones con código validado por restaurante y usuario.
+ * @depends ../../lib/auth, ./LayoutPage.astro
+ */
+
+
+import AdminBaseLayout from '../../layouts/AdminBaseLayout.astro';
+import { verifyToken } from '../../lib/auth';
+
+const token = Astro.cookies.get('auth_token')?.value;
+
+if (!token) {
+  return Astro.redirect('/login');
+}
+
+const payload = verifyToken(token);
+
+if (!payload || payload.sys !== 'RESTAURANT') {
+  return Astro.redirect('/login');
+}
+
+const actualRestaurantId = Number(payload.restaurant_id ?? 0);
+---
+
+<AdminBaseLayout title="Canjear cupón" description="Canjea cupones con código validado por restaurante">
+  <main class="min-h-screen w-full bg-base-200 px-4 py-8">
+    <div class="w-full">
+      <section class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body space-y-5">
+          <div>
+            <p class="text-sm uppercase tracking-[0.2em] text-primary">Canjear</p>
+            <h1 class="mt-2 text-3xl font-bold text-base-content">Cupón del cliente</h1>
+          </div>
+
+          <div class="alert alert-info shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Formato requerido: SHOP-XXXX-USERID</span>
+          </div>
+
+          <form id="redeemForm" class="space-y-4">
+            <div>
+              <label class="label" for="couponCode">
+                <span class="label-text">Código del cupón</span>
+              </label>
+              <input
+                id="couponCode"
+                name="couponCode"
+                type="text"
+                placeholder="SHOP-ABC123-42"
+                class="input input-bordered w-full uppercase"
+                pattern="SHOP-[A-Z0-9]+-\d+"
+                required
+              />
+            </div>
+
+            <input type="hidden" id="restaurantId" value={actualRestaurantId} />
+
+            <button type="submit" class="btn btn-primary w-full text-white">Validar y canjear</button>
+            <div id="redeemMessage" class="hidden alert" role="alert"></div>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+</AdminBaseLayout>
+
+<script>
+  const form = document.getElementById('redeemForm');
+  const messageBox = document.getElementById('redeemMessage');
+
+  if (form) {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const input = document.getElementById('couponCode');
+      const restaurantId = Number(document.getElementById('restaurantId')?.value || 0);
+      const code = String(input?.value || '').trim().toUpperCase();
+
+      if (!/^SHOP-[A-Z0-9]+-\d+$/.test(code)) {
+        if (messageBox) {
+          messageBox.className = 'alert alert-error';
+          messageBox.textContent = 'El formato del código es inválido. Debe ser SHOP-XXXX-USERID';
+          messageBox.classList.remove('hidden');
+        }
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/shop', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'redeemCode', code, restaurantId }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'No se pudo canjear el cupón');
+        }
+
+        if (messageBox) {
+          messageBox.className = 'alert alert-success';
+          messageBox.textContent = data.message || 'Cupón canjeado correctamente.';
+          messageBox.classList.remove('hidden');
+        }
+
+        form.reset();
+      } catch (error) {
+        if (messageBox) {
+          messageBox.className = 'alert alert-error';
+          messageBox.textContent = error instanceof Error ? error.message : 'Error desconocido';
+          messageBox.classList.remove('hidden');
+        }
+      }
+    });
+  }
+</script>

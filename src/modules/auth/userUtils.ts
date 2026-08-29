@@ -1,4 +1,4 @@
-import type { User } from '../../data/user';
+import type { User, CouponBuy } from '../../data/user';
 import { localUsers } from '../../data/localUsers';
 
 /**
@@ -31,7 +31,7 @@ export function createUser(data: Partial<User>): User {
     totalReviews: data.totalReviews ?? 0,
     reviews: data.reviews ?? [],
     favoriteRestaurant: data.favoriteRestaurant ?? [],
-    cuponsBuy: data.cuponsBuy ?? [],
+    cuponsBuy: (data.cuponsBuy as CouponBuy[]) ?? [],
     currentLocation: data.currentLocation,
   };
 }
