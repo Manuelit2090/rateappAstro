@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, toRef } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   restaurantId: { type: Number, required: true },
@@ -24,7 +24,8 @@ const handleFileChange = (event) => {
 };
 
 const uploadImage = async () => {
-  if (!selectedFile.value || !props.restaurantId) return;
+  const file = selectedFile.value;
+  if (!file || !props.restaurantId) return;
   isUploading.value = true;
 
   try {
@@ -32,18 +33,23 @@ const uploadImage = async () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        filename: selectedFile.value.name,
-        contentType: selectedFile.value.type,
+        filename: file.name,
+        contentType: file.type,
       }),
     });
 
-    if (!presigned.ok) throw new Error('No se pudo obtener URL firmada');
+    if (!presigned.ok) {
+      throw new Error('No se pudo obtener URL firmada');
+    }
+
     const { uploadUrl, fileUrl } = await presigned.json();
 
     const uploadResponse = await fetch(uploadUrl, {
       method: 'PUT',
-      headers: { 'Content-Type': selectedFile.value.type },
-      body: selectedFile.value,
+      headers: {
+        'Content-Type': file.type,
+      },
+      body: file,
     });
 
     if (!uploadResponse.ok) throw new Error('Error subiendo a R2');

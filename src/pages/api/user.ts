@@ -5,20 +5,33 @@
 
 import type { APIRoute } from 'astro';
 import pool from '../../lib/db';
+import { hashPassword, verifyToken } from '../../lib/auth';
 
 export const GET: APIRoute = async ({ request }) => {
   try {
     const url = new URL(request.url);
     const email = url.searchParams.get('email');
+    const token = cookiesFromRequest(request);
+    const auth = token ? verifyToken(token) : null;
 
-    if (!email) {
-      return new Response(JSON.stringify({ success: false, error: 'Falta el email' }), {
-        status: 400,
+    if (!auth) {
+      return new Response(JSON.stringify({ success: false, error: 'Sesión no válida o ausente' }), {
+        status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const [rows] = await pool.execute('SELECT * FROM users WHERE email = ?', [email]) as any[];
+    if (email && email.trim().toLowerCase() !== auth.email.trim().toLowerCase()) {
+      return new Response(JSON.stringify({ success: false, error: 'El email no coincide con la sesión' }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const [rows] = await pool.execute(
+      'SELECT id, name, email, phone, totalPoints, totalReviews FROM users WHERE id = ?',
+      [auth.id]
+    ) as any[];
     const user = rows?.[0];
 
     if (!user) {
@@ -35,7 +48,6 @@ export const GET: APIRoute = async ({ request }) => {
         name: user.name,
         email: user.email,
         phone: user.phone ?? '',
-        favoriteFood: user.favoriteFood ?? '',
         totalPoints: user.totalPoints ?? 0,
         totalReviews: user.totalReviews ?? 0,
       },
@@ -56,11 +68,13 @@ export const GET: APIRoute = async ({ request }) => {
 export const PUT: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { email, name, phone, favoriteFood, password, cuponsBuy } = body || {};
+    const { email, name, phone, password, cuponsBuy } = body || {};
+    const token = cookiesFromRequest(request);
+    const auth = token ? verifyToken(token) : null;
 
-    if (!email) {
-      return new Response(JSON.stringify({ success: false, error: 'Falta el email del usuario' }), {
-        status: 400,
+    if (!auth) {
+      return new Response(JSON.stringify({ success: false, error: 'Sesión no válida o ausente' }), {
+        status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
     }
@@ -78,9 +92,9 @@ export const PUT: APIRoute = async ({ request }) => {
       values.push(phone);
     }
 
-    if (favoriteFood !== undefined) {
-      fields.push('favoriteFood = ?');
-      values.push(favoriteFood);
+    if (email !== undefined && typeof email === 'string' && email.trim() !== '') {
+      fields.push('email = ?');
+      values.push(email.trim().toLowerCase());
     }
 
     if (cuponsBuy !== undefined) {
@@ -109,10 +123,10 @@ export const PUT: APIRoute = async ({ request }) => {
 
     if (password !== undefined && password !== '') {
       fields.push('password = ?');
-      values.push(password);
+      values.push(await hashPassword(password));
     }
 
-    values.push(email);
+    values.push(auth.id);
 
     if (fields.length === 0) {
       return new Response(JSON.stringify({ success: false, error: 'No hay campos para actualizar' }), {
@@ -121,7 +135,7 @@ export const PUT: APIRoute = async ({ request }) => {
       });
     }
 
-    await pool.execute(`UPDATE users SET ${fields.join(', ')} WHERE email = ?`, values);
+    await pool.execute(`UPDATE users SET ${fields.join(', ')} WHERE id = ?`, values);
 
     return new Response(JSON.stringify({ success: true, message: 'Cambios guardados con éxito' }), {
       status: 200,
@@ -136,3 +150,13 @@ export const PUT: APIRoute = async ({ request }) => {
     });
   }
 };
+
+function cookiesFromRequest(request: Request): string | null {
+  const cookieHeader = request.headers.get('cookie') ?? '';
+  const authCookie = cookieHeader
+    .split(';')
+    .map((cookie) => cookie.trim())
+    .find((cookie) => cookie.startsWith('auth_token='));
+
+  return authCookie ? decodeURIComponent(authCookie.slice('auth_token='.length)) : null;
+}

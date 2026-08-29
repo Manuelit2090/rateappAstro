@@ -48,90 +48,116 @@ interface Review {
   reviewItem?: ReviewItem[];
 }
 
+const REVIEW_POINTS_REWARD = 10;
+
+function jsonError(message: string, status: number): Response {
+  return new Response(JSON.stringify({ error: message }), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+async function userHasReviewedRestaurant(userId: number, restaurantId: number): Promise<boolean> {
+  try {
+    const [rows] = await pool.execute(
+      'SELECT COUNT(*) AS total FROM reviews WHERE reviewUser = ? AND restaurant_id = ?',
+      [String(userId), restaurantId]
+    ) as any[];
+
+    const total = Number(rows?.[0]?.total ?? 0);
+    return total > 0;
+  } catch (error) {
+    console.error('Error validando reseñas previas del usuario:', error);
+    throw error;
+  }
+}
+
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     const token = cookies.get('auth_token')?.value;
 
     if (!token) {
-      return new Response(
-        JSON.stringify({ error: 'No autenticado' }),
-        { status: 401 }
-      );
+      return jsonError('No autenticado', 401);
     }
 
     const payload = verifyToken(token);
     if (!payload) {
-      return new Response(
-        JSON.stringify({ error: 'Token inválido' }),
-        { status: 401 }
-      );
+      return jsonError('Token inválido', 401);
     }
 
-    const { business_id, rating, content, reviewItem } = await request.json() as {
-      business_id: number;
-      rating: number;
-      content: string;
-      reviewItem?: ReviewItem[];
+    const jsonBody = await request.json().catch(() => null);
+    if (!jsonBody || typeof jsonBody !== 'object') {
+      return jsonError('JSON inválido', 400);
+    }
+
+    const { business_id, rating, content, reviewItem } = jsonBody as {
+      business_id?: unknown;
+      rating?: unknown;
+      content?: unknown;
+      reviewItem?: unknown;
     };
 
-    if (!business_id || !rating || rating < 1 || rating > 5) {
-      return new Response(
-        JSON.stringify({ error: 'Datos inválidos' }),
-        { status: 400 }
-      );
+    const businessId = Number(business_id);
+    const numericRating = Number(rating);
+
+    if (!Number.isInteger(businessId) || businessId <= 0 || !Number.isFinite(numericRating) || numericRating < 1 || numericRating > 5) {
+      return jsonError('Datos inválidos', 400);
     }
 
-    // Verificar que el usuario existe y traer su nombre (para reviewUser)
+    const safeContent = typeof content === 'string'
+      ? content
+      : typeof content === 'number' || typeof content === 'boolean'
+        ? String(content)
+        : '';
+
+    const safeReviewItem = Array.isArray(reviewItem)
+      ? reviewItem.filter((item: any) => item && typeof item.item === 'string' && typeof item.total === 'number')
+      : [];
+
     const [users] = await pool.execute(
       'SELECT id, name FROM users WHERE id = ?',
       [payload.id]
     ) as any[];
 
     if (!users.length) {
-      return new Response(
-        JSON.stringify({ error: 'Cliente no encontrado' }),
-        { status: 404 }
-      );
+      return jsonError('Cliente no encontrado', 404);
     }
+
     const reviewUser = users[0].name;
 
-    // Verificar que el restaurante existe y traer su slug + reviews actuales
     const [restaurants] = await pool.execute(
       'SELECT id, slug, reviews FROM restaurants WHERE id = ?',
-      [business_id]
+      [businessId]
     ) as any[];
 
     if (!restaurants.length) {
-      return new Response(
-        JSON.stringify({ error: 'Restaurante no encontrado' }),
-        { status: 404 }
-      );
+      return jsonError('Restaurante no encontrado', 404);
     }
-    const restaurant = restaurants[0];
 
-    // Insertar la reseña
+    const restaurant = restaurants[0];
+    const hasPreviousReview = await userHasReviewedRestaurant(payload.id, businessId);
+
     const [insertResult] = await pool.execute(
       `INSERT INTO reviews (reviewSlug, reviewStar, reviewText, reviewUser, reviewDate, restaurant_id, reviewItem)
-       VALUES (?, ?, ?, ?, NOW(), ?, ?)`,
+       VALUES (?, ?, ?, ?, NOW(), ?, ?)
+      `,
       [
         restaurant.slug,
-        rating,
-        content ?? '',
+        numericRating,
+        safeContent,
         reviewUser,
-        business_id,
-        reviewItem && reviewItem.length ? JSON.stringify(reviewItem) : null
+        businessId,
+        safeReviewItem.length ? JSON.stringify(safeReviewItem) : null,
       ]
     ) as any[];
 
     const newReviewId = insertResult.insertId;
 
-    // Guardar reviewId (string) en la propia fila
     await pool.execute(
       'UPDATE reviews SET reviewId = ? WHERE id = ?',
       [String(newReviewId), newReviewId]
     );
 
-    // Actualizar el array json `reviews` en restaurants
     let currentReviews: number[] = [];
     if (restaurant.reviews) {
       try {
@@ -144,33 +170,36 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
     currentReviews.push(newReviewId);
 
-    // Actualizar promedio de rating del negocio
     const [avgResult] = await pool.execute(
       'SELECT AVG(reviewStar) as avg_rating FROM reviews WHERE restaurant_id = ?',
-      [business_id]
+      [businessId]
     ) as any[];
 
     await pool.execute(
       'UPDATE restaurants SET rating = ?, reviews = ? WHERE id = ?',
-      [avgResult[0].avg_rating, JSON.stringify(currentReviews), business_id]
+      [avgResult[0].avg_rating, JSON.stringify(currentReviews), businessId]
     );
 
-    // Otorgar puntos al cliente (10 puntos por reseña)
-    await pool.execute(
-      'UPDATE users SET totalPoints = totalPoints + 10 WHERE id = ?',
-      [payload.id]
-    );
+    if (!hasPreviousReview) {
+      await pool.execute(
+        'UPDATE users SET totalPoints = totalPoints + ?, totalReviews = totalReviews + 1 WHERE id = ?',
+        [REVIEW_POINTS_REWARD, payload.id]
+      );
+    }
 
     return new Response(
-      JSON.stringify({ message: 'Reseña creada exitosamente', reviewId: newReviewId }),
+      JSON.stringify({
+        message: hasPreviousReview
+          ? 'Reseña guardada correctamente. No se otorgaron puntos porque ya existe una reseña previa para este restaurante.'
+          : 'Reseña creada exitosamente',
+        reviewId: newReviewId,
+        awardedPoints: hasPreviousReview ? 0 : REVIEW_POINTS_REWARD,
+      }),
       { status: 201, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error('Error al crear reseña:', error);
-    return new Response(
-      JSON.stringify({ error: 'Error interno del servidor' }),
-      { status: 500 }
-    );
+    return jsonError('Error interno del servidor', 500);
   }
 };
 

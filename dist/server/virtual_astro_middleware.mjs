@@ -1,4 +1,4 @@
-import { t as sequence } from "./chunks/sequence_B9U-1IVV.mjs";
+import { t as sequence } from "./chunks/sequence_CW2Ohy7S.mjs";
 import { a as verifyToken } from "./chunks/auth_-mFB-2Pn.mjs";
 //#region src/middleware.ts
 var PUBLIC_PATHS = /* @__PURE__ */ new Set([

@@ -7,7 +7,6 @@ interface UserProfile {
   name: string
   email: string
   phone: string
-  favoriteFood: string
   totalPoints: number
   totalReviews: number
 }
@@ -16,7 +15,6 @@ const form = ref<UserProfile>({
   name: '',
   email: '',
   phone: '',
-  favoriteFood: '',
   totalPoints: 0,
   totalReviews: 0,
 })
@@ -24,6 +22,14 @@ const form = ref<UserProfile>({
 const password = ref('')
 const message = ref('')
 const isSaving = ref(false)
+
+const parseResponse = async (response: Response) => {
+  const data = await response.json().catch(() => ({}))
+  if (!response.ok || !data.success) {
+    throw new Error(data.error || 'La API no respondió correctamente')
+  }
+  return data
+}
 
 const getLoggedEmail = () => {
   if (typeof window === 'undefined') return ''
@@ -40,18 +46,9 @@ const getLoggedEmail = () => {
 const loadUser = async () => {
   const email = getLoggedEmail()
 
-  if (!email) {
-    message.value = 'No se encontró el email del usuario autenticado.'
-    return
-  }
-
   try {
-    const response = await fetch(`/api/user?email=${encodeURIComponent(email)}`)
-    const data = await response.json()
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.error || 'No se pudo cargar el perfil')
-    }
+    const endpoint = email ? `/api/user?email=${encodeURIComponent(email)}` : '/api/user'
+    const data = await parseResponse(await fetch(endpoint))
 
     form.value = {
       ...form.value,
@@ -59,7 +56,9 @@ const loadUser = async () => {
     }
   } catch (error) {
     console.error('Error cargando perfil:', error)
-    message.value = 'No se pudo cargar tu perfil.'
+    message.value = email
+      ? 'No se pudo cargar tu perfil. Comprueba tu sesión.'
+      : 'No se encontró una sesión autenticada.'
   }
 }
 
@@ -72,7 +71,6 @@ const saveProfile = async () => {
       email: form.value.email,
       name: form.value.name,
       phone: form.value.phone,
-      favoriteFood: form.value.favoriteFood,
     }
 
     if (password.value) {
@@ -87,17 +85,13 @@ const saveProfile = async () => {
       body: JSON.stringify(payload),
     })
 
-    const data = await response.json()
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.error || 'No se pudo guardar')
-    }
+    await parseResponse(response)
 
     password.value = ''
     message.value = 'Cambios guardados con éxito.'
   } catch (error) {
     console.error('Error guardando perfil:', error)
-    message.value = 'No se pudieron guardar los cambios.'
+  message.value = 'No se pudieron guardar los cambios. Comprueba tu sesión e inténtalo de nuevo.'
   } finally {
     isSaving.value = false
   }
@@ -119,7 +113,7 @@ onMounted(() => {
             <p class="text-sm font-semibold uppercase tracking-[0.3em] text-primary">Settings</p>
             <h1 class="text-3xl font-bold">Perfil y preferencias</h1>
             <p class="mt-2 text-sm text-base-content/70">
-              Actualiza tus datos personales y preferencias culinarias.
+              Actualiza tus datos personales.
             </p>
           </div>
         </div>
@@ -146,11 +140,6 @@ onMounted(() => {
             <label class="block">
               <span class="mb-2 block text-sm font-medium">Teléfono</span>
               <input v-model="form.phone" class="input input-bordered w-full" placeholder="Tu teléfono" />
-            </label>
-
-            <label class="block md:col-span-2">
-              <span class="mb-2 block text-sm font-medium">Comida favorita</span>
-              <input v-model="form.favoriteFood" class="input input-bordered w-full" placeholder="Ej. Sushi" />
             </label>
 
             <label class="block md:col-span-2">
