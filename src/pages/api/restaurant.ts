@@ -1,6 +1,6 @@
 /**
  * @file restaurant.ts
- * @description Endpoint para consultar y actualizar datos de un restaurante.
+ * @description Endpoint para consultar, crear y actualizar datos de un restaurante.
  */
 
 import type { APIRoute } from 'astro';
@@ -224,20 +224,8 @@ export const GET: APIRoute = async ({ request }) => {
 
 export const PUT: APIRoute = async ({ request }) => {
   try {
-    const body = await request.json();
-    const {
-      id,
-      name,
-      image,
-      category,
-      cuisine,
-      description,
-      phone,
-      email,
-      address,
-      priceRange,
-      promoted,
-    } = body || {};
+    const body = await request.json().catch(() => ({}));
+    const { id } = body || {};
 
     if (!id) {
       return new Response(JSON.stringify({ success: false, error: 'Falta el id del restaurante' }), {
@@ -246,6 +234,34 @@ export const PUT: APIRoute = async ({ request }) => {
       });
     }
 
+    // 1. Obtener los datos actuales del restaurante
+    const [rows] = await pool.execute(
+      'SELECT * FROM restaurants WHERE id = ? LIMIT 1',
+      [id]
+    ) as any[];
+
+    const current = rows?.[0];
+
+    if (!current) {
+      return new Response(JSON.stringify({ success: false, error: 'Restaurante no encontrado' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    // 2. Conservar datos existentes si solo se envían algunos campos en la petición
+    const updatedName = body.name !== undefined ? body.name : current.name;
+    const updatedImage = body.image !== undefined ? body.image : current.image;
+    const updatedCategory = body.category !== undefined ? body.category : current.category;
+    const updatedCuisine = body.cuisine !== undefined ? body.cuisine : current.cuisine;
+    const updatedDescription = body.description !== undefined ? body.description : current.description;
+    const updatedPhone = body.phone !== undefined ? body.phone : current.phone;
+    const updatedEmail = body.email !== undefined ? body.email : current.email;
+    const updatedAddress = body.address !== undefined ? body.address : current.address;
+    const updatedPriceRange = body.priceRange !== undefined ? body.priceRange : current.priceRange;
+    const updatedPromoted = body.promoted !== undefined ? body.promoted : current.promoted;
+
+    // 3. Ejecutar la actualización con MySQL
     await pool.execute(
       `UPDATE restaurants SET
         name = ?,
@@ -259,17 +275,36 @@ export const PUT: APIRoute = async ({ request }) => {
         priceRange = ?,
         promoted = ?
       WHERE id = ?`,
-      [name, image || null, category, cuisine, description, phone, email, address, priceRange, promoted, id]
+      [
+        updatedName,
+        updatedImage || null,
+        updatedCategory,
+        updatedCuisine,
+        updatedDescription,
+        updatedPhone,
+        updatedEmail,
+        updatedAddress,
+        updatedPriceRange,
+        updatedPromoted,
+        id,
+      ]
     );
 
-    return new Response(JSON.stringify({ success: true, message: 'Restaurante actualizado correctamente' }), {
+    return new Response(JSON.stringify({ 
+      success: true, 
+      message: 'Restaurante actualizado correctamente',
+      imageUrl: updatedImage 
+    }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error al actualizar el restaurante:', error);
 
-    return new Response(JSON.stringify({ success: false, error: 'Error al actualizar el restaurante' }), {
+    return new Response(JSON.stringify({ 
+      success: false, 
+      error: error?.message || 'Error al actualizar el restaurante' 
+    }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
