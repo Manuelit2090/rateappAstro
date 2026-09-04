@@ -40,6 +40,10 @@ const handleReviewSubmit = async (
       return
     }
 
+    window.dispatchEvent(new CustomEvent('review-created', {
+      detail: { reviewId: data.reviewId, restaurantSlug: props.slug },
+    }))
+
     await loadDataUserFromAPI()
     const badgeResult = await syncBadgesForUser(dataUser.user)
 
