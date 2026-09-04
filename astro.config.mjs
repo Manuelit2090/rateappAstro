@@ -4,7 +4,6 @@ import node from '@astrojs/node'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  // Modo híbrido para permitir endpoints dinámicos (API routes)
   output: 'server', 
   adapter: node({ mode: 'standalone' }),
   integrations: [
@@ -12,5 +11,11 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    // Agrega esto para solucionar el error de HMR del router
+    server: {
+      watch: {
+        ignored: ['**/.astro/**']
+      }
+    }
   },
 })
