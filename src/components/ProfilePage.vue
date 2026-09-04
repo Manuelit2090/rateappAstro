@@ -228,7 +228,13 @@ const userInitial = computed(() => {
         </div>
       </div>
 
-      <BadgeList />
+      <div class="border rounded-2xl mt-4 p-5 border-base-200 bg-base-100 shadow-md">
+         <div>
+              <h3 class="text-lg font-bold text-base-content">Tus Logros</h3>
+              <p class="text-sm text-base-content/60">Objetivos y metas desbloqueados durante tu trayectoria en RateApp.</p>
+            </div>
+<BadgeList />
+        </div>
     </div>
 
     <!-- ESTADO SIN LOGUEAR -->
