@@ -7,6 +7,7 @@ import type { APIRoute } from 'astro';
 import type { ResultSetHeader } from 'mysql2';
 import pool from '../../lib/db';
 import { generateToken, verifyToken } from '../../lib/auth';
+import { parseCoordinate, resolveCoordinates } from '../../lib/geocoding';
 
 function buildAuthCookie(token: string): string {
   const secureFlag = import.meta.env.PROD ? 'Secure; ' : '';
@@ -36,6 +37,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const category = parseString(body.category);
     const image = parseString(body.image);
     const address = parseString(body.address);
+    const rawLatitude = body.latitude ?? body.lat;
+    const rawLongitude = body.longitude ?? body.lon;
     const rawReviews = (() => {
       if (Array.isArray(body.reviews)) return body.reviews;
       if (typeof body.reviews === 'string') {
@@ -66,6 +69,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
 
+    const coordinates = await resolveCoordinates(address, rawLatitude, rawLongitude);
+    if (!coordinates) {
+      return new Response(JSON.stringify({
+        success: false,
+        error: 'No se pudo convertir la dirección en coordenadas válidas.',
+      }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+    }
+
     const slug = name
       .toLowerCase()
       .normalize('NFD')
@@ -90,9 +101,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const finalReviews = reviews;
 
     const [result] = await pool.execute(
-      `INSERT INTO restaurants (name, image, slug, reviews, category, cuisine, description, priceRange, promoted, phone, email, address)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [name, finalImage, finalSlug, finalReviews, category, cuisine, description, priceRange, promoted, phone, email, address]
+      `INSERT INTO restaurants (name, image, slug, reviews, category, cuisine, description, priceRange, promoted, phone, email, address, latitude, longitude)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [name, finalImage, finalSlug, finalReviews, category, cuisine, description, priceRange, promoted, phone, email, address, coordinates.latitude, coordinates.longitude]
     ) as [ResultSetHeader, unknown];
 
     const restaurantId = Number(result.insertId);
@@ -149,6 +160,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         phone,
         email,
         address,
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude,
       },
     }), {
       status: 201,
@@ -206,7 +219,8 @@ export const GET: APIRoute = async ({ request }) => {
         phone: restaurant.phone,
         email: restaurant.email,
         address: restaurant.address,
-        location: restaurant.location,
+        latitude: parseCoordinate(restaurant.latitude, -90, 90),
+        longitude: parseCoordinate(restaurant.longitude, -180, 180),
       },
     }), {
       status: 200,
@@ -258,6 +272,20 @@ export const PUT: APIRoute = async ({ request }) => {
     const updatedPhone = body.phone !== undefined ? body.phone : current.phone;
     const updatedEmail = body.email !== undefined ? body.email : current.email;
     const updatedAddress = body.address !== undefined ? body.address : current.address;
+    const addressChanged = body.address !== undefined && String(body.address).trim() !== String(current.address ?? '').trim();
+    const coordinates = addressChanged || body.latitude !== undefined || body.longitude !== undefined
+      ? await resolveCoordinates(String(updatedAddress ?? ''), body.latitude, body.longitude)
+      : {
+          latitude: parseCoordinate(current.latitude, -90, 90),
+          longitude: parseCoordinate(current.longitude, -180, 180),
+        };
+
+    if (!coordinates || coordinates.latitude === null || coordinates.longitude === null) {
+      return new Response(JSON.stringify({ success: false, error: 'Latitud y longitud inválidas.' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
     const updatedPriceRange = body.priceRange !== undefined ? body.priceRange : current.priceRange;
     const updatedPromoted = body.promoted !== undefined ? body.promoted : current.promoted;
 
@@ -272,6 +300,8 @@ export const PUT: APIRoute = async ({ request }) => {
         phone = ?,
         email = ?,
         address = ?,
+        latitude = ?,
+        longitude = ?,
         priceRange = ?,
         promoted = ?
       WHERE id = ?`,
@@ -284,6 +314,8 @@ export const PUT: APIRoute = async ({ request }) => {
         updatedPhone,
         updatedEmail,
         updatedAddress,
+        coordinates.latitude,
+        coordinates.longitude,
         updatedPriceRange,
         updatedPromoted,
         id,

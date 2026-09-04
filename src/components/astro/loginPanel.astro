@@ -1,135 +1,129 @@
 ---
 import LoginForm from "../LoginForm.vue";
-import {Image} from "astro:assets";
 ---
 
 <section
-  class="bg-base-100 text-base-content min-h-screen grid grid-cols-1 lg:grid-cols-2 overflow-hidden relative"
+  class="relative grid min-h-screen grid-cols-1 overflow-hidden bg-base-100 text-base-content md:grid-cols-2"
 >
-  <!-- Elementos Ambientales Decorativos (Orbes de Neón traseros) -->
+  <!-- Detalles de esquinas tecnológicas -->
   <div
-    class="fixed top-[-15%] right-[-15%] w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10 animate-pulse"
-    style="animation-duration: 4s;"
+    class="pointer-events-none absolute left-8 top-8 z-10 hidden sm:block"
+    aria-hidden="true"
   >
+    <div class="h-16 w-16 border-l-2 border-t-2 border-primary/70 shadow-[0_0_18px_var(--color-primary)]"></div>
+    <div class="mt-2 flex gap-1">
+      <span class="h-1 w-1 rounded-full bg-primary"></span>
+      <span class="h-1 w-1 rounded-full bg-secondary"></span>
+      <span class="h-1 w-1 rounded-full bg-accent"></span>
+    </div>
   </div>
+
   <div
-    class="fixed bottom-[-15%] left-[-15%] w-96 h-96 bg-secondary/15 rounded-full blur-3xl -z-10 animate-pulse"
-    style="animation-duration: 5s;"
+    class="pointer-events-none absolute right-8 top-8 z-10 hidden sm:block"
+    aria-hidden="true"
   >
-  </div>
-
-  <!-- Detalles Tecnológicos en Esquinas Globales -->
-  <!-- Esquina Superior Izquierda -->
-  <div class="absolute top-8 left-8 z-10 hidden sm:block">
-    <div class="w-16 h-16 border-l-2 border-t-2 border-primary/30"></div>
-    <div class="flex gap-1 mt-2">
-      <div class="w-1 h-1 rounded-full bg-primary/50"></div>
-      <div class="w-1 h-1 rounded-full bg-primary/30"></div>
-      <div class="w-1 h-1 rounded-full bg-primary/20"></div>
+    <div class="ml-auto h-16 w-16 border-r-2 border-t-2 border-secondary/70 shadow-[0_0_18px_var(--color-secondary)]"></div>
+    <div class="mt-2 flex justify-end gap-1">
+      <span class="h-1 w-1 rounded-full bg-accent"></span>
+      <span class="h-1 w-1 rounded-full bg-secondary"></span>
+      <span class="h-1 w-1 rounded-full bg-primary"></span>
     </div>
   </div>
 
-  <!-- Esquina Superior Derecha -->
-  <div class="absolute top-8 right-8 z-10 hidden sm:block">
-    <div class="w-16 h-16 border-r-2 border-t-2 border-secondary/30"></div>
-    <div class="flex gap-1 mt-2 justify-end">
-      <div class="w-1 h-1 rounded-full bg-secondary/20"></div>
-      <div class="w-1 h-1 rounded-full bg-secondary/30"></div>
-      <div class="w-1 h-1 rounded-full bg-secondary/50"></div>
-    </div>
-  </div>
-
-  <!-- COLUMNA IZQUIERDA: Logo y Fondo Futurista -->
+  <!-- COLUMNA IZQUIERDA: Cuadro neón giratorio y logo -->
   <div
-    class="relative hidden lg:flex flex-col items-center justify-center border-r border-base-content/10 bg-neutral/20 backdrop-blur-sm overflow-hidden select-none"
+    class="relative hidden min-h-screen flex-col items-center justify-center overflow-hidden border-r border-primary/20 bg-base-200 px-8 backdrop-blur-sm select-none md:flex"
   >
-    <!-- Patrón de malla cibernética de fondo -->
-    <div
-      class="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px]"
-    >
-    </div>
-
-    <!-- Orbe de neón interno para la columna del logo -->
-    <div
-      class="absolute w-64 h-64 bg-primary/20 rounded-full blur-2xl animate-pulse"
-    >
-    </div>
-
-    <!-- Contenedor del Logotipo (Placeholder Futurista) -->
     <div class="relative z-10 flex flex-col items-center gap-6 p-8 text-center">
-      <!-- Escudo/Contenedor del Logo -->
-      <div
-        class="relative w-40 h-40 flex items-center justify-center border border-primary/40 rounded-xl bg-base-100/50 backdrop-blur-md shadow-[0_0_50px_rgba(var(--p),0.1)] before:absolute before:inset-0 before:border-2 before:border-dashed before:border-primary/20 before:rounded-xl before:animate-[spin_40s_linear_infinite]"
-      >
-        <!-- Glifo Tecnológico Temporal -->
-        <span
-          class="text-5xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-tr from-primary to-secondary animate-bounce"
-          style="animation-duration: 3s;"
-        >
-          <Image
-            src="/avatar-user.jpg"
-            alt="Avatar del usuario"
-            width={120}
-            height={120}
-          />
-        </span>
-        <!-- Líneas de escaneo estéticas -->
+      <div class="relative flex h-64 w-64 items-center justify-center">
+        <!-- 1. Cuadro Neón exterior que gira mediante CSS puro -->
+         <div
+           class="spin-element absolute inset-0 rounded-2xl border-2 border-primary bg-transparent"
+           aria-hidden="true"
+         ></div>
+
+        <!-- 2. Marco secundario con bordes punteados -->
         <div
-          class="absolute inset-x-0 h-[2px] bg-primary/30 top-0 animate-[scan_2s_linear_infinite]"
+          class="pointer-events-none absolute inset-3 rounded-xl border-2 border-dashed border-secondary/60 bg-transparent"
+          aria-hidden="true"
+        ></div>
+
+        <!-- 3. Contenedor central donde flota el logo -->
+        <div
+          class="relative flex h-52 w-52 items-center justify-center overflow-hidden rounded-2xl border border-accent/50 bg-base-100 p-5 shadow-[0_0_24px_var(--color-secondary)] backdrop-blur-md"
         >
+          <!-- Logo con animación de rebote independiente -->
+          <img
+            src="/avatar-user.png"
+            alt="Avatar de RateApp"
+            width="120"
+            height="120"
+            onerror="this.onerror=null; this.src='/avatar-user.jpg'"
+            class="bounce-element relative z-10 h-36 w-36 object-contain"
+          />
+
+          <!-- Línea de escaneo -->
+          <div
+            class="scan-element pointer-events-none absolute inset-x-5 top-5 h-0.5 bg-secondary"
+            aria-hidden="true"
+           ></div>
         </div>
       </div>
 
-      <!-- Textos del Proyecto -->
+      <!-- Título de la App -->
       <div class="space-y-2">
         <h1
-          class="text-3xl font-black tracking-[0.2em] uppercase text-base-content"
+          class="text-3xl font-black uppercase tracking-[0.2em] text-base-content"
         >
           Rate<span class="text-primary">App</span>
         </h1>
-        <p class="text-xs tracking-widest text-base-content/60 font-mono">
-          [ SYSTEM_ACCESS: STABLE_NODE ]
-        </p>
       </div>
-    </div>
-
-    <!-- Líneas de datos simuladas en la parte inferior izquierda -->
-    <div
-      class="absolute bottom-8 left-8 font-mono text-[10px] text-base-content/30 space-y-1"
-    >
-      <p>SYS_STATUS: ACTIVE</p>
-      <p>NETWORK: SECURE_CORE_9</p>
     </div>
   </div>
 
-  <!-- COLUMNA DERECHA: Formulario de Login -->
+  <!-- COLUMNA DERECHA: Formulario e interfaz sin alteraciones -->
   <main
-    class="relative flex flex-col items-center justify-center p-6 sm:p-12 z-10"
+    class="relative z-10 flex min-h-screen flex-col items-center justify-center p-6 sm:p-12"
   >
-    <!-- Contenedor del Formulario -->
     <div
-      class="w-full max-w-sm bg-base-100/40 lg:bg-transparent p-6 sm:p-0 rounded-2xl border border-base-content/5 lg:border-none backdrop-blur-md lg:backdrop-blur-none shadow-2xl lg:shadow-none"
+      class="w-full max-w-sm rounded-2xl border border-base-content/5 bg-base-100/40 p-6 shadow-2xl backdrop-blur-md sm:p-8 md:border-none md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none"
     >
-     
-
       <LoginForm client:load />
     </div>
 
-    <!-- Footer integrado en la columna derecha -->
     <footer
-      class="w-full text-center text-[10px] sm:text-xs absolute bottom-6 left-0 px-6 font-mono"
+      class="mt-8 w-full shrink-0 px-6 text-center font-mono text-xs text-base-content/60"
     >
-      <p class="font-medium tracking-widest text-base-content/40">
-        © 2026 Rate App
-      </p>
-     
+      © 2026 Rate App — Todos los derechos reservados.
     </footer>
   </main>
 </section>
 
-<style>
-  /* Animación para la línea de escaneo del logo placeholder */
-  @keyframes scan {
+<style is:global>
+  /* Animación del giro del cuadro neón */
+  @keyframes custom-spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Animación del rebote del logo */
+  @keyframes custom-bounce {
+    0%, 100% {
+      transform: translateY(-8%);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: translateY(0);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+
+  /* Animación del escáner */
+  @keyframes custom-scan {
     0% {
       top: 0%;
       opacity: 0;
@@ -144,5 +138,23 @@ import {Image} from "astro:assets";
       top: 100%;
       opacity: 0;
     }
+  }
+
+  .spin-element {
+    animation: custom-spin 10s linear infinite !important;
+    border-color: var(--color-primary) !important;
+    background: transparent !important;
+    box-shadow: 0 0 30px var(--color-primary), inset 0 0 15px var(--color-primary) !important;
+    transform-origin: center;
+  }
+
+  .bounce-element {
+    animation: custom-bounce 2s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 20px var(--color-primary));
+    transform-origin: center;
+  }
+
+  .scan-element {
+    animation: custom-scan 2s linear infinite !important;
   }
 </style>

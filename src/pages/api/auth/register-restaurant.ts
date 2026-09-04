@@ -11,6 +11,7 @@ import type { APIRoute } from 'astro';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../../lib/db';
 import { generateToken, hashPassword, buildAuthCookie } from '../../../lib/auth';
+import { resolveCoordinates } from '../../../lib/geocoding';
 
 type RestaurantRegistrationBody = {
   email: string;
@@ -19,6 +20,8 @@ type RestaurantRegistrationBody = {
   restaurantName: string;
   address: string;
   category: string;
+  latitude?: number | string;
+  longitude?: number | string;
 };
 
 type UserExistsRow = RowDataPacket & {
@@ -52,6 +55,14 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
+    const coordinates = await resolveCoordinates(address, body?.latitude, body?.longitude);
+    if (!coordinates) {
+      return new Response(
+        JSON.stringify({ error: 'No se pudo convertir la dirección en coordenadas válidas.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     const [existingRows] = (await pool.execute(
       'SELECT id FROM users WHERE email = ? LIMIT 1',
       [email]
@@ -78,9 +89,9 @@ export const POST: APIRoute = async ({ request }) => {
       await connection.beginTransaction();
 
       const [restaurantInsert] = (await connection.execute(
-        `INSERT INTO restaurants (name, slug, address, category)
-         VALUES (?, ?, ?, ?)`,
-        [restaurantName, restaurantSlug, address, category]
+        `INSERT INTO restaurants (name, slug, address, category, latitude, longitude)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [restaurantName, restaurantSlug, address, category, coordinates.latitude, coordinates.longitude]
       )) as [ResultSetHeader, unknown];
 
       const restaurantId = Number(restaurantInsert.insertId);

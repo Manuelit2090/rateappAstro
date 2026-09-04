@@ -1,14 +1,17 @@
 import type { APIRoute } from 'astro';
 import pool from '../../../lib/db';
+import { parseCoordinate } from '../../../lib/geocoding';
 
 export const GET: APIRoute = async ({ request }) => {
   try {
     const url = new URL(request.url);
     const lat = url.searchParams.get('lat');
     const lon = url.searchParams.get('lon');
-    const radius = url.searchParams.get('radius') || '10'; // km
+    const latitude = parseCoordinate(lat, -90, 90);
+    const longitude = parseCoordinate(lon, -180, 180);
+    const radius = Number.parseFloat(url.searchParams.get('radius') || '10');
 
-    if (!lat || !lon) {
+    if (latitude === null || longitude === null || !Number.isFinite(radius) || radius <= 0) {
       return new Response(
         JSON.stringify({ error: 'Coordenadas (lat, lon) requeridas' }),
         { status: 400 }
@@ -29,7 +32,7 @@ export const GET: APIRoute = async ({ request }) => {
        HAVING distance <= ?
        ORDER BY distance ASC
        LIMIT 50`,
-      [lat, lon, lat, radius]
+      [latitude, longitude, latitude, radius]
     ) as any[];
 
     return new Response(JSON.stringify({ restaurants }), {

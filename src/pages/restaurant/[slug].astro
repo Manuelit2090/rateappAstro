@@ -26,11 +26,23 @@ interface RestaurantRow {
   phone?: string
   email?: string
   address?: string
+  latitude?: number | string | null
+  longitude?: number | string | null
   lat?: number
   lon?: number
   tags?: string | string[]
   deleted_at?: string | null
   [key: string]: any
+}
+
+interface Restaurant extends RestaurantRow {
+  image?: string | Record<string, unknown>
+  rating?: number | string
+  reviews?: number | string | unknown[]
+  distance?: number | string
+  priceRange?: string
+  promoted?: boolean
+  tags?: string[]
 }
 
 // Genera las rutas estáticas para cada restaurante desde la DB
@@ -78,8 +90,8 @@ async function getRestaurantFromDb(slug: string): Promise<Restaurant | null> {
     phone: restaurant.phone ?? '',
     email: restaurant.email ?? '',
     address: restaurant.address ?? '',
-    lat: restaurant.lat ?? 0,
-    lon: restaurant.lon ?? 0,
+    lat: Number(restaurant.latitude ?? restaurant.lat ?? 0),
+    lon: Number(restaurant.longitude ?? restaurant.lon ?? 0),
   } as Restaurant
 }
 

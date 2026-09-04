@@ -10,7 +10,7 @@
 import type { APIRoute } from 'astro';
 import type { RowDataPacket } from 'mysql2';
 import pool from '../../../lib/db';
-import { verifyPassword, generateToken, hashPassword } from '../../../lib/auth';
+import { verifyPassword, generateToken, buildAuthCookie } from '../../../lib/auth';
 
 type UserLoginRow = RowDataPacket & {
   id: number;
@@ -22,10 +22,12 @@ type UserLoginRow = RowDataPacket & {
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { email, password } = await request.json();
-    const emailNormalized = typeof email === 'string' ? email.trim().toLowerCase() : email; 
+    const body = await request.json().catch(() => null);
+    const email = body && typeof body === 'object' ? (body as Record<string, unknown>).email : null;
+    const password = body && typeof body === 'object' ? (body as Record<string, unknown>).password : null;
+    const emailNormalized = typeof email === 'string' ? email.trim().toLowerCase() : '';
 
-    if (!email || !password) {
+    if (!emailNormalized || typeof password !== 'string' || !password) {
       return new Response(JSON.stringify({ error: 'Email y contraseña son requeridos' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
@@ -39,10 +41,7 @@ export const POST: APIRoute = async ({ request }) => {
     ) as [UserLoginRow[], any];
 
     const customer = rows[0] ?? null;
-    console.log('Usuario encontrado en DB:', customer);
-
     if (!customer) {
-      console.debug('Login failed: no user for email', emailNormalized);
       return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
@@ -52,20 +51,10 @@ export const POST: APIRoute = async ({ request }) => {
     const match = await verifyPassword(password, customer.password);
 
     if (!match) {
-      const isBcrypt = typeof customer.password === 'string' && customer.password.startsWith('$2');
-      console.debug('Login failed: password mismatch for user id', customer.id, 'isBcrypt=', isBcrypt, 'pwdLen=', typeof customer.password === 'string' ? customer.password.length : 'n/a');
-
       return new Response(JSON.stringify({ error: 'Email o contraseña incorrectos' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
-    }
-
-    // Si la contraseña no estaba encriptada con bcrypt, la actualizamos automáticamente
-    const isBcryptPassword = customer.password.startsWith('$2');
-    if (!isBcryptPassword) {
-      const newHash = await hashPassword(password);
-      await pool.execute('UPDATE users SET password = ? WHERE id = ?', [newHash, customer.id]);
     }
 
     // Definición del rol del sistema
@@ -89,20 +78,26 @@ export const POST: APIRoute = async ({ request }) => {
       restaurant_id: restaurantId,
     });
 
-    const isProd = process.env.NODE_ENV === 'production';
-    const secureFlag = isProd ? 'Secure; ' : '';
+    const redirectPath = userSystem === 'CLIENT' ? '/dashboard' : '/admin/dashboard';
 
-    const redirectPath = userSystem === 'RESTAURANT' ? '/admin/dashboard' : '/dashboard';
+    const user = {
+      id: customer.id,
+      email: customer.email,
+      sys: userSystem,
+      role: userSystem,
+      restaurant_id: restaurantId,
+    };
 
     return new Response(JSON.stringify({
       message: 'Login exitoso',
-      id: customer.id,
-      sys: userSystem,
+      user,
+      id: user.id,
+      sys: user.sys,
       redirect: redirectPath,
     }), {
       status: 200,
       headers: {
-        'Set-Cookie': `auth_token=${token}; HttpOnly; ${secureFlag}Path=/; Max-Age=604800; SameSite=Strict`,
+        'Set-Cookie': buildAuthCookie(token),
         'Content-Type': 'application/json',
       },
     });

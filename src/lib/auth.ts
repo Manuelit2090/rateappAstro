@@ -51,21 +51,17 @@ export async function hashPassword(password: string): Promise<string> {
 
 /**
  * Verifica que una contraseña coincida con el valor almacenado.
- * Acepta hashes bcrypt y contraseñas antiguas almacenadas en texto plano.
+ * Acepta únicamente hashes bcrypt almacenados en la base de datos.
  * @param password - Contraseña en texto plano a verificar
  * @param hash - Valor almacenado en la base de datos
  * @returns Promise que resuelve a true si coinciden, false si no
  */
-export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  if (!hash) {
+export async function verifyPassword(password: unknown, hash: unknown): Promise<boolean> {
+  if (typeof password !== 'string' || typeof hash !== 'string' || !hash) {
     return false;
   }
 
-  if (hash.startsWith('$2')) {
-    return bcrypt.compare(password, hash);
-  }
-
-  return password === hash;
+  return hash.startsWith('$2') && bcrypt.compare(password, hash);
 }
 
 /**

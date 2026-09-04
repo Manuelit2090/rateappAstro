@@ -13,38 +13,55 @@ const loading = ref(false)
 
 const loginOrRegister = ref<'login' | 'register'>('login')
 
+function isValidEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+}
+
 async function handleLogin() {
   error.value = ''
 
-  if (!email.value || !password.value) {
+  const normalizedEmail = email.value.trim().toLowerCase()
+  if (!normalizedEmail || !password.value) {
     error.value = 'Email y contraseña son requeridos'
     return
   }
 
+  if (!isValidEmail(normalizedEmail)) {
+    error.value = 'Introduce un email válido'
+    return
+  }
+
+  if (loading.value) return
+
   loading.value = true
   try {
     const payload = {
-      email: email.value.trim(),
+      email: normalizedEmail,
       password: password.value,
     }
 
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(payload),
     })
 
-    const data = await res.json()
+    const data = await res.json().catch(() => ({}))
 
     if (!res.ok) {
       error.value = data.error || 'Error al iniciar sesión'
       return
     }
 
-    const destination = data.redirect || (data.user?.sys === 'RESTAURANT' ? '/admin/dashboard' : '/dashboard')
+    const destination = typeof data.redirect === 'string'
+      ? data.redirect
+      : data.user?.sys === 'CLIENT' || data.sys === 'CLIENT'
+        ? '/dashboard'
+        : '/admin/dashboard'
 
     await loadDataUserFromAPI()
-    window.location.assign(destination)
+    window.location.href = destination
   } catch (err) {
     console.error('Error:', err)
     error.value = 'Error de conexión. Intenta de nuevo.'
@@ -71,6 +88,7 @@ async function handleRegister() {
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({
         name: name.value.trim(), 
         email: email.value.trim(),
@@ -79,7 +97,7 @@ async function handleRegister() {
       }),
     })
 
-    const data = await res.json()
+    const data = await res.json().catch(() => ({}))
 
     if (!res.ok) {
       error.value = data.error || 'Error al registrar usuario'

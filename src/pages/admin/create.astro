@@ -74,6 +74,9 @@ try {
           <div>
             <label for="address" class="block text-sm font-medium text-base-content">Dirección *</label>
             <input type="text" name="address" id="address" required class="input input-bordered w-full mt-1 bg-base-100 text-base-content" />
+            <input type="hidden" name="latitude" id="latitude" />
+            <input type="hidden" name="longitude" id="longitude" />
+            <p id="locationStatus" class="mt-1 text-xs text-base-content/60"></p>
           </div>
 
           <div>
@@ -129,6 +132,29 @@ try {
       const formData = new FormData(form);
 
       try {
+        const address = (document.getElementById('address') as HTMLInputElement).value.trim();
+        const locationStatus = document.getElementById('locationStatus');
+        const geocodeUrl = new URL('https://nominatim.openstreetmap.org/search');
+        geocodeUrl.searchParams.set('format', 'jsonv2');
+        geocodeUrl.searchParams.set('limit', '1');
+        geocodeUrl.searchParams.set('q', address);
+
+        if (locationStatus) locationStatus.textContent = 'Buscando coordenadas...';
+        const geocodeResponse = await fetch(geocodeUrl.toString(), {
+          headers: { Accept: 'application/json' },
+        });
+        const geocodeResults = await geocodeResponse.json() as Array<{ lat?: string; lon?: string }>;
+        const latitude = Number.parseFloat(geocodeResults[0]?.lat ?? '');
+        const longitude = Number.parseFloat(geocodeResults[0]?.lon ?? '');
+
+        if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+          throw new Error('No se encontraron coordenadas para la dirección indicada.');
+        }
+
+        (document.getElementById('latitude') as HTMLInputElement).value = String(latitude);
+        (document.getElementById('longitude') as HTMLInputElement).value = String(longitude);
+        if (locationStatus) locationStatus.textContent = `Ubicación encontrada: ${latitude}, ${longitude}`;
+
         // Hace la petición POST de manera asíncrona a tu API
         const response = await fetch(form.action, {
           method: form.method,
@@ -143,7 +169,7 @@ try {
         } else {
           // Si la API devuelve un error estructurado en JSON
           const errorData = await response.json();
-          alert(`Error: ${errorData.message || 'No se pudo crear el restaurante'}`);
+          alert(`Error: ${errorData.error || errorData.message || 'No se pudo crear el restaurante'}`);
         }
       } catch (error) {
         console.error('Error al enviar el formulario:', error);
