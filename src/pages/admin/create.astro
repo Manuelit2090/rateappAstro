@@ -39,141 +39,202 @@ try {
 ---
 
 <LayoutPage title="Crear — Admin">
-  <main class="min-h-screen bg-base-200 py-8 px-4 sm:px-6 lg:px-8">
-    <div class="mx-auto max-w-5xl grid grid-cols-1 gap-6 md:grid-cols-5 items-start">
+  <main class="min-h-screen bg-base-200 py-10 px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-5xl grid grid-cols-1 gap-8 md:grid-cols-5 items-start">
       
-      <!-- Columna Izquierda: Información -->
-      <section class="md:col-span-2 border border-base-300 bg-base-100 p-6 shadow-sm rounded-2xl">
-        <h2 class="text-xl font-bold text-base-content">Crear un nuevo restaurante</h2>
-        <p class="mt-2 text-sm text-base-content/70">
-          Complete el formulario para dar de alta un nuevo establecimiento en la plataforma. Todos los campos con (*) son obligatorios.
-        </p>
+      <section class="md:col-span-2 card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body gap-4">
+          <div class="flex items-center gap-3">
+            <div class="p-3 bg-primary/10 rounded-2xl text-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h5m-5 0V11m0 0h2m-2 0h-2" />
+              </svg>
+            </div>
+            <h2 class="card-title text-xl font-bold">Nuevo Restaurante</h2>
+          </div>
+          
+          <p class="text-sm text-base-content/70 leading-relaxed">
+            Complete los datos para registrar un establecimiento en la plataforma. Los campos marcados con <span class="badge badge-error badge-xs font-bold">*</span> son obligatorios.
+          </p>
+
+          <div class="divider my-1"></div>
+
+          <div class="alert alert-info text-xs shadow-none border-none bg-info/10 text-info-content">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span>La dirección se geolocalizará automáticamente al enviar la información.</span>
+          </div>
+        </div>
       </section>
 
-      <!-- Columna Derecha: Formulario -->
-      <section class="md:col-span-3 border border-base-300 bg-base-100 p-6 shadow-sm rounded-2xl">
-        <!-- AGREGADO: Se le colocó el id "restaurantForm" para poder seleccionarlo en JavaScript -->
-        <form id="restaurantForm" action="/api/restaurant" method="POST" class="space-y-4">
-          
-          <div>
-            <label for="name" class="block text-sm font-medium text-base-content">Nombre del restaurante *</label>
-            <input type="text" name="name" id="name" required class="input input-bordered w-full mt-1 bg-base-100 text-base-content" />
-          </div>
+      <section class="md:col-span-3 card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body">
+          <form id="restaurantForm" action="/api/restaurant" method="POST" class="space-y-4">
+            
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend font-semibold">
+                Nombre del restaurante <span class="text-error">*</span>
+              </legend>
+              <label class="input input-bordered flex items-center gap-2 w-full">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2 5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v1h4v-1Z"/></svg>
+                <input type="text" name="name" id="name" required class="grow" placeholder="Ej. El Buen Sabor" />
+              </label>
+            </fieldset>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label for="category" class="block text-sm font-medium text-base-content">Categoría *</label>
-              <input type="text" name="category" id="category" required placeholder="Ej: Italiana, Japonesa" class="input input-bordered w-full mt-1 bg-base-100 text-base-content" />
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <fieldset class="fieldset">
+                <legend class="fieldset-legend font-semibold">
+                  Categoría <span class="text-error">*</span>
+                </legend>
+                <input type="text" name="category" id="category" required placeholder="Ej. Italiana, Japonesa" class="input input-bordered w-full" />
+              </fieldset>
+
+              <fieldset class="fieldset">
+                <legend class="fieldset-legend font-semibold">Tipo de cocina</legend>
+                <input type="text" name="cuisine" id="cuisine" placeholder="Ej. Tradicional, Fusión" class="input input-bordered w-full" />
+              </fieldset>
             </div>
-            <div>
-              <label for="cuisine" class="block text-sm font-medium text-base-content">Tipo de cocina</label>
-              <input type="text" name="cuisine" id="cuisine" placeholder="Ej: Tradicional, Fusión" class="input input-bordered w-full mt-1 bg-base-100 text-base-content" />
+
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend font-semibold">
+                Dirección <span class="text-error">*</span>
+              </legend>
+              <label class="input input-bordered flex items-center gap-2 w-full">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.307-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 001.04.573l.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd" /></svg>
+                <input type="text" name="address" id="address" required class="grow" placeholder="Calle 10 # 40-20, Envigado" />
+              </label>
+              <input type="hidden" name="latitude" id="latitude" />
+              <input type="hidden" name="longitude" id="longitude" />
+              <p id="locationStatus" class="text-xs text-base-content/60 mt-1 min-h-[1.25rem]"></p>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend font-semibold">Descripción</legend>
+              <textarea name="description" id="description" rows="3" placeholder="Añade detalles relevantes del negocio..." class="textarea textarea-bordered w-full h-24"></textarea>
+            </fieldset>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <fieldset class="fieldset">
+                <legend class="fieldset-legend font-semibold">Teléfono</legend>
+                <label class="input input-bordered flex items-center gap-2 w-full">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 opacity-70"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
+                  <input type="tel" name="phone" id="phone" class="grow" placeholder="+57 300 000 0000" />
+                </label>
+              </fieldset>
+
+              <fieldset class="fieldset">
+                <legend class="fieldset-legend font-semibold">Correo electrónico</legend>
+                <label class="input input-bordered flex items-center gap-2 w-full">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 opacity-70"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+                  <input type="email" name="email" id="email" class="grow" placeholder="contacto@restaurante.com" />
+                </label>
+              </fieldset>
             </div>
-          </div>
 
-          <div>
-            <label for="address" class="block text-sm font-medium text-base-content">Dirección *</label>
-            <input type="text" name="address" id="address" required class="input input-bordered w-full mt-1 bg-base-100 text-base-content" />
-            <input type="hidden" name="latitude" id="latitude" />
-            <input type="hidden" name="longitude" id="longitude" />
-            <p id="locationStatus" class="mt-1 text-xs text-base-content/60"></p>
-          </div>
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend font-semibold">Rango de precios</legend>
+              <select name="priceRange" id="priceRange" class="select select-bordered w-full">
+                <option value="" disabled selected>Seleccione una opción</option>
+                <option value="$">$ (Económico)</option>
+                <option value="$$">$$ (Medio)</option>
+                <option value="$$$">$$$ (Premium)</option>
+                <option value="$$$$">$$$$ (Lujo)</option>
+              </select>
+            </fieldset>
 
-          <div>
-            <label for="description" class="block text-sm font-medium text-base-content">Descripción</label>
-            <textarea name="description" id="description" rows="3" class="textarea textarea-bordered w-full mt-1 bg-base-100 text-base-content"></textarea>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label for="phone" class="block text-sm font-medium text-base-content">Teléfono</label>
-              <input type="tel" name="phone" id="phone" class="input input-bordered w-full mt-1 bg-base-100 text-base-content" />
+            <div class="pt-4 card-actions">
+              <button type="submit" id="submitBtn" class="btn btn-primary w-full shadow-md">
+                <span>Crear restaurante</span>
+              </button>
             </div>
-            <div>
-              <label for="email" class="block text-sm font-medium text-base-content">Correo electrónico</label>
-              <input type="email" name="email" id="email" class="input input-bordered w-full mt-1 bg-base-100 text-base-content" />
-            </div>
-          </div>
 
-          <div>
-            <label for="priceRange" class="block text-sm font-medium text-base-content">Rango de precios</label>
-            <select name="priceRange" id="priceRange" class="select select-bordered w-full mt-1 bg-base-100 text-base-content">
-              <option value="" disabled selected>Seleccione una opción</option>
-              <option value="€">€ (Económico)</option>
-              <option value="€€">€€ (Medio)</option>
-              <option value="€€€">€€€ (Premium)</option>
-              <option value="€€€€">€€€€ (Lujo)</option>
-            </select>
-          </div>
-
-          <div class="pt-2">
-            <button type="submit" class="btn btn-primary w-full normal-case text-white">
-              Crear restaurante
-            </button>
-          </div>
-
-        </form>
+          </form>
+        </div>
       </section>
 
     </div>
   </main>
 </LayoutPage>
 
-<!-- NUEVO: Script para controlar el comportamiento del formulario desde el cliente -->
 <script>
   const form = document.getElementById('restaurantForm') as HTMLFormElement;
+  const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
 
   if (form) {
     form.addEventListener('submit', async (event) => {
-      // Evita que el navegador recargue la página o vaya a la URL del action
       event.preventDefault();
 
-      // Recopila los datos del formulario automáticamente
-      const formData = new FormData(form);
+      const originalBtnContent = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="loading loading-spinner loading-sm"></span> Procesando...`;
 
       try {
         const address = (document.getElementById('address') as HTMLInputElement).value.trim();
         const locationStatus = document.getElementById('locationStatus');
-        const geocodeUrl = new URL('https://nominatim.openstreetmap.org/search');
-        geocodeUrl.searchParams.set('format', 'jsonv2');
-        geocodeUrl.searchParams.set('limit', '1');
-        geocodeUrl.searchParams.set('q', address);
 
-        if (locationStatus) locationStatus.textContent = 'Buscando coordenadas...';
-        const geocodeResponse = await fetch(geocodeUrl.toString(), {
-          headers: { Accept: 'application/json' },
-        });
-        const geocodeResults = await geocodeResponse.json() as Array<{ lat?: string; lon?: string }>;
-        const latitude = Number.parseFloat(geocodeResults[0]?.lat ?? '');
-        const longitude = Number.parseFloat(geocodeResults[0]?.lon ?? '');
-
-        if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
-          throw new Error('No se encontraron coordenadas para la dirección indicada.');
+        if (!address) {
+          throw new Error('Debes indicar una dirección válida.');
         }
 
-        (document.getElementById('latitude') as HTMLInputElement).value = String(latitude);
-        (document.getElementById('longitude') as HTMLInputElement).value = String(longitude);
-        if (locationStatus) locationStatus.textContent = `Ubicación encontrada: ${latitude}, ${longitude}`;
+        let latitude: number | null = null;
+        let longitude: number | null = null;
 
-        // Hace la petición POST de manera asíncrona a tu API
+        if (locationStatus) {
+          locationStatus.className = 'text-xs text-info mt-1 font-medium';
+          locationStatus.textContent = 'Buscando coordenadas de la dirección...';
+        }
+
+        try {
+          const geocodeUrl = new URL('https://nominatim.openstreetmap.org/search');
+          geocodeUrl.searchParams.set('format', 'jsonv2');
+          geocodeUrl.searchParams.set('limit', '1');
+          geocodeUrl.searchParams.set('q', address);
+
+          const geocodeResponse = await fetch(geocodeUrl.toString(), {
+            headers: { Accept: 'application/json' },
+          });
+
+          if (geocodeResponse.ok) {
+            const geocodeResults = await geocodeResponse.json() as Array<{ lat?: string; lon?: string }>;
+            latitude = Number.parseFloat(geocodeResults[0]?.lat ?? '');
+            longitude = Number.parseFloat(geocodeResults[0]?.lon ?? '');
+          }
+        } catch (geoError) {
+          console.warn('Geocodificación del navegador fallida, se usará el servidor:', geoError);
+        }
+
+        if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+          (document.getElementById('latitude') as HTMLInputElement).value = String(latitude);
+          (document.getElementById('longitude') as HTMLInputElement).value = String(longitude);
+
+          if (locationStatus) {
+            locationStatus.className = 'text-xs text-success mt-1 font-medium';
+            locationStatus.textContent = `Ubicación localizada: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+          }
+        } else if (locationStatus) {
+          locationStatus.className = 'text-xs text-warning mt-1 font-medium';
+          locationStatus.textContent = 'No se pudo geolocalizar en el navegador; la dirección se resolverá en el servidor.';
+        }
+
+        const formData = new FormData(form);
+
         const response = await fetch(form.action, {
           method: form.method,
           body: formData,
         });
 
         if (response.ok) {
-          // Si tu API responde de manera correcta (status 200-299)
           alert('¡Restaurante creado con éxito!');
-          // Rediriges al usuario usando JavaScript en el cliente
           window.location.href = '/admin/dashboard';
         } else {
-          // Si la API devuelve un error estructurado en JSON
           const errorData = await response.json();
           alert(`Error: ${errorData.error || errorData.message || 'No se pudo crear el restaurante'}`);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error al enviar el formulario:', error);
-        alert('Ocurrió un error de red al intentar crear el restaurante.');
+        alert(error.message || 'Ocurrió un error de red al intentar crear el restaurante.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnContent;
       }
     });
   }
