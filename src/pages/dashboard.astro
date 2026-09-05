@@ -4,7 +4,6 @@ import ProfileCard from '../components/ProfileCard.vue'
 import RestaurantGrid from '../components/RestaurantGrid.vue'
 import HeaderPage from '../components/UI/HeaderPage.vue'
 import { verifyToken } from '../lib/auth'
-import { restaurantService } from '../lib/api'
 
 const sessionToken = Astro.cookies.get('auth_token')?.value;
 
@@ -51,8 +50,9 @@ try {
     return Astro.redirect('/login');
   }
 
-  const restResponse = await restaurantService.search('') as { restaurants?: unknown[] };
-  initialRestaurants = restResponse.restaurants ?? [];
+  // El Feed calcula la distancia en el cliente después de obtener la ubicación.
+  // No precargamos la lista completa para evitar mostrar restaurantes fuera de 4-6 km.
+  initialRestaurants = [];
 } catch (error) {
   console.error('Error cargando datos del dashboard SSR:', error);
   return Astro.redirect('/login');

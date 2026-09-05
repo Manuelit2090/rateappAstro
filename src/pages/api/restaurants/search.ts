@@ -13,8 +13,9 @@ export const GET: APIRoute = async ({ request }) => {
     const url = new URL(request.url);
     const q = url.searchParams.get('q') || '';
     const category = url.searchParams.get('category');
+    const all = url.searchParams.get('all') === 'true';
     const page = parseInt(url.searchParams.get('page') || '1', 10) || 1;
-    const limit = 20;
+    const limit = all ? 1000 : 20;
     const offset = (page - 1) * limit;
 
     let query = 'SELECT * FROM restaurants WHERE 1=1';
@@ -32,7 +33,9 @@ export const GET: APIRoute = async ({ request }) => {
 
     // Al concatenar limit y offset directamente como números enteros seguros,
     // evitamos que el prepared statement de MySQL falle por tipos de datos.
-    query += ` ORDER BY rating DESC LIMIT ${limit} OFFSET ${offset}`;
+    query += all
+      ? ' ORDER BY rating DESC'
+      : ` ORDER BY rating DESC LIMIT ${limit} OFFSET ${offset}`;
 
     const [restaurants] = await pool.execute(query, params) as any[];
 
