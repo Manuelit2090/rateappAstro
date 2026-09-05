@@ -49,36 +49,29 @@ const categories = [
 
 const moods = ['Date night', 'Quick bite', 'With friends', 'Working solo', 'Celebration', 'Hidden gem']
 
-// Cargar restaurantes al montar el componente
 onMounted(async () => {
-  await loadRestaurants()
+  await loadAllRestaurants()
 })
 
-async function loadRestaurants() {
+async function loadAllRestaurants() {
   loading.value = true
   error.value = ''
+
   try {
-    const response = await restaurantService.search('', undefined, 1)
-    restaurants.value = response.restaurants || []
+    const response = await restaurantService.getAll()
+    restaurants.value = Array.isArray(response.restaurants) ? response.restaurants : []
   } catch (err) {
     console.error('Error cargando restaurantes:', err)
     error.value = 'Error al cargar restaurantes'
+    restaurants.value = []
   } finally {
     loading.value = false
   }
 }
 
 async function searchRestaurants(category?: string) {
-  loading.value = true
-  error.value = ''
-  try {
-    const response = await restaurantService.search(query.value, category, 1)
-    restaurants.value = response.restaurants || []
-  } catch (err) {
-    console.error('Error buscando:', err)
-    error.value = 'Error en la búsqueda'
-  } finally {
-    loading.value = false
+  if (category) {
+    activeFilter.value = 'All'
   }
 }
 </script>
@@ -162,7 +155,7 @@ async function searchRestaurants(category?: string) {
           v-else
           class="text-center py-20 text-neutral rounded-3xl border border-base-300/60 bg-base-100/40"
         >
-          Nothing matches "{{ query }}". Try a different cuisine.
+          No hay restaurantes disponibles.
         </div>
       </section>
 
