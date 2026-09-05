@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import type { Review } from '../../data/reviews'
 
 const props = defineProps<{
@@ -16,7 +16,7 @@ const loadReviews = async () => {
 
   try {
     const res = await fetch(`/api/auth/reviews?slug=${encodeURIComponent(props.restaurantSlug)}`)
-    const data = await res.json()
+    const data = await res.json().catch(() => ({}))
 
     if (!res.ok) {
       error.value = data.error || 'No se pudieron cargar las reseñas'
@@ -24,8 +24,13 @@ const loadReviews = async () => {
     }
 
     // reviewDate llega como string desde la API; lo convertimos a Date para usar toLocaleDateString
-    restaurantReviews.value = data.reviews.map((rev: Review) => ({
+    const reviews = Array.isArray(data.reviews) ? data.reviews : []
+    restaurantReviews.value = reviews.map((rev: Review, index: number) => ({
       ...rev,
+      reviewId: String(rev.reviewId ?? `review-${index}`),
+      reviewStar: Number(rev.reviewStar) || 0,
+      reviewUser: String(rev.reviewUser ?? 'Usuario'),
+      reviewText: String(rev.reviewText ?? ''),
       reviewDate: new Date(rev.reviewDate),
     }))
   } catch (err) {
@@ -36,13 +41,24 @@ const loadReviews = async () => {
   }
 }
 
-onMounted(loadReviews)
+const handleReviewCreated = () => {
+  void loadReviews()
+}
+
+onMounted(() => {
+  void loadReviews()
+  window.addEventListener('review-created', handleReviewCreated)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('review-created', handleReviewCreated)
+})
 </script>
 
 <template>
   <div class="mt-8 space-y-4">
 
-    <p v-if="loading" class="text-sm text-secundary text-center py-6">
+    <p v-if="loading" class="text-sm text-secondary text-center py-6">
       Cargando reseñas...
     </p>
 

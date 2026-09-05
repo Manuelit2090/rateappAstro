@@ -212,9 +212,9 @@ export const GET: APIRoute = async ({ request }) => {
       );
     }
 
-    // 1. Buscar el restaurante por slug y traer su array de ids de reviews
+    // 1. Resolver el restaurante por slug.
     const [restaurants] = await pool.execute(
-      'SELECT id, reviews FROM restaurants WHERE slug = ?',
+      'SELECT id FROM restaurants WHERE slug = ? LIMIT 1',
       [slug]
     ) as any[];
 
@@ -225,32 +225,14 @@ export const GET: APIRoute = async ({ request }) => {
       );
     }
 
-    let reviewIds: number[] = [];
-    if (restaurants[0].reviews) {
-      try {
-        reviewIds = typeof restaurants[0].reviews === 'string'
-          ? JSON.parse(restaurants[0].reviews)
-          : restaurants[0].reviews;
-      } catch {
-        reviewIds = [];
-      }
-    }
-
-    if (!reviewIds.length) {
-      return new Response(JSON.stringify({ reviews: [] }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    // 2. Traer esas reviews puntuales por id
-    const placeholders = reviewIds.map(() => '?').join(', ');
+    // 2. Buscar directamente por restaurant_id. El JSON restaurants.reviews
+    // puede contener IDs numéricos o UUIDs según el endpoint que creó la reseña.
     const [rows] = await pool.execute(
       `SELECT reviewId, reviewSlug, reviewStar, reviewText, reviewUser, reviewDate, reviewItem
        FROM reviews
-       WHERE id IN (${placeholders})
+       WHERE restaurant_id = ?
        ORDER BY reviewDate DESC`,
-      reviewIds
+      [restaurants[0].id]
     ) as any[];
 
     const reviews: Review[] = rows.map((row: any) => ({
