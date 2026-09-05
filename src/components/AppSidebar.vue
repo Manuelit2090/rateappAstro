@@ -35,7 +35,6 @@ const items = [
   { icon: Compass,      label: 'Discover',  to: '/discover' },
      { icon: Search,   label: 'Search',    to: '/search' },
   { icon: TicketPercent, label: 'Shop',     to: '/shop' },
-  // { icon: Trophy,       label: 'Quests',    to: '/quests' },
   { icon: Heart,        label: 'Favorites', to: '/favorites' },
   { icon: CircleUser,   label: 'Profile',    to: '/profile' },
 ]
