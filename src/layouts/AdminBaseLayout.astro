@@ -1,6 +1,6 @@
 ---
 import AppSideBarAdmin from "../components/AppSidebarAdmin.vue";
-import MobileDock from "../components/MobileDock.vue";
+import MobileDockAdmin from "../components/MobileDockAdmin.vue";
 import AlertContainer from "../components/UI/alertContainer.vue";
 
 import {Menu, Ticket, TicketX } from 'lucide-vue-next'
@@ -45,9 +45,9 @@ const {
     <div class="flex w-full bg-background text-foreground">
       <AlertContainer client:visible />
       <AppSideBarAdmin class="md:block hidden" client:visible />
-      <MobileDock class="md:hidden" client:visible />
+      <MobileDockAdmin class="md:hidden" client:visible />
 
-      <div class="fab fab-flower">
+      <div class="md:visible hidden" fab fab-flower>
         <!-- a focusable div with tabindex is necessary to work on all browsers. role="button" is necessary for accessibility -->
         <div
           tabindex="0"
