@@ -7,6 +7,13 @@ import type { APIRoute } from 'astro';
 import pool from '../../lib/db';
 import { hashPassword, verifyToken } from '../../lib/auth';
 
+function jsonResponse(body: Record<string, unknown>, status: number): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
 export const GET: APIRoute = async ({ request }) => {
   try {
     const url = new URL(request.url);
@@ -148,6 +155,66 @@ export const PUT: APIRoute = async ({ request }) => {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
+  }
+};
+
+export const DELETE: APIRoute = async ({ request }) => {
+  try {
+    const token = cookiesFromRequest(request);
+    const auth = token ? verifyToken(token) : null;
+
+    if (!auth) {
+      return jsonResponse({ success: false, error: 'Sesión no válida o ausente' }, 401);
+    }
+
+    const body = await request.json().catch(() => ({}));
+    if (body?.confirmation !== 'ELIMINAR') {
+      return jsonResponse({
+        success: false,
+        error: 'Debes confirmar la eliminación escribiendo ELIMINAR',
+      }, 400);
+    }
+
+    const connection = await pool.getConnection();
+
+    try {
+      await connection.beginTransaction();
+
+      const [redemptionTable] = await connection.execute(
+        `SELECT TABLE_NAME FROM information_schema.TABLES
+         WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'customer_redemptions'`
+      ) as any[];
+
+      if (redemptionTable.length > 0) {
+        await connection.execute(
+          'DELETE FROM customer_redemptions WHERE customer_id = ?',
+          [auth.id]
+        );
+      }
+
+      await connection.execute('DELETE FROM users WHERE id = ?', [auth.id]);
+
+      await connection.commit();
+
+      return new Response(JSON.stringify({
+        success: true,
+        message: 'Cuenta eliminada correctamente',
+      }), {
+        status: 200,
+        headers: {
+          'Set-Cookie': 'auth_token=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax',
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  } catch (error) {
+    console.error('Error al eliminar la cuenta:', error);
+    return jsonResponse({ success: false, error: 'Error interno del servidor' }, 500);
   }
 };
 

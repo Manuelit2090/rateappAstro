@@ -91,7 +91,7 @@ async function toggleLike() {
         <div class="flex items-center gap-4 text-xs text-accent-content/85">
           <span class="inline-flex items-center gap-1.5">
             <MapPin class="h-3.5 w-3.5" />
-            {{ r.distance }}
+            {{ r.distance ? `${Number(r.distance).toFixed(2)} km` : '—' }}
           </span>
           <span>{{ r.priceRange }}</span>
           <span>{{ r.reviews.length }} reviews</span>

@@ -17,9 +17,11 @@ He conectado completamente la lógica del programa RateApp con la base de datos 
 - `POST /api/auth/login` - Iniciar sesión
 - `POST /api/auth/logout` - Cerrar sesión
 - `GET /api/auth/me` - Obtener usuario autenticado
+- `DELETE /api/user` - Eliminar la cuenta autenticada; requiere confirmar `ELIMINAR`
 
 #### Restaurantes (`/api/restaurants/`)
-- `GET /api/restaurants/nearby?lat=40.4168&lon=-3.7038&radius=10` - Restaurantes cercanos
+- `GET /api/restaurants/nearby?lat=40.4168&lon=-3.7038` - Feed: restaurantes entre 4 y 6 km; sólo acepta `lat` y `lon`
+- `GET /api/restaurants/search?q=&all=true` - Discover: todos los restaurantes, sin filtro de distancia
 - `GET /api/restaurants/search?q=burguer&category=burgers&page=1` - Búsqueda de restaurantes
 - `GET /api/restaurants/[slug]` - Detalles de restaurante con reseñas
 
@@ -122,19 +124,33 @@ const response = await fetch('/api/auth/login', {
 // Token se guarda automáticamente en cookie httpOnly
 ```
 
-### 3. Obtener Restaurantes Cercanos
+### 3. Feed: restaurantes cercanos
 ```javascript
 const lat = 40.4168;
 const lon = -3.7038;
-const response = await fetch(`/api/restaurants/nearby?lat=${lat}&lon=${lon}&radius=10`);
+const response = await fetch(`/api/restaurants/nearby?lat=${lat}&lon=${lon}`);
 const data = await response.json();
+// Sólo devuelve restaurantes con distancia >= 4 km y <= 6 km.
 ```
 
-### 4. Buscar Restaurantes
+### 4. Discover: todos los restaurantes
 ```javascript
-const response = await fetch('/api/restaurants/search?q=burger&category=burgers&page=1');
+const response = await fetch('/api/restaurants/search?q=&all=true');
 const data = await response.json();
+// No aplica filtro geográfico.
 ```
+
+### 5. Eliminar cuenta
+```javascript
+const response = await fetch('/api/user', {
+  method: 'DELETE',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ confirmation: 'ELIMINAR' }),
+});
+```
+
+Respuestas: `200` cuenta eliminada y cookie JWT invalidada; `401` sesión ausente o inválida; `500` error interno. Una confirmación incorrecta devuelve `400`.
 
 ### 5. Crear Reseña (requiere autenticación)
 ```javascript
@@ -183,10 +199,12 @@ const response = await fetch('/api/coupons', {
 
 1. **Registro/Login** → Se crea usuario en BD con contraseña encriptada (bcrypt)
 2. **JWT Token** → Se genera token JWT y se almacena en cookie httpOnly
-3. **Descubrir Restaurantes** → Se obtienen de BD ordenados por distancia o rating
-4. **Escribir Reseña** → Se guarda en BD + otorga 10 puntos
-5. **Acumular Puntos** → Se guardan en tabla `customers.total_points`
-6. **Canjear Cupón** → Transacción: descuenta puntos + registra en `customer_redemptions`
+3. **Feed** → `/api/restaurants/nearby?lat=...&lon=...` muestra sólo restaurantes entre 4 y 6 km
+4. **Discover** → `/api/restaurants/search?q=&all=true` muestra todos los restaurantes sin filtro de distancia
+5. **Escribir Reseña** → Se guarda en BD y otorga puntos sólo en la primera reseña por restaurante
+6. **Acumular Puntos** → Se guardan en `users.totalPoints`
+7. **Canjear Cupón** → Transacción: descuenta puntos y registra el canjeo
+8. **Eliminar cuenta** → `DELETE /api/user`, requiere confirmación y cierra la sesión
 
 ---
 
@@ -207,8 +225,7 @@ Asegúrate de que tu base de datos tenga estas tablas:
 
 ```sql
 -- Clientes
-customers (id, uuid, full_name, username, email, password_hash, 
-           total_points, status, deleted_at, last_login_at, created_at, updated_at)
+users (id, name, email, password, totalPoints, totalReviews, sys, restaurant_id)
 
 -- Sesiones
 customer_sessions (id, customer_id, token_hash, expires_at, revoked_at)
@@ -219,8 +236,7 @@ restaurants (id, slug, name, cuisine, category, description,
             address, lat, lon, tags)
 
 -- Reseñas
-reviews (id, customer_id, business_id, rating, title, content, deleted_at, 
-         created_at, updated_at)
+reviews (id, reviewId, reviewSlug, reviewStar, reviewText, reviewUser, reviewDate, restaurant_id, reviewItem)
 
 -- Favoritos
 customer_favorites (id, customer_id, business_id, created_at)
