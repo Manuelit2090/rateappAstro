@@ -79,60 +79,139 @@ onMounted(() => void loadReviews())
 
 <template>
   <section class="space-y-6">
-    <div v-if="loading" class="rounded-lg border p-6 text-center text-base-content/70">Cargando reseñas...</div>
-    <div v-else-if="error" class="rounded-lg border border-error/30 bg-error/10 p-6 text-error">{{ error }}</div>
+    <!-- Estado de Carga -->
+    <div v-if="loading" class="card bg-base-100 border border-base-200 shadow-xl p-12 text-center">
+      <div class="flex flex-col items-center justify-center gap-3">
+        <span class="loading loading-spinner loading-lg text-warning"></span>
+        <p class="text-sm font-semibold opacity-70">Cargando métricas y reseñas...</p>
+      </div>
+    </div>
+
+    <!-- Estado de Error -->
+    <div v-else-if="error" class="alert alert-error shadow-lg">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>{{ error }}</span>
+    </div>
+
     <template v-else>
-      <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <div class="rounded-lg border p-4 bg-base-100/50">
-          <p class="text-sm text-base-content/70">Promedio general</p>
-          <p class="mt-2 text-3xl font-bold text-primary">{{ averageRating }} <span class="text-xl">/ 5</span></p>
+      <!-- BLOQUE 1: Métricas Principales (Stats) -->
+      <div class="stats stats-vertical md:stats-horizontal shadow-xl bg-base-100 border border-base-200 w-full">
+        <div class="stat">
+          <div class="stat-title text-xs font-bold uppercase tracking-wider">Promedio general</div>
+          <div class="stat-value text-warning flex items-baseline gap-1">
+            <span>{{ averageRating }}</span>
+            <span class="text-base font-medium text-base-content/50">/ 5</span>
+          </div>
+          <div class="stat-desc font-semibold text-warning">★ Basado en calificaciones</div>
         </div>
-        <div class="rounded-lg border p-4 bg-base-100/50">
-          <p class="text-sm text-base-content/70">Total de reseñas</p>
-          <p class="mt-2 text-3xl font-bold">{{ reviews.length }}</p>
+
+        <div class="stat">
+          <div class="stat-title text-xs font-bold uppercase tracking-wider">Total de reseñas</div>
+          <div class="stat-value text-base-content">{{ reviews.length }}</div>
+          <div class="stat-desc">Opiniones registradas</div>
         </div>
-        <div class="rounded-lg border p-4 bg-base-100/50">
-          <p class="text-sm text-base-content/70">Tendencia mensual</p>
-          <p class="mt-2 text-3xl font-bold" :class="trend.difference >= 0 ? 'text-success' : 'text-error'">
+
+        <div class="stat">
+          <div class="stat-title text-xs font-bold uppercase tracking-wider">Tendencia mensual</div>
+          <div class="stat-value" :class="trend.difference >= 0 ? 'text-success' : 'text-error'">
             {{ trend.difference >= 0 ? '+' : '' }}{{ trend.difference }}
-          </p>
-          <p class="text-xs text-base-content/60">{{ trend.currentMonth }} este mes · {{ trend.previousMonth }} anterior</p>
+          </div>
+          <div class="stat-desc">
+            <span class="font-bold text-base-content">{{ trend.currentMonth }}</span> este mes · <span class="opacity-70">{{ trend.previousMonth }} anterior</span>
+          </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div class="rounded-lg border p-4 bg-base-100/50">
-          <h2 class="font-semibold">Distribución de calificaciones</h2>
-          <div class="mt-4 space-y-3">
-            <div v-for="item in distribution" :key="item.rating" class="flex items-center gap-3 text-sm">
-              <span class="w-12">{{ item.rating }} estrellas</span>
-              <progress class="progress progress-primary h-2 flex-1" :value="item.percentage" max="100" />
-              <span class="w-10 text-right text-base-content/70">{{ item.percentage }}%</span>
+      <!-- BLOQUE 2: Desglose de Rendimiento -->
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <!-- Distribución de estrellas -->
+        <div class="card bg-base-100 border border-base-200 shadow-xl">
+          <div class="card-body p-6">
+            <h2 class="card-title text-base font-bold">Distribución de calificaciones</h2>
+            <div class="mt-4 space-y-3">
+              <div v-for="item in distribution" :key="item.rating" class="flex items-center gap-3 text-sm">
+                <span class="w-20 font-semibold flex items-center gap-1">
+                  {{ item.rating }} <span class="text-warning">★</span>
+                </span>
+                <progress class="progress progress-warning h-2.5 flex-1" :value="item.percentage" max="100" />
+                <span class="w-12 text-right font-bold text-base-content/70">{{ item.percentage }}%</span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="rounded-lg border p-4 bg-base-100/50">
-          <h2 class="font-semibold">Resumen de tendencia</h2>
-          <p class="mt-4 text-sm text-base-content/70">Comparativa de reseñas registradas entre el mes actual y el anterior.</p>
+
+        <!-- Resumen Comparativo -->
+        <div class="card bg-base-100 border border-base-200 shadow-xl">
+          <div class="card-body p-6 justify-between">
+            <div>
+              <h2 class="card-title text-base font-bold">Resumen de tendencia</h2>
+              <p class="mt-2 text-sm opacity-70 leading-relaxed">
+                Comparativa directa entre la cantidad de interacción obtenida en el ciclo actual versus el periodo anterior.
+              </p>
+            </div>
+
+            <div class="rounded-2xl bg-base-200/50 p-4 border border-base-200 space-y-2 mt-4">
+              <div class="flex justify-between items-center text-sm">
+                <span class="font-medium opacity-70">Reseñas este mes:</span>
+                <span class="font-bold badge badge-neutral">{{ trend.currentMonth }}</span>
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <span class="font-medium opacity-70">Reseñas mes anterior:</span>
+                <span class="font-bold badge badge-ghost">{{ trend.previousMonth }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="rounded-lg border bg-base-100/50 p-4">
-        <h2 class="font-semibold">Historial de reseñas</h2>
-        <p v-if="!reviews.length" class="py-8 text-center text-base-content/70">No hay reseñas registradas aún</p>
-        <div v-else class="mt-4 overflow-x-auto">
-          <table class="table w-full">
-            <thead><tr><th>Usuario</th><th>Valoración</th><th>Comentario</th><th>Fecha</th><th>Respuesta</th></tr></thead>
-            <tbody>
-              <tr v-for="review in reviews" :key="review.id">
-                <td>{{ review.userName }}</td>
-                <td class="text-primary">{{ review.rating }} / 5</td>
-                <td class="min-w-56 whitespace-normal">{{ review.comment || 'Sin comentario' }}</td>
-                <td>{{ formatDate(review.date) }}</td>
-                <td class="min-w-48 whitespace-normal text-base-content/70">{{ review.restaurantResponse || 'Sin respuesta' }}</td>
-              </tr>
-            </tbody>
-          </table>
+      <!-- BLOQUE 3: Tabla de Historial -->
+      <div class="card bg-base-100 border border-base-200 shadow-xl">
+        <div class="card-body p-6">
+          <h2 class="card-title text-base font-bold mb-2">Historial de reseñas</h2>
+          
+          <div v-if="!reviews.length" class="py-12 text-center text-base-content/60">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 opacity-30 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+            <p class="font-semibold">No hay reseñas registradas aún</p>
+          </div>
+
+          <div v-else class="overflow-x-auto">
+            <table class="table table-zebra w-full">
+              <thead>
+                <tr class="text-xs uppercase font-extrabold text-base-content/60">
+                  <th>Usuario</th>
+                  <th>Valoración</th>
+                  <th>Comentario</th>
+                  <th>Fecha</th>
+                  <th>Respuesta</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="review in reviews" :key="review.id" class="hover">
+                  <td class="font-bold">{{ review.userName }}</td>
+                  <td>
+                    <div class="flex items-center gap-1 font-bold text-warning">
+                      <span>★</span>
+                      <span>{{ review.rating }}</span>
+                    </div>
+                  </td>
+                  <td class="min-w-56 max-w-xs whitespace-normal text-sm leading-snug">
+                    {{ review.comment || 'Sin comentario' }}
+                  </td>
+                  <td class="text-xs opacity-70 whitespace-nowrap">{{ formatDate(review.date) }}</td>
+                  <td class="min-w-48 max-w-xs whitespace-normal">
+                    <span v-if="review.restaurantResponse" class="text-xs bg-base-200 p-2 rounded-lg block border border-base-300">
+                      {{ review.restaurantResponse }}
+                    </span>
+                    <span v-else class="badge badge-ghost badge-sm opacity-60">Sin respuesta</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </template>

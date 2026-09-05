@@ -161,7 +161,7 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-zinc-950 px-4 py-8 text-zinc-100 sm:px-6 lg:px-8">
-    <div class="mx-auto max-w-6xl space-y-6">
+    <div class="mx-auto w-full space-y-6">
       <div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
         <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
           <div>
@@ -185,14 +185,10 @@ onMounted(() => {
           @click="activeTab = 'profile'">
           Perfil del Restaurante
         </button>
-        <button class="rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
-          :class="activeTab === 'stats' ? 'bg-orange-500 text-zinc-950' : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100'"
-          @click="activeTab = 'stats'">
-          Estadísticas Rápidas
-        </button>
+       
       </div>
 
-      <div v-if="activeTab === 'profile'" class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+      <div v-if="activeTab === 'profile'" class="w-full grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         <section class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
           <h2 class="text-xl font-semibold">Información del Restaurante</h2>
           <div class="mt-6 grid gap-4 md:grid-cols-2">
@@ -257,23 +253,7 @@ onMounted(() => {
           </div>
         </section>
 
-        <aside class="space-y-6">
-          <div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
-            <h3 class="text-lg font-semibold">Resumen rápido</h3>
-            <div class="mt-4 space-y-3">
-              <div class="rounded-lg border border-orange-500/20 bg-orange-500/10 p-4">
-                <p class="text-sm text-zinc-400">Estado</p>
-                <p class="text-lg font-semibold text-orange-400">
-                  {{ restaurant.promoted ? 'Promocionado' : 'Normal' }}
-                </p>
-              </div>
-              <div class="rounded-lg border border-zinc-800 bg-zinc-950/70 p-4">
-                <p class="text-sm text-zinc-400">Ubicación</p>
-                <p class="text-lg font-semibold text-zinc-100">{{ restaurant.location || 'Sin ubicación' }}</p>
-              </div>
-            </div>
-          </div>
-        </aside>
+        
       </div>
 
       <div v-else-if="activeTab === 'stats'" class="grid gap-6 md:grid-cols-3">
