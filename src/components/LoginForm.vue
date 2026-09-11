@@ -160,7 +160,6 @@ function changeLoginOrRegister() {
           <div class="form-control">
             <div class="flex justify-between items-center pb-1">
               <label class="label-text font-medium text-base-content/80">Contraseña</label>
-              <a href="#" class="text-xs text-primary hover:underline font-medium">¿Olvidaste tu contraseña?</a>
             </div>
             <label class="input input-bordered flex items-center gap-3 bg-base-100/60 focus-within:border-primary">
               <Lock class="w-4 h-4 text-base-content/50" />
