@@ -26,6 +26,31 @@ onMounted(async () => {
   }
 })
 
+async function logoutUser() {
+  try {
+    const response = await fetch('/api/auth/logout', { 
+      headers: {
+        'Content-Type': 'application/json',
+      method: 'GET',
+      credentials: 'include',
+
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data.message); // "Sesión cerrada"
+      
+      // Redirige al usuario a la página de inicio o login
+      window.location.href = '/login';
+    } else {
+      console.error('Error al cerrar sesión');
+    }
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+
 const items = [
   { icon: Home, label: 'Home', to: '/admin/dashboard' },
   { icon: BarChart, label: 'Estadísticas', to: '/admin/analytics' },
@@ -97,7 +122,7 @@ function isActive(to: string, idx: number) {
             class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral-content hover:bg-base-200 transition-colors"
             @click="logoutUser()">
             <LogOut class="h-5 w-5" />
-            <span>Sign out</span>
+            <span>Log Out</span>
           </button>
         </div>
       </div>
