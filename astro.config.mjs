@@ -10,10 +10,10 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   output: 'server', 
   adapter: netlify(),
+  site: 'https://rateappproject.netlify.app/',
   integrations: [vue(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
-    // Agrega esto para solucionar el error de HMR del router
     server: {
       watch: {
         ignored: ['**/.astro/**']

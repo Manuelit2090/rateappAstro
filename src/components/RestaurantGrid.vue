@@ -28,7 +28,7 @@ async function loadRestaurants() {
     if (!coordinates) {
       restaurants.value = []
       locationStatus.value = ''
-      error.value = 'No pudimos obtener tu ubicación. Concede permiso para buscar restaurantes entre 4 y 6 km.'
+      error.value = 'No pudimos obtener tu ubicación. Concede permiso para buscar restaurantes entre 0 y 6 km.'
       return
     }
 
