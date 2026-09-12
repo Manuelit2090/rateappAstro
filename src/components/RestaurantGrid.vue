@@ -34,7 +34,7 @@ async function loadRestaurants() {
 
     const response = await restaurantService.getNearby(coordinates.lat, coordinates.lng)
     restaurants.value = Array.isArray(response.restaurants) ? response.restaurants : []
-    locationStatus.value = `Mostrando restaurantes entre ${response.minDistanceKm ?? 4} y ${response.maxDistanceKm ?? 6} km`
+    locationStatus.value = `Mostrando restaurantes entre ${response.minDistanceKm ?? 0} y ${response.maxDistanceKm ?? 6} km`
   } catch (err) {
     console.error('Error cargando restaurantes:', err)
     error.value = 'Error al cargar restaurantes desde la base de datos.'
@@ -66,7 +66,7 @@ onMounted(loadRestaurants)
 
     <div v-else>
       <div v-if="restaurants.length === 0" class="text-center py-20 text-neutral rounded-3xl border border-base-300/60 bg-base-100/40">
-        No hay restaurantes disponibles entre 4 y 6 km.
+        No hay restaurantes disponibles entre 0 y 6 km.
       </div>
 
       <div v-else class="grid md:grid-cols-2 gap-6">

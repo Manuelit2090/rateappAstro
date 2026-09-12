@@ -2,8 +2,8 @@ import type { APIRoute } from 'astro';
 import pool from '../../../lib/db';
 import { parseCoordinate } from '../../../lib/geocoding';
 
-const MIN_DISTANCE_KM = 4;
-const MAX_DISTANCE_KM = 8;
+const MIN_DISTANCE_KM = 0;
+const MAX_DISTANCE_KM = 6;
 
 function parseJsonArray(value: unknown): unknown[] {
   if (Array.isArray(value)) return value;

@@ -5,7 +5,7 @@ import RestaurantCard from './RestaurantCard.vue'
 import HeaderPage from './UI/HeaderPage.vue'
 import { restaurantService } from '../lib/api'
 
-const filters = ['All', 'Trending', 'New', 'Promoted', 'Top rated'] as const
+const filters = ['All', 'Trending', 'Top rated'] as const
 type Filter = typeof filters[number]
 
 const activeFilter = ref<Filter>('All')
@@ -47,7 +47,6 @@ const categories = [
   { label: 'Desserts', icon: '🍰' },
 ]
 
-const moods = ['Date night', 'Quick bite', 'With friends', 'Working solo', 'Celebration', 'Hidden gem']
 
 onMounted(async () => {
   await loadAllRestaurants()
