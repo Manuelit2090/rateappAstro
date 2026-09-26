@@ -2,14 +2,9 @@
 import LoginForm from "../LoginForm.vue";
 ---
 
-<section
-  class="relative grid min-h-screen grid-cols-1 overflow-hidden bg-base-100 text-base-content md:grid-cols-2"
->
+<section class="relative grid min-h-screen grid-cols-1 overflow-hidden bg-base-100 text-base-content md:grid-cols-2">
   <!-- Detalles de esquinas tecnológicas -->
-  <div
-    class="pointer-events-none absolute left-8 top-8 z-10 hidden sm:block"
-    aria-hidden="true"
-  >
+  <div class="pointer-events-none absolute left-8 top-8 z-10 hidden sm:block" aria-hidden="true">
     <div class="h-16 w-16 border-l-2 border-t-2 border-primary/70 shadow-[0_0_18px_var(--color-primary)]"></div>
     <div class="mt-2 flex gap-1">
       <span class="h-1 w-1 rounded-full bg-primary"></span>
@@ -18,10 +13,7 @@ import LoginForm from "../LoginForm.vue";
     </div>
   </div>
 
-  <div
-    class="pointer-events-none absolute right-8 top-8 z-10 hidden sm:block"
-    aria-hidden="true"
-  >
+  <div class="pointer-events-none absolute right-8 top-8 z-10 hidden sm:block" aria-hidden="true">
     <div class="ml-auto h-16 w-16 border-r-2 border-t-2 border-secondary/70 shadow-[0_0_18px_var(--color-secondary)]"></div>
     <div class="mt-2 flex justify-end gap-1">
       <span class="h-1 w-1 rounded-full bg-accent"></span>
@@ -31,28 +23,15 @@ import LoginForm from "../LoginForm.vue";
   </div>
 
   <!-- COLUMNA IZQUIERDA: Cuadro neón giratorio y logo -->
-  <div
-    class="relative hidden min-h-screen flex-col items-center justify-center overflow-hidden border-r border-primary/20 bg-base-200 px-8 backdrop-blur-sm select-none md:flex"
-  >
+  <div class="relative hidden min-h-screen flex-col items-center justify-center overflow-hidden border-r border-primary/20 bg-base-200 px-8 backdrop-blur-sm select-none md:flex">
     <div class="relative z-10 flex flex-col items-center gap-6 p-8 text-center">
       <div class="relative flex h-64 w-64 items-center justify-center">
-        <!-- 1. Cuadro Neón exterior que gira mediante CSS puro -->
-         <div
-           class="spin-element absolute inset-0 rounded-2xl border-2 border-primary bg-transparent"
-           aria-hidden="true"
-         ></div>
-
-        <!-- 2. Marco secundario con bordes punteados -->
-        <div
-          class="pointer-events-none absolute inset-3 rounded-xl border-2 border-dashed border-secondary/60 bg-transparent"
-          aria-hidden="true"
-        ></div>
-
-        <!-- 3. Contenedor central donde flota el logo -->
-        <div
-          class="relative flex h-52 w-52 items-center justify-center overflow-hidden rounded-2xl border border-accent/50 bg-base-100 p-5 shadow-[0_0_24px_var(--color-secondary)] backdrop-blur-md"
-        >
-          <!-- Logo con animación de rebote independiente -->
+        <!-- Cuadro Neón exterior -->
+        <div class="spin-element absolute inset-0 rounded-2xl border-2 border-primary bg-transparent" aria-hidden="true"></div>
+        <!-- Marco secundario -->
+        <div class="pointer-events-none absolute inset-3 rounded-xl border-2 border-dashed border-secondary/60 bg-transparent" aria-hidden="true"></div>
+        <!-- Contenedor central -->
+        <div class="relative flex h-52 w-52 items-center justify-center overflow-hidden rounded-2xl border border-accent/50 bg-base-100 p-5 shadow-[0_0_24px_var(--color-secondary)] backdrop-blur-md">
           <img
             src="/avatar-user.png"
             alt="Avatar de RateApp"
@@ -61,86 +40,46 @@ import LoginForm from "../LoginForm.vue";
             onerror="this.onerror=null; this.src='/avatar-user.jpg'"
             class="bounce-element relative z-10 h-36 w-36 object-contain"
           />
-
-          <!-- Línea de escaneo -->
-          <div
-            class="scan-element pointer-events-none absolute inset-x-5 top-5 h-0.5 bg-secondary"
-            aria-hidden="true"
-           ></div>
+          <div class="scan-element pointer-events-none absolute inset-x-5 top-5 h-0.5 bg-secondary" aria-hidden="true"></div>
         </div>
-
         <!-- Líneas de escaneo estéticas -->
         <div class="absolute inset-x-0 h-[2px] bg-primary/30 top-0 animate-[scan_2s_linear_infinite]"></div>
       </div>
-
       <!-- Título de la App -->
       <div class="space-y-2">
-        <h1
-          class="text-3xl font-black uppercase tracking-[0.2em] text-base-content"
-        >
+        <h1 class="text-3xl font-black uppercase tracking-[0.2em] text-base-content">
           Rate<span class="text-primary">App</span>
         </h1>
       </div>
     </div>
   </div>
 
-  <!-- COLUMNA DERECHA: Formulario e interfaz sin alteraciones -->
-  <main
-    class="relative z-10 flex min-h-screen flex-col items-center justify-center p-6 sm:p-12"
-  >
-    <div
-      class="w-full max-w-sm rounded-2xl border border-base-content/5 bg-base-100/40 p-6 shadow-2xl backdrop-blur-md sm:p-8 md:border-none md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none"
-    >
+  <!-- COLUMNA DERECHA: Formulario e interfaz -->
+  <main class="relative z-10 flex min-h-screen flex-col items-center justify-center p-6 sm:p-12">
+    <div class="w-full max-w-sm rounded-2xl border border-base-content/5 bg-base-100/40 p-6 shadow-2xl backdrop-blur-md sm:p-8 md:border-none md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none">
       <LoginForm client:load />
     </div>
 
-    <footer
-      class="mt-8 w-full shrink-0 px-6 text-center font-mono text-xs text-base-content/60"
-    >
-      © 2026 Rate App — Todos los derechos reservados.
+    <footer class="mt-8 w-full shrink-0 px-6 text-center font-mono text-xs text-base-content/60">
+      © {new Date().getFullYear()} Rate App — Todos los derechos reservados.
     </footer>
   </main>
 </section>
 
 <style is:global>
-  /* Animación del giro del cuadro neón */
   @keyframes custom-spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
-
-  /* Animación del rebote del logo */
   @keyframes custom-bounce {
-    0%, 100% {
-      transform: translateY(-8%);
-      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-    }
-    50% {
-      transform: translateY(0);
-      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-    }
+    0%, 100% { transform: translateY(-8%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+    50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
   }
-
-  /* Animación del escáner */
   @keyframes custom-scan {
-    0% {
-      top: 0%;
-      opacity: 0;
-    }
-    5% {
-      opacity: 1;
-    }
-    95% {
-      opacity: 1;
-    }
-    100% {
-      top: 100%;
-      opacity: 0;
-    }
+    0% { top: 0%; opacity: 0; }
+    5% { opacity: 1; }
+    95% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
   }
 
   .spin-element {
@@ -150,13 +89,11 @@ import LoginForm from "../LoginForm.vue";
     box-shadow: 0 0 30px var(--color-primary), inset 0 0 15px var(--color-primary) !important;
     transform-origin: center;
   }
-
   .bounce-element {
     animation: custom-bounce 2s ease-in-out infinite !important;
     filter: drop-shadow(0 0 20px var(--color-primary));
     transform-origin: center;
   }
-
   .scan-element {
     animation: custom-scan 2s linear infinite !important;
   }

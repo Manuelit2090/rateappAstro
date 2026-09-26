@@ -1,19 +1,20 @@
 [
   {
     "AllowedOrigins": [
+      "https://rateappproject.netlify.app",
       "http://localhost:4321"
     ],
     "AllowedMethods": [
       "GET",
       "PUT",
+      "DELETE",
       "POST",
       "HEAD"
     ],
     "AllowedHeaders": [
       "*"
     ],
-    "ExposeHeaders": [
-      "ETag"
-    ]
+    "ExposeHeaders": [],
+    "MaxAgeSeconds": 3000
   }
 ]

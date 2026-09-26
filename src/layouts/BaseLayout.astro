@@ -1,4 +1,6 @@
 ---
+import '../styles/global.css'; 
+
 
 import AppSideBar from '../components/AppSidebar.vue'
 import MobileDock from '../components/MobileDock.vue'
@@ -27,7 +29,7 @@ const {
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary" />
-    <link rel="icon" href="/public/avatar-user.jpg">
+    <link rel="icon" href="/avatar-user.jpg">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -37,8 +39,7 @@ const {
       rel="stylesheet"
     />
 
-    <!-- Global styles (Tailwind + CSS vars) -->
-    <link rel="stylesheet" href="/src/styles/global.css" />
+
   </head>
   <body>
      <div class="flex w-full bg-background text-foreground">

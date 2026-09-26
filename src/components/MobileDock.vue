@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { storeUbicacion as ubication } from './UI/storeUbication.ts';
-import { dataUser, loadDataUserFromAPI, logoutUser, setDataUser } from '../store/dataUser';
+import { dataUser, loadDataUserFromAPI, setDataUser } from '../store/dataUser';
 import {
   Menu, Home, Compass, Trophy, Heart, Bookmark,
   MessageSquare, Settings, LogOut, Flame, MapPin, CircleUser, Search, TicketPercent, X
@@ -38,6 +38,30 @@ const items = [
   { icon: Heart, label: 'Favorites', to: '/favorites' },
   { icon: CircleUser, label: 'Profile', to: '/profile' },
 ]
+async function logoutUser() {
+  try {
+    const response = await fetch('/api/auth/logout', { 
+      headers: {
+        'Content-Type': 'application/json',
+      method: 'GET',
+      credentials: 'include',
+
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data.message); // "Sesión cerrada"
+      
+      // Redirige al usuario a la página de inicio o login
+      window.location.href = '/login';
+    } else {
+      console.error('Error al cerrar sesión');
+    }
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
 
 function isActive(to: string, idx: number) {
   return routePath.value === to && (idx === 0 || to !== '/')
@@ -112,7 +136,7 @@ function isActive(to: string, idx: number) {
             class="w-full flex items-center gap-3 px-3 h-11 rounded-xl text-sm text-neutral-content hover:bg-base-200 transition-colors"
             @click="logoutUser()">
             <LogOut class="h-5 w-5" />
-            <span>Sign out</span>
+            <span>Log Out</span>
           </button>
         </div>
       </div>
