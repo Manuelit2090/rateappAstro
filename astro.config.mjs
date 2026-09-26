@@ -3,15 +3,17 @@ import vue from '@astrojs/vue'
 import node from '@astrojs/node'
 import tailwindcss from '@tailwindcss/vite'
 
+import netlify from '@astrojs/netlify';
+
+import sitemap from '@astrojs/sitemap';
+
 export default defineConfig({
   output: 'server', 
-  adapter: node({ mode: 'standalone' }),
-  integrations: [
-    vue()
-  ],
+  adapter: netlify(),
+  site: 'https://rateappproject.netlify.app/',
+  integrations: [vue(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
-    // Agrega esto para solucionar el error de HMR del router
     server: {
       watch: {
         ignored: ['**/.astro/**']

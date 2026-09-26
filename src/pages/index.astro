@@ -1,6 +1,5 @@
 ---
 import LayoutPage from "../layouts/LayoutPage.astro";
-import Logo from "/public/avatar-user.jpg";
 ---
 
 <LayoutPage>
@@ -64,9 +63,9 @@ import Logo from "/public/avatar-user.jpg";
 							<p
 								class="text-base-content/65 text-lg leading-relaxed max-w-md"
 							>
-								Nada de estrellas genéricas. Calificamos comida,
-								servicio, ambiente e iluminación por separado —
-								y te pagamos en puntos por contarlo.
+								Encuentra reseñas de usuarios reales, comparte
+								tus opiniones y ademas recibe recompensas por
+								ello.
 							</p>
 
 							<div class="flex flex-wrap items-center gap-4 pt-4">
@@ -232,124 +231,51 @@ import Logo from "/public/avatar-user.jpg";
 								cupones en la tienda..
 							</p>
 
+							
+						</div>
+
+						<a href="#" class="hover-3d cursor-pointer">
+							<!-- content -->
 							<div
-								class="grid sm:grid-cols-2 gap-x-8 gap-y-5 pt-2 font-mono text-sm"
+								class="card md:w-200 bg-black text-white bg-[radial-gradient(circle_at_bottom_left,#ffffff04_35%,transparent_36%),radial-gradient(circle_at_top_right,#ffffff04_35%,transparent_36%)] bg-size-[4.95em_4.95em]"
 							>
-								<div
-									class="flex items-baseline justify-between dashed-rule pb-2"
-								>
-									<span class="text-base-content/60 font-body"
-										>Reseña básica</span
-									>
-									<span class="text-accent">+10</span>
+								<div class="card-body">
+									<div class="flex justify-between mb-10">
+										<div class="font-bold">
+											RateApp Wallet
+										</div>
+										<div class="text-5xl opacity-10">❁</div>
+									</div>
+									<div class="text-lg mb-4 opacity-40">
+										0210 8820 1150 0222
+									</div>
+									<div class="flex justify-between">
+										<div>
+											<div class="text-xs opacity-20">
+												CARD USER
+											</div>
+											<div>Carlos Enrique</div>
+										</div>
+										<div>
+											<div class="text-xs opacity-20">
+												PUNTOS
+											</div>
+											<div>247</div>
+										</div>
+									</div>
 								</div>
 							</div>
-						</div>
 
-						<div class="hover-3d w-full">
-							<!-- El secreto es añadir padding extra (p-4), preserve-3d y quitar cualquier overflow oculto -->
-							<figure
-								class="w-full rounded-2xl p-4 [transform-style:preserve-3d] overflow-visible"
-							>
-								<div
-									class="bg-neutral text-neutral-content rounded-3xl p-7 md:p-9 border border-base-300 shadow-xl"
-								>
-									<div
-										class="flex flex-col justify-between items-start"
-									>
-										<!-- Bloque Superior: Puntos -->
-										<div class="w-full">
-											<p
-												class="text-xs font-mono uppercase tracking-widest text-neutral-content/50"
-											>
-												Mi Puntos
-											</p>
-											<p
-												class="font-display text-5xl font-semibold mt-2 tabular-nums"
-											>
-												420<span
-													class="text-lg font-mono text-neutral-content/40 ml-2"
-													>pts</span
-												>
-											</p>
-										</div>
-									</div>
-
-									<!-- Bloque Inferior: Grid de Cupones -->
-									<div
-										class="grid grid-cols-2 gap-4 mt-8 w-full"
-									>
-										<!-- Tarjeta Cupón 1 -->
-										<div
-											class="bg-base-100 text-base-content rounded-2xl p-4 flex flex-col justify-between gap-3 min-h-[140px]"
-										>
-											<div>
-												<div
-													class="flex justify-between items-center"
-												>
-													<span class="text-2xl"
-														>🎟️</span
-													>
-													<span
-														class="text-[11px] font-mono text-secondary font-bold"
-														>200 pts</span
-													>
-												</div>
-												<p
-													class="text-sm font-semibold leading-snug mt-1"
-												>
-													20% off en la cuenta
-												</p>
-											</div>
-											<button
-												class="btn btn-primary btn-sm w-full normal-case rounded-full mt-auto"
-											>
-												Canjear
-											</button>
-										</div>
-
-										<!-- Tarjeta Cupón 2 -->
-										<div
-											class="bg-base-100 text-base-content rounded-2xl p-4 flex flex-col justify-between gap-3 min-h-[140px]"
-										>
-											<div>
-												<div
-													class="flex justify-between items-center"
-												>
-													<span class="text-2xl"
-														>🍰</span
-													>
-													<span
-														class="text-[11px] font-mono text-accent font-bold"
-														>600 pts</span
-													>
-												</div>
-												<p
-													class="text-sm font-semibold leading-snug mt-1"
-												>
-													Postre de la casa
-												</p>
-											</div>
-											<button
-												class="btn btn-accent btn-sm w-full normal-case rounded-full mt-auto"
-											>
-												Canjear
-											</button>
-										</div>
-									</div>
-								</div>
-							</figure>
-						</div>
-
-						<!-- Capas obligatorias para el script/CSS del efecto 3D -->
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
+							<!-- 8 empty divs needed for the 3D effect -->
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+						</a>
 					</div>
 				</div>
 			</section>
@@ -439,16 +365,13 @@ import Logo from "/public/avatar-user.jpg";
 				>
 				</div>
 				<div class="relative max-w-2xl mx-auto reveal" data-reveal>
-					<span
-						class="course-eyebrow text-xs text-secondary uppercase"
-						>La cuenta, por favor</span
-					>
+					
 					<h2
 						class="font-display text-4xl md:text-6xl mt-4 leading-tight"
 					>
 						Tu próxima <span class="italic text-primary"
-							>buena mesa</span
-						> está a un tap
+							>restaurante favorito</span
+						> está a un paso.
 					</h2>
 					<p
 						class="text-neutral-content/60 text-lg mt-5 leading-relaxed"
@@ -480,15 +403,14 @@ import Logo from "/public/avatar-user.jpg";
 				class="footer sm:footer-horizontal bg-base-200 text-base-content p-10"
 			>
 				<aside>
-						<img
-							src="/avatar-user.jpg"
-							alt="logo_rateapp"
-							class="w-24 h-24"
-						/>
-					
-					<p>RateApp 2026</p>
-					<br>
+					<img
+						src="/avatar-user.jpg"
+						alt="logo_rateapp"
+						class="w-24 h-24"
+					/>
 
+					<p>RateApp 2026</p>
+					<br />
 				</aside>
 				<nav>
 					<h6 class="footer-title">Funcionamiento</h6>
